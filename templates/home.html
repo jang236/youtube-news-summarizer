@@ -17,26 +17,32 @@
         }
 
         :root {
-            --bg: #0d1117;
-            --bg2: #161b22;
-            --card: #1c2333;
-            --card-h: #242d3d;
-            --input: #0d1117;
-            --border: #30363d;
-            --border-l: #21262d;
-            --t1: #e6edf3;
-            --t2: #8b949e;
-            --t3: #6e7681;
+            --bg: #f0f4f8;
+            --bg2: #ffffff;
+            --card: #ffffff;
+            --card-h: #f7fafc;
+            --border: #e2e8f0;
+            --border-l: #edf2f7;
+            --t1: #1a202c;
+            --t2: #4a5568;
+            --t3: #a0aec0;
             --blue: #3b82f6;
             --blue-h: #2563eb;
-            --blue-g: rgba(59, 130, 246, .15);
-            --green: #2ea043;
-            --red: #f85149;
-            --orange: #d29922;
+            --blue-bg: #ebf2ff;
+            --blue-lt: rgba(59, 130, 246, .08);
+            --green: #22c55e;
+            --green-bg: rgba(34, 197, 94, .1);
+            --red: #ef4444;
+            --red-bg: rgba(239, 68, 68, .1);
+            --orange: #f59e0b;
+            --orange-bg: rgba(245, 158, 11, .1);
             --purple: #8b5cf6;
+            --purple-bg: rgba(139, 92, 246, .1);
             --r: 12px;
             --rs: 8px;
             --tr: .2s ease;
+            --shadow: 0 1px 3px rgba(0, 0, 0, .08);
+            --shadow-lg: 0 4px 16px rgba(0, 0, 0, .1);
         }
 
         body {
@@ -49,12 +55,12 @@
 
         /* ===== Header ===== */
         .hd {
-            background: var(--bg2);
-            border-bottom: 1px solid var(--border);
+            background: var(--blue);
             padding: 0 24px;
             position: sticky;
             top: 0;
-            z-index: 100
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, .3)
         }
 
         .hd-in {
@@ -63,70 +69,49 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 56px
+            height: 52px
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-weight: 700;
-            font-size: 18px;
-            color: var(--t1);
+            font-size: 17px;
+            color: #fff;
             text-decoration: none
         }
 
         .logo-i {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, #f85149, #ff6b6b);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px
+            font-size: 20px
         }
 
-        .hd-time {
+        .hd-nav {
+            display: flex;
+            gap: 2px
+        }
+
+        .hd-btn {
+            padding: 7px 16px;
             font-size: 13px;
-            color: var(--t3)
-        }
-
-        /* ===== Tabs ===== */
-        .tabs {
-            background: var(--bg2);
-            border-bottom: 1px solid var(--border);
-            padding: 0 24px
-        }
-
-        .tabs-in {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0
-        }
-
-        .tab {
-            padding: 12px 20px;
-            font-size: 14px;
             font-weight: 500;
-            color: var(--t2);
+            color: rgba(255, 255, 255, .7);
             background: none;
             border: none;
-            border-bottom: 2px solid transparent;
+            border-radius: 6px;
             cursor: pointer;
             transition: var(--tr);
-            white-space: nowrap;
             font-family: inherit
         }
 
-        .tab:hover {
-            color: var(--t1)
+        .hd-btn:hover {
+            color: #fff;
+            background: rgba(255, 255, 255, .15)
         }
 
-        .tab.on {
-            color: var(--blue);
-            border-bottom-color: var(--blue)
+        .hd-btn.on {
+            color: #fff;
+            background: rgba(255, 255, 255, .2)
         }
 
         /* ===== Container ===== */
@@ -171,62 +156,65 @@
             border-radius: var(--r);
             padding: 20px;
             cursor: pointer;
-            transition: var(--tr)
+            transition: var(--tr);
+            box-shadow: var(--shadow)
         }
 
         .stat:hover {
             border-color: var(--blue);
-            box-shadow: 0 0 0 1px var(--blue-g)
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px)
         }
 
         .stat-top {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px
+            margin-bottom: 8px
         }
 
         .stat-icon {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px
+            font-size: 20px
         }
 
         .stat-icon-ch {
-            background: rgba(59, 130, 246, .15);
+            background: var(--blue-bg);
             color: var(--blue)
         }
 
         .stat-icon-sum {
-            background: rgba(139, 92, 246, .15);
+            background: var(--purple-bg);
             color: var(--purple)
         }
 
         .stat-icon-run {
-            background: rgba(46, 160, 67, .15);
+            background: var(--green-bg);
             color: var(--green)
         }
 
         .stat-val {
             font-size: 28px;
-            font-weight: 700
+            font-weight: 800;
+            color: var(--t1)
         }
 
         .stat-unit {
             font-size: 14px;
             font-weight: 400;
-            color: var(--t2);
-            margin-left: 4px
+            color: var(--t3);
+            margin-left: 2px
         }
 
         .stat-sub {
             font-size: 12px;
             color: var(--t3);
-            margin-top: 4px
+            margin-top: 2px
         }
 
         /* ===== Buttons ===== */
@@ -236,7 +224,7 @@
             gap: 6px;
             padding: 8px 16px;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             border: none;
             border-radius: var(--rs);
             cursor: pointer;
@@ -247,7 +235,8 @@
 
         .btn-p {
             background: var(--blue);
-            color: #fff
+            color: #fff;
+            box-shadow: 0 1px 4px rgba(59, 130, 246, .3)
         }
 
         .btn-p:hover {
@@ -260,26 +249,26 @@
         }
 
         .btn-g {
-            background: transparent;
+            background: var(--card);
             color: var(--t2);
             border: 1px solid var(--border)
         }
 
         .btn-g:hover {
-            background: var(--card);
-            color: var(--t1)
+            background: var(--bg);
+            border-color: var(--blue)
         }
 
         .btn-d {
             background: transparent;
             color: var(--red);
-            border: 1px solid rgba(248, 81, 73, .3);
+            border: 1px solid rgba(239, 68, 68, .3);
             padding: 4px 10px;
             font-size: 12px
         }
 
         .btn-d:hover {
-            background: rgba(248, 81, 73, .1)
+            background: var(--red-bg)
         }
 
         .btn-sm {
@@ -288,17 +277,18 @@
         }
 
         .btn-sum {
-            background: rgba(59, 130, 246, .1);
+            background: var(--blue-bg);
             color: var(--blue);
-            border: 1px solid rgba(59, 130, 246, .25);
-            padding: 6px 14px;
+            border: 1px solid rgba(59, 130, 246, .2);
+            padding: 6px 16px;
             font-size: 12px;
             font-weight: 600;
-            border-radius: 6px
+            border-radius: 6px;
+            white-space: nowrap
         }
 
         .btn-sum:hover {
-            background: rgba(59, 130, 246, .2)
+            background: rgba(59, 130, 246, .15)
         }
 
         /* ===== Section ===== */
@@ -311,14 +301,15 @@
 
         .sec-t {
             font-size: 18px;
-            font-weight: 600
+            font-weight: 700
         }
 
         .sec-link {
             font-size: 13px;
             color: var(--blue);
             cursor: pointer;
-            text-decoration: none
+            text-decoration: none;
+            font-weight: 500
         }
 
         .sec-link:hover {
@@ -336,30 +327,31 @@
             border-radius: var(--r);
             overflow: hidden;
             border: 1px solid var(--border);
-            transition: var(--tr)
+            transition: var(--tr);
+            background: var(--card);
+            box-shadow: var(--shadow)
         }
 
         .v-wrap:hover {
-            border-color: rgba(59, 130, 246, .3)
+            border-color: rgba(59, 130, 246, .3);
+            box-shadow: var(--shadow-lg)
         }
 
         .v-card {
-            background: var(--card);
             padding: 16px;
             display: flex;
-            gap: 16px;
-            transition: var(--tr)
+            gap: 16px
         }
 
         .v-thumb-wrap {
             position: relative;
-            min-width: 180px;
-            width: 180px
+            min-width: 200px;
+            width: 200px
         }
 
         .v-thumb {
-            width: 180px;
-            height: 101px;
+            width: 200px;
+            height: 113px;
             border-radius: var(--rs);
             object-fit: cover;
             background: var(--bg)
@@ -369,7 +361,7 @@
             position: absolute;
             bottom: 6px;
             right: 6px;
-            background: rgba(0, 0, 0, .8);
+            background: rgba(0, 0, 0, .75);
             color: #fff;
             font-size: 10px;
             padding: 1px 5px;
@@ -386,16 +378,17 @@
 
         .v-ch {
             font-size: 12px;
-            color: var(--blue);
+            color: var(--t3);
             font-weight: 500;
             margin-bottom: 2px
         }
 
         .v-title {
             font-size: 15px;
-            font-weight: 600;
+            font-weight: 700;
             line-height: 1.4;
             margin-bottom: 4px;
+            color: var(--t1);
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -425,63 +418,57 @@
             color: var(--t3)
         }
 
-        .v-tags {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            flex-wrap: wrap
-        }
-
         /* ===== Tags ===== */
         .tag {
             display: inline-block;
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 11px;
-            font-weight: 500
+            font-weight: 600;
+            margin-right: 4px
         }
 
         .tag-pos {
-            background: rgba(46, 160, 67, .15);
-            color: #3fb950
+            background: var(--green-bg);
+            color: #16a34a
         }
 
         .tag-neg {
-            background: rgba(248, 81, 73, .15);
-            color: #f85149
+            background: var(--red-bg);
+            color: #dc2626
         }
 
         .tag-neu {
-            background: rgba(139, 148, 158, .15);
-            color: #8b949e
+            background: rgba(160, 174, 192, .12);
+            color: #718096
         }
 
         .tag-urg {
-            background: rgba(248, 81, 73, .2);
-            color: #f85149;
-            border: 1px solid rgba(248, 81, 73, .3)
+            background: var(--red-bg);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, .2)
         }
 
         .tag-maj {
-            background: rgba(210, 153, 34, .15);
-            color: #d29922
+            background: var(--orange-bg);
+            color: #d97706
         }
 
         .tag-nor {
-            background: rgba(139, 148, 158, .1);
-            color: #6e7681
+            background: rgba(160, 174, 192, .08);
+            color: #a0aec0
         }
 
         .tag-stk {
-            background: rgba(59, 130, 246, .1);
-            color: #58a6ff;
+            background: var(--blue-bg);
+            color: var(--blue);
             border: 1px solid rgba(59, 130, 246, .15)
         }
 
-        /* ===== AI Comment (Inline Expand) ===== */
+        /* ===== AI Panel (Inline Expand) ===== */
         .ai-panel {
             display: none;
-            background: var(--bg2);
+            background: #f8fafc;
             border-top: 1px solid var(--border);
             padding: 20px;
             animation: fi .3s ease
@@ -499,19 +486,19 @@
         }
 
         .ai-badge {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--blue);
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 4px
+            gap: 6px
         }
 
         .ai-close {
             background: none;
             border: none;
             color: var(--t3);
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             padding: 2px 6px;
             border-radius: 4px
@@ -519,7 +506,7 @@
 
         .ai-close:hover {
             color: var(--t1);
-            background: var(--card)
+            background: var(--border-l)
         }
 
         .ai-tags {
@@ -530,7 +517,7 @@
         }
 
         .ai-sec {
-            background: var(--bg);
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--rs);
             padding: 14px;
@@ -540,8 +527,10 @@
         .ai-sec-t {
             font-size: 12px;
             color: var(--blue);
-            font-weight: 600;
-            margin-bottom: 8px
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: .3px
         }
 
         .ai-point {
@@ -549,8 +538,8 @@
             color: var(--t2);
             line-height: 1.7;
             margin-bottom: 3px;
-            padding-left: 14px;
-            text-indent: -14px
+            padding-left: 16px;
+            text-indent: -16px
         }
 
         .ai-insight {
@@ -564,18 +553,18 @@
             color: var(--t1)
         }
 
-        .ai-summary {
+        .ai-text {
             font-size: 14px;
             color: var(--t2);
             line-height: 1.8;
             margin-top: 14px
         }
 
-        .ai-summary p {
+        .ai-text p {
             margin-bottom: 10px
         }
 
-        .ai-summary strong {
+        .ai-text strong {
             color: var(--t1)
         }
 
@@ -586,7 +575,8 @@
             font-size: 12px;
             color: var(--blue);
             margin-top: 10px;
-            text-decoration: none
+            text-decoration: none;
+            font-weight: 500
         }
 
         .ai-link:hover {
@@ -599,12 +589,13 @@
             border: 1px solid var(--border);
             border-radius: var(--r);
             padding: 20px;
-            margin-bottom: 24px
+            margin-bottom: 24px;
+            box-shadow: var(--shadow)
         }
 
         .analyze-t {
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 12px;
             color: var(--t2)
         }
@@ -618,7 +609,7 @@
             flex: 1;
             padding: 10px 14px;
             font-size: 14px;
-            background: var(--input);
+            background: var(--bg);
             border: 1px solid var(--border);
             border-radius: var(--rs);
             color: var(--t1);
@@ -629,7 +620,7 @@
 
         .inp:focus {
             border-color: var(--blue);
-            box-shadow: 0 0 0 3px var(--blue-g)
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, .12)
         }
 
         .inp::placeholder {
@@ -651,11 +642,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: var(--tr)
+            transition: var(--tr);
+            box-shadow: var(--shadow)
         }
 
         .ch-card:hover {
-            background: var(--card-h)
+            border-color: var(--blue)
         }
 
         .ch-info {
@@ -679,7 +671,7 @@
 
         .ch-name {
             font-size: 14px;
-            font-weight: 500
+            font-weight: 600
         }
 
         .ch-id {
@@ -701,7 +693,7 @@
 
         .empty-t {
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             color: var(--t2)
         }
 
@@ -710,7 +702,7 @@
             margin-top: 8px
         }
 
-        /* ===== Modal (for URL analysis result) ===== */
+        /* ===== Modal ===== */
         .modal-bg {
             display: none;
             position: fixed;
@@ -718,7 +710,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(13, 17, 23, .85);
+            background: rgba(26, 32, 44, .6);
             z-index: 800;
             align-items: center;
             justify-content: center;
@@ -730,7 +722,7 @@
         }
 
         .modal {
-            background: var(--bg2);
+            background: var(--card);
             border: 1px solid var(--border);
             border-radius: var(--r);
             max-width: 800px;
@@ -738,7 +730,7 @@
             max-height: 80vh;
             overflow-y: auto;
             padding: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, .4)
+            box-shadow: var(--shadow-lg)
         }
 
         .modal-h {
@@ -773,7 +765,8 @@
             z-index: 1000;
             transform: translateY(100px);
             opacity: 0;
-            transition: .3s ease
+            transition: .3s ease;
+            box-shadow: var(--shadow-lg)
         }
 
         .toast.show {
@@ -814,7 +807,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(13, 17, 23, .8);
+            background: rgba(240, 244, 248, .9);
             z-index: 500;
             align-items: center;
             justify-content: center;
@@ -828,7 +821,18 @@
 
         .ld-t {
             font-size: 14px;
-            color: var(--t2)
+            color: var(--t2);
+            font-weight: 500
+        }
+
+        /* ===== Footer ===== */
+        .ft {
+            text-align: center;
+            padding: 24px;
+            font-size: 12px;
+            color: var(--t3);
+            border-top: 1px solid var(--border);
+            margin-top: 40px
         }
 
         /* ===== Responsive ===== */
@@ -856,13 +860,13 @@
                 padding: 16px
             }
 
-            .tab {
-                padding: 10px 14px;
-                font-size: 13px
-            }
-
             .inp-row {
                 flex-direction: column
+            }
+
+            .hd-btn {
+                padding: 6px 10px;
+                font-size: 12px
             }
         }
     </style>
@@ -873,27 +877,19 @@
     <!-- Header -->
     <header class="hd">
         <div class="hd-in">
-            <a href="/" class="logo">
-                <div class="logo-i">▶</div>YouTube 요약봇
-            </a>
-            <span class="hd-time" id="clock"></span>
+            <a href="/" class="logo"><span class="logo-i">▶</span> YouTube 요약봇</a>
+            <nav class="hd-nav">
+                <button class="hd-btn on" data-t="dash">📊 대시보드</button>
+                <button class="hd-btn" data-t="ch">📡 채널관리</button>
+                <button class="hd-btn" data-t="arch">📁 보관함</button>
+            </nav>
         </div>
     </header>
-
-    <!-- Tabs -->
-    <nav class="tabs">
-        <div class="tabs-in">
-            <button class="tab on" data-t="dash">📊 대시보드</button>
-            <button class="tab" data-t="ch">📡 채널관리</button>
-            <button class="tab" data-t="arch">📁 보관함</button>
-        </div>
-    </nav>
 
     <main class="ct">
 
         <!-- ===== 대시보드 ===== -->
         <div id="p-dash" class="pane on">
-            <!-- Status Cards -->
             <div class="stats">
                 <div class="stat" onclick="switchTab('ch')">
                     <div class="stat-top">
@@ -918,16 +914,14 @@
                 </div>
             </div>
 
-            <!-- URL 분석 -->
             <div class="analyze">
                 <div class="analyze-t">🔍 YouTube 영상 직접 분석</div>
                 <div class="inp-row">
                     <input class="inp" id="videoUrl" placeholder="YouTube URL을 입력하세요">
-                    <button class="btn btn-p" id="btnAn" onclick="analyzeVideo()">분석하기</button>
+                    <button class="btn btn-p" id="btnAn" onclick="analyzeVideo()">🔍 분석</button>
                 </div>
             </div>
 
-            <!-- 오늘의 요약 -->
             <div class="sec-h">
                 <h2 class="sec-t">오늘의 요약</h2>
                 <div style="display:flex;gap:8px;align-items:center">
@@ -977,12 +971,14 @@
 
     </main>
 
+    <footer class="ft">YouTube 요약봇 © 2025 · Powered by Gemini AI</footer>
+
     <!-- URL Analysis Result Modal -->
     <div id="resModal" class="modal-bg" onclick="if(event.target===this)closeRes()">
         <div class="modal">
             <div class="modal-h">
                 <div>
-                    <div style="font-size:12px;color:var(--blue)" id="resCh"></div>
+                    <div style="font-size:12px;color:var(--blue);font-weight:500" id="resCh"></div>
                     <h2 style="font-size:18px" id="resTitle"></h2>
                 </div>
                 <button class="modal-x" onclick="closeRes()">✕</button>
@@ -1003,11 +999,11 @@
 
         // ===== Tabs =====
         function switchTab(t) {
-            document.querySelectorAll('.tab').forEach(b => { b.classList.toggle('on', b.dataset.t === t) });
+            document.querySelectorAll('.hd-btn').forEach(b => { b.classList.toggle('on', b.dataset.t === t) });
             document.querySelectorAll('.pane').forEach(p => { p.classList.toggle('on', p.id === 'p-' + t) });
             if (t === 'ch') loadCh(); if (t === 'arch') loadArch();
         }
-        document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
+        document.querySelectorAll('.hd-btn').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
 
         // ===== Utils =====
         function toast(m, ok = true) { const t = document.getElementById('toast'); t.textContent = m; t.className = 'toast ' + (ok ? 'toast-ok' : 'toast-err') + ' show'; setTimeout(() => t.classList.remove('show'), 3000) }
@@ -1018,7 +1014,7 @@
         function fmtSum(t) { if (!t) return ''; return '<p>' + t.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>' }
         async function api(u, m = 'GET', b = null) { const o = { method: m, headers: { 'Content-Type': 'application/json' } }; if (b) o.body = JSON.stringify(b); const r = await fetch(A + u, o); return r.json() }
 
-        // ===== Sentiment/Importance Helpers =====
+        // ===== Tag Helpers =====
         function sTag(s) {
             if (s === 'positive') return '<span class="tag tag-pos">🟢 호재</span>';
             if (s === 'negative') return '<span class="tag tag-neg">🔴 악재</span>';
@@ -1033,42 +1029,32 @@
             let arr = []; try { arr = typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { }
             return arr.slice(0, 5).map(s => '<span class="tag tag-stk">' + esc(s) + '</span>').join('');
         }
-        function pointsArr(raw) {
-            try { return typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { return [] }
-        }
+        function pointsArr(raw) { try { return typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { return [] } }
 
-        // ===== Build AI Panel HTML =====
+        // ===== Build AI Panel =====
         function buildAiPanel(a, id) {
             let h = '<div class="ai-panel" id="ai-' + id + '">';
             h += '<div class="ai-header"><div class="ai-badge">🤖 AI 코멘트</div><button class="ai-close" onclick="closeAi(' + id + ')">✕</button></div>';
-
-            // Tags
             h += '<div class="ai-tags">' + sTag(a.sentiment) + iTag(a.importance) + stockTags(a.key_stocks) + '</div>';
-
-            // Key Points
             const pts = pointsArr(a.key_points);
             if (pts.length) {
                 h += '<div class="ai-sec"><div class="ai-sec-t">📋 핵심 포인트</div>';
                 pts.forEach(p => { h += '<div class="ai-point">• ' + esc(p) + '</div>' });
                 h += '</div>';
             }
-
-            // Market + Insight
             if (a.market_impact || a.investment_insight) {
                 h += '<div class="ai-sec">';
                 if (a.market_impact) h += '<div class="ai-insight"><strong>📊 시장 영향:</strong> ' + esc(a.market_impact) + '</div>';
                 if (a.investment_insight) h += '<div class="ai-insight"><strong>💡 투자 시사점:</strong> ' + esc(a.investment_insight) + '</div>';
                 h += '</div>';
             }
-
-            // Full Summary
-            h += '<div class="ai-summary">' + fmtSum(a.summary || '') + '</div>';
+            h += '<div class="ai-text">' + fmtSum(a.summary || '') + '</div>';
             h += '<a class="ai-link" href="https://www.youtube.com/watch?v=' + a.video_id + '" target="_blank">🔗 원본 영상 보기</a>';
             h += '</div>';
             return h;
         }
 
-        // ===== Build Video Card HTML =====
+        // ===== Build Video Card =====
         function buildCard(a) {
             const thumb = a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg';
             return `
@@ -1078,13 +1064,11 @@
                 <img class="v-thumb" src="${thumb}" alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'">
             </div>
             <div class="v-info">
-                <div class="v-ch">${esc(a.channel_name || '')}</div>
+                <div class="v-ch">${esc(a.channel_name || '')} · ${fmtDate(a.created_at)}</div>
                 <div class="v-title">${esc(a.title)}</div>
                 <div class="v-preview">${esc((a.summary || '').substring(0, 120))}</div>
                 <div class="v-bottom">
-                    <div>
-                        <span class="v-meta">${a.analysis_type === 'daily' ? '🤖 자동' : '👤 수동'} · ${fmtDate(a.created_at)}</span>
-                    </div>
+                    <div class="v-meta">${a.analysis_type === 'daily' ? '🤖 자동 수집' : '👤 수동 분석'}</div>
                     <button class="btn-sum" onclick="event.stopPropagation();toggleAi(${a.id})">요약 보기</button>
                 </div>
             </div>
@@ -1097,15 +1081,9 @@
         function toggleAi(id) {
             const panel = document.getElementById('ai-' + id);
             if (!panel) return;
-            // Close all other panels first
             document.querySelectorAll('.ai-panel.open').forEach(p => { if (p.id !== 'ai-' + id) p.classList.remove('open') });
             panel.classList.toggle('open');
-            if (panel.classList.contains('open')) {
-                // If panel data is just from list (may not have full detail), fetch it
-                if (!panel.dataset.loaded) {
-                    fetchAndFillAi(id);
-                }
-            }
+            if (panel.classList.contains('open') && !panel.dataset.loaded) { fetchAndFillAi(id) }
         }
         async function fetchAndFillAi(id) {
             const panel = document.getElementById('ai-' + id);
@@ -1115,8 +1093,7 @@
                 if (d.success && d.analysis) {
                     const a = d.analysis;
                     panel.outerHTML = buildAiPanel(a, id).replace('class="ai-panel"', 'class="ai-panel open"');
-                    const np = document.getElementById('ai-' + id);
-                    if (np) np.dataset.loaded = '1';
+                    const np = document.getElementById('ai-' + id); if (np) np.dataset.loaded = '1';
                 }
             } catch (e) { console.error(e) }
         }
@@ -1126,26 +1103,16 @@
         async function loadDash() {
             try {
                 const [archD, chD, digD] = await Promise.all([api('/api/archive/list'), api('/api/channels'), api('/api/daily_digest/latest')]);
-
-                // Stats
-                const chs = chD.channels || [];
-                const ans = archD.analyses || [];
+                const chs = chD.channels || []; const ans = archD.analyses || [];
                 document.getElementById('sChN').innerHTML = chs.length + '<span class="stat-unit">개</span>';
                 document.getElementById('sSumN').innerHTML = ans.length + '<span class="stat-unit">개</span>';
                 if (digD.success && digD.digest) {
                     const d = new Date(digD.digest.completed_at || digD.digest.created_at);
                     const ago = Math.round((Date.now() - d.getTime()) / 60000);
                     document.getElementById('sRun').textContent = ago < 60 ? ago + '분 전' : Math.round(ago / 60) + '시간 전';
-                } else {
-                    document.getElementById('sRun').textContent = '미실행';
-                }
-
-                // Video list
+                } else { document.getElementById('sRun').textContent = '미실행' }
                 const ct = document.getElementById('dashList');
-                if (!ans.length) {
-                    ct.innerHTML = '<div class="empty"><div class="empty-i">📺</div><div class="empty-t">요약된 영상이 없습니다</div><div class="empty-d">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 분석하세요</div></div>';
-                    return;
-                }
+                if (!ans.length) { ct.innerHTML = '<div class="empty"><div class="empty-i">📺</div><div class="empty-t">요약된 영상이 없습니다</div><div class="empty-d">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 분석하세요</div></div>'; return }
                 ct.innerHTML = ans.slice(0, 15).map(a => buildCard(a)).join('');
             } catch (e) { console.error(e) }
         }
@@ -1153,24 +1120,17 @@
         // ===== Channels =====
         async function loadCh() {
             try {
-                const d = await api('/api/channels');
-                const el = document.getElementById('chList');
+                const d = await api('/api/channels'); const el = document.getElementById('chList');
                 if (!d.channels || !d.channels.length) { el.innerHTML = '<div class="empty"><div class="empty-i">📡</div><div class="empty-t">등록된 채널이 없습니다</div></div>'; return }
                 el.innerHTML = d.channels.map(c => `
-            <div class="ch-card" id="ch-${c.id}">
-                <div class="ch-info">
-                    <div class="ch-av">${(c.channel_name || '?')[0]}</div>
-                    <div><div class="ch-name">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div>
-                </div>
-                <button class="btn btn-d" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button>
-            </div>`).join('');
+            <div class="ch-card"><div class="ch-info"><div class="ch-av">${(c.channel_name || '?')[0]}</div>
+            <div><div class="ch-name">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div></div>
+            <button class="btn btn-d" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button></div>`).join('');
             } catch (e) { console.error(e) }
         }
         async function addCh() {
-            const url = document.getElementById('chUrl').value.trim();
-            if (!url) { toast('채널 URL을 입력해주세요', false); return }
-            showLd('채널 등록 중...');
-            try {
+            const url = document.getElementById('chUrl').value.trim(); if (!url) { toast('채널 URL을 입력해주세요', false); return }
+            showLd('채널 등록 중...'); try {
                 const d = await api('/api/channels', 'POST', { channel_url: url }); hideLd();
                 if (d.success) { toast('✅ ' + d.channel.channel_name + ' 등록'); document.getElementById('chUrl').value = ''; loadCh(); loadDash() }
                 else toast('❌ ' + (d.message || '실패'), false)
@@ -1184,17 +1144,15 @@
         // ===== Archive =====
         async function loadArch() {
             try {
-                const d = await api('/api/archive/list');
-                const ct = document.getElementById('archList');
+                const d = await api('/api/archive/list'); const ct = document.getElementById('archList');
                 if (!d.analyses || !d.analyses.length) { ct.innerHTML = '<div class="empty"><div class="empty-i">📁</div><div class="empty-t">보관된 분석이 없습니다</div></div>'; return }
-                ct.innerHTML = d.analyses.map(a => buildCard(a)).join('');
+                ct.innerHTML = d.analyses.map(a => buildCard(a)).join('')
             } catch (e) { console.error(e) }
         }
 
         // ===== Digest =====
         async function triggerDigest() {
-            const btn = document.getElementById('btnDig');
-            btn.disabled = true; btn.textContent = '⏳ 실행 중...';
+            const btn = document.getElementById('btnDig'); btn.disabled = true; btn.textContent = '⏳ 실행 중...';
             showLd('데일리 다이제스트 실행 중... (2~3분 소요)');
             try {
                 const d = await api('/api/daily_digest', 'POST', { hours: 48 }); hideLd();
@@ -1206,51 +1164,36 @@
 
         // ===== URL Analysis =====
         async function analyzeVideo() {
-            const url = document.getElementById('videoUrl').value.trim();
-            if (!url) { toast('URL을 입력해주세요', false); return }
-            const btn = document.getElementById('btnAn'); btn.disabled = true;
-            showLd('영상 분석 중...');
+            const url = document.getElementById('videoUrl').value.trim(); if (!url) { toast('URL을 입력해주세요', false); return }
+            const btn = document.getElementById('btnAn'); btn.disabled = true; showLd('영상 분석 중...');
             try {
                 const d = await api('/api/analyze', 'POST', { video_url: url, analysis_type: 'single' }); hideLd();
                 if (d.success) {
-                    // Show result in modal
                     document.getElementById('resCh').textContent = d.video_info?.channel_name || '';
                     document.getElementById('resTitle').textContent = d.video_info?.title || '';
-
                     let h = '<div class="ai-tags">' + sTag(d.sentiment) + iTag(d.importance) + stockTags(d.key_stocks) + '</div>';
                     const pts = d.key_points || [];
                     if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">📋 핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-point">• ' + esc(p) + '</div>' }); h += '</div>' }
                     if (d.market_impact || d.investment_insight) {
                         h += '<div class="ai-sec">';
                         if (d.market_impact) h += '<div class="ai-insight"><strong>📊 시장 영향:</strong> ' + esc(d.market_impact) + '</div>';
-                        if (d.investment_insight) h += '<div class="ai-insight"><strong>💡 투자 시사점:</strong> ' + esc(d.investment_insight) + '</div>';
-                        h += '</div>';
+                        if (d.investment_insight) h += '<div class="ai-insight"><strong>💡 투자 시사점:</strong> ' + esc(d.investment_insight) + '</div>'; h += '</div>'
                     }
-                    h += '<div class="ai-summary">' + fmtSum(d.summary || '') + '</div>';
+                    h += '<div class="ai-text">' + fmtSum(d.summary || '') + '</div>';
                     h += '<a class="ai-link" href="' + esc(url) + '" target="_blank">🔗 원본 영상 보기</a>';
-
                     document.getElementById('resBody').innerHTML = h;
                     document.getElementById('resModal').classList.add('show');
-                    document.getElementById('videoUrl').value = '';
-                    toast('✅ 분석 완료!'); loadDash();
+                    document.getElementById('videoUrl').value = ''; toast('✅ 분석 완료!'); loadDash();
                 } else toast('❌ ' + (d.message || '실패'), false)
-            } catch (e) { hideLd(); toast('❌ 오류', false) }
-            finally { btn.disabled = false }
+            } catch (e) { hideLd(); toast('❌ 오류', false) } finally { btn.disabled = false }
         }
         function closeRes() { document.getElementById('resModal').classList.remove('show') }
-
-        // ===== Clock =====
-        function updateClock() {
-            const d = new Date();
-            document.getElementById('clock').textContent = d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }) + ' ' + d.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-        }
-        setInterval(updateClock, 60000); updateClock();
 
         // ===== Keyboard =====
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeRes();
             if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyzeVideo();
-            if (e.key === 'Enter' && document.activeElement.id === 'chUrl') addCh();
+            if (e.key === 'Enter' && document.activeElement.id === 'chUrl') addCh()
         });
 
         // Init
