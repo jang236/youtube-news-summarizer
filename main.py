@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import json as json_module
 """
 Flask 기반 YouTube 영상 분석 웹 애플리케이션
 - 단일 분석 / 심화 분석 지원
@@ -70,6 +71,12 @@ def init_db():
             thumbnail_url TEXT DEFAULT '',
             transcript TEXT DEFAULT '',
             summary TEXT DEFAULT '',
+            sentiment TEXT DEFAULT 'neutral',
+            importance TEXT DEFAULT 'normal',
+            key_stocks TEXT DEFAULT '[]',
+            key_points TEXT DEFAULT '[]',
+            market_impact TEXT DEFAULT '',
+            investment_insight TEXT DEFAULT '',
             analysis_type TEXT DEFAULT 'single',
             language TEXT DEFAULT '',
             method TEXT DEFAULT '',
@@ -77,6 +84,20 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
+
+    # 기존 DB에 새 컬럼 추가 (ALTER TABLE)
+    for col, default in [
+        ('sentiment', "'neutral'"),
+        ('importance', "'normal'"),
+        ('key_stocks', "'[]'"),
+        ('key_points', "'[]'"),
+        ('market_impact', "''"),
+        ('investment_insight', "''"),
+    ]:
+        try:
+            c.execute(f'ALTER TABLE analyses ADD COLUMN {col} TEXT DEFAULT {default}')
+        except Exception:
+            pass  # 이미 존재
 
     # 채널 구독 테이블
     c.execute('''
@@ -320,13 +341,32 @@ def analyze():
 
         # 3) AI 요약
         logger.info(f"🤖 AI 요약 생성 중... (모드: {analysis_type})")
+        sentiment = 'neutral'
+        importance = 'normal'
+        key_stocks = []
+        key_points = []
+        market_impact = ''
+        investment_insight = ''
+
         try:
             summarizer = GeminiSummarizer(gemini_key)
 
             if analysis_type == 'advanced':
                 summary = summarizer.analyze_advanced(transcript, video_info)
             else:
-                summary = summarizer.analyze_single(transcript, video_info)
+                raw_result = summarizer.analyze_single(transcript, video_info)
+                # 구조화된 JSON 파싱
+                try:
+                    parsed = json_module.loads(raw_result)
+                    summary = parsed.get('summary', raw_result)
+                    sentiment = parsed.get('sentiment', 'neutral')
+                    importance = parsed.get('importance', 'normal')
+                    key_stocks = parsed.get('key_stocks', [])
+                    key_points = parsed.get('key_points', [])
+                    market_impact = parsed.get('market_impact', '')
+                    investment_insight = parsed.get('investment_insight', '')
+                except (json_module.JSONDecodeError, TypeError):
+                    summary = raw_result
 
             if not summary:
                 summary = "요약을 생성할 수 없습니다."
@@ -334,7 +374,7 @@ def analyze():
             logger.error(f"AI 요약 실패: {e}")
             summary = f"AI 요약 중 오류 발생: {str(e)}"
 
-        logger.info(f"✅ AI 요약 완료: {len(summary):,}자")
+        logger.info(f"✅ AI 요약 완료: {len(summary):,}자 | {sentiment}/{importance}")
 
         # 4) DB에 저장
         try:
@@ -342,12 +382,18 @@ def analyze():
             conn.execute(
                 '''INSERT INTO analyses
                    (video_id, video_url, title, channel_name, thumbnail_url,
-                    transcript, summary, analysis_type, language, method, char_count)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+                    transcript, summary, sentiment, importance, key_stocks,
+                    key_points, market_impact, investment_insight,
+                    analysis_type, language, method, char_count)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)''',
                 (video_id, video_url, video_info.get('title', ''),
                  video_info.get('channel_name', ''),
                  video_info.get('thumbnail_url', ''),
-                 transcript, summary, analysis_type,
+                 transcript, summary, sentiment, importance,
+                 json_module.dumps(key_stocks, ensure_ascii=False),
+                 json_module.dumps(key_points, ensure_ascii=False),
+                 market_impact, investment_insight,
+                 analysis_type,
                  extract_result['language'], extract_result['method'],
                  extract_result['char_count'])
             )
@@ -370,6 +416,12 @@ def analyze():
             },
             'transcript': transcript,
             'summary': summary,
+            'sentiment': sentiment,
+            'importance': importance,
+            'key_stocks': key_stocks,
+            'key_points': key_points,
+            'market_impact': market_impact,
+            'investment_insight': investment_insight,
             'analysis_type': analysis_type,
             'extraction': {
                 'method': extract_result['method'],
@@ -483,7 +535,9 @@ def list_analyses():
         conn = get_db()
         analyses = conn.execute(
             'SELECT id, video_id, title, channel_name, thumbnail_url, '
-            'summary, analysis_type, char_count, created_at '
+            'summary, sentiment, importance, key_stocks, key_points, '
+            'market_impact, investment_insight, '
+            'analysis_type, char_count, created_at '
             'FROM analyses ORDER BY created_at DESC LIMIT 50'
         ).fetchall()
         conn.close()
@@ -757,21 +811,47 @@ def run_daily_digest(hours: int = 24) -> dict:
                 'title': video['title'],
                 'channel_name': video['channel_name'],
             }
-            summary = summarizer.analyze_single(extract_result['transcript'], video_info)
+            raw_result = summarizer.analyze_single(extract_result['transcript'], video_info)
 
-            if not summary:
+            if not raw_result:
                 continue
+
+            # 구조화된 JSON 파싱
+            d_sentiment = 'neutral'
+            d_importance = 'normal'
+            d_key_stocks = []
+            d_key_points = []
+            d_market_impact = ''
+            d_investment_insight = ''
+
+            try:
+                parsed = json_module.loads(raw_result)
+                d_summary = parsed.get('summary', raw_result)
+                d_sentiment = parsed.get('sentiment', 'neutral')
+                d_importance = parsed.get('importance', 'normal')
+                d_key_stocks = parsed.get('key_stocks', [])
+                d_key_points = parsed.get('key_points', [])
+                d_market_impact = parsed.get('market_impact', '')
+                d_investment_insight = parsed.get('investment_insight', '')
+            except (json_module.JSONDecodeError, TypeError):
+                d_summary = raw_result
 
             # DB 저장
             conn = get_db()
             conn.execute(
                 '''INSERT INTO analyses
                    (video_id, video_url, title, channel_name, thumbnail_url,
-                    transcript, summary, analysis_type, language, method, char_count)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, 'daily', ?, ?, ?)''',
+                    transcript, summary, sentiment, importance, key_stocks,
+                    key_points, market_impact, investment_insight,
+                    analysis_type, language, method, char_count)
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'daily', ?, ?, ?)''',
                 (video['video_id'], video['url'], video['title'],
                  video['channel_name'], video['thumbnail_url'],
-                 extract_result['transcript'], summary,
+                 extract_result['transcript'], d_summary,
+                 d_sentiment, d_importance,
+                 json_module.dumps(d_key_stocks, ensure_ascii=False),
+                 json_module.dumps(d_key_points, ensure_ascii=False),
+                 d_market_impact, d_investment_insight,
                  extract_result['language'], extract_result['method'],
                  extract_result['char_count'])
             )
@@ -782,7 +862,10 @@ def run_daily_digest(hours: int = 24) -> dict:
                 'video_id': video['video_id'],
                 'title': video['title'],
                 'channel_name': video['channel_name'],
-                'summary_preview': summary[:200],
+                'summary_preview': d_summary[:200],
+                'sentiment': d_sentiment,
+                'importance': d_importance,
+                'key_stocks': d_key_stocks,
             })
 
             logger.info(f"  ✅ 요약 완료")
