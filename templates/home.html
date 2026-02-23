@@ -5,640 +5,649 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube 요약봇</title>
-    <meta name="description" content="AI 기반 YouTube 영상 자동 요약 대시보드">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* ===== Reset & Base ===== */
         *,
         *::before,
         *::after {
             box-sizing: border-box;
             margin: 0;
-            padding: 0;
+            padding: 0
         }
 
         :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-card: #1c2333;
-            --bg-card-hover: #242d3d;
-            --bg-input: #0d1117;
+            --bg: #0d1117;
+            --bg2: #161b22;
+            --card: #1c2333;
+            --card-h: #242d3d;
             --border: #30363d;
-            --border-light: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-muted: #6e7681;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --accent-glow: rgba(59, 130, 246, 0.15);
-            --success: #2ea043;
-            --warning: #d29922;
-            --danger: #f85149;
-            --radius: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --transition: 0.2s ease;
+            --text: #e6edf3;
+            --text2: #8b949e;
+            --muted: #6e7681;
+            --blue: #3b82f6;
+            --blue-h: #2563eb;
+            --blue-g: rgba(59, 130, 246, .15);
+            --green: #2ea043;
+            --red: #f85149;
+            --orange: #d29922;
+            --r: 12px;
+            --rs: 8px;
+            --t: .2s ease;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
-            min-height: 100vh;
+            min-height: 100vh
         }
 
-        /* ===== Header ===== */
-        .header {
-            background: var(--bg-secondary);
+        /* Header */
+        .hd {
+            background: var(--bg2);
             border-bottom: 1px solid var(--border);
-            padding: 0 24px;
+            padding: 0 20px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 100
         }
 
-        .header-inner {
-            max-width: 1200px;
+        .hd-in {
+            max-width: 900px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 56px;
+            height: 52px
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-weight: 700;
-            font-size: 18px;
-            color: var(--text-primary);
-            text-decoration: none;
+            font-size: 16px;
+            color: var(--text);
+            text-decoration: none
         }
 
-        .logo-icon {
-            width: 32px;
-            height: 32px;
+        .logo-i {
+            width: 28px;
+            height: 28px;
             background: linear-gradient(135deg, #f85149, #ff6b6b);
-            border-radius: 8px;
+            border-radius: 7px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 14px
         }
 
-        .header-time {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        /* ===== Tab Navigation ===== */
-        .tab-nav {
-            background: var(--bg-secondary);
-            border-bottom: 1px solid var(--border);
-            padding: 0 24px;
-        }
-
-        .tab-nav-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            gap: 0;
-        }
-
-        .tab-btn {
-            padding: 12px 20px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .tab-btn:hover {
-            color: var(--text-primary);
-        }
-
-        .tab-btn.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
-        }
-
-        /* ===== Main Container ===== */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 24px;
-        }
-
-        /* ===== Tab Content ===== */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ===== Status Cards ===== */
-        .status-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .status-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            transition: var(--transition);
-        }
-
-        .status-card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent-glow);
-        }
-
-        .status-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .status-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .status-value .unit {
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--text-secondary);
-            margin-left: 4px;
-        }
-
-        .status-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* ===== Section ===== */
-        .section-header {
+        .hd-r {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
+            gap: 8px
         }
 
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        /* ===== Buttons ===== */
+        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
+            gap: 5px;
+            padding: 7px 14px;
             font-size: 13px;
             font-weight: 500;
             border: none;
-            border-radius: var(--radius-sm);
+            border-radius: var(--rs);
             cursor: pointer;
-            transition: var(--transition);
+            transition: var(--t);
             text-decoration: none;
+            font-family: inherit
         }
 
-        .btn-primary {
-            background: var(--accent);
-            color: white;
+        .btn-p {
+            background: var(--blue);
+            color: #fff
         }
 
-        .btn-primary:hover {
-            background: var(--accent-hover);
+        .btn-p:hover {
+            background: var(--blue-h)
         }
 
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .btn-p:disabled {
+            opacity: .5;
+            cursor: not-allowed
         }
 
-        .btn-ghost {
+        .btn-g {
             background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
+            color: var(--text2);
+            border: 1px solid var(--border)
         }
 
-        .btn-ghost:hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
+        .btn-g:hover {
+            background: var(--card);
+            color: var(--text)
         }
 
-        .btn-danger {
+        .btn-d {
             background: transparent;
-            color: var(--danger);
-            border: 1px solid var(--danger);
+            color: var(--red);
+            border: 1px solid rgba(248, 81, 73, .3);
             padding: 4px 10px;
-            font-size: 12px;
+            font-size: 11px
         }
 
-        .btn-danger:hover {
-            background: rgba(248, 81, 73, 0.1);
+        .btn-d:hover {
+            background: rgba(248, 81, 73, .1)
         }
 
         .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
+            padding: 5px 10px;
+            font-size: 12px
         }
 
-        /* ===== Video Cards ===== */
-        .video-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+        /* Main */
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px
         }
 
-        .video-card {
-            background: var(--bg-card);
+        /* Highlight Card */
+        .highlight {
+            background: linear-gradient(135deg, #1a1f35, #1c2333);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px;
+            border-radius: var(--r);
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .highlight::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), #8b5cf6, var(--blue))
+        }
+
+        .hl-label {
+            font-size: 11px;
+            color: var(--blue);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 8px
+        }
+
+        .hl-text {
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.7
+        }
+
+        .hl-empty {
+            font-size: 13px;
+            color: var(--muted);
+            font-style: italic
+        }
+
+        /* Section */
+        .sec {
+            margin-bottom: 24px
+        }
+
+        .sec-h {
             display: flex;
-            gap: 16px;
-            transition: var(--transition);
-            cursor: pointer;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px
         }
 
-        .video-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-lg);
+        .sec-t {
+            font-size: 16px;
+            font-weight: 600
         }
 
-        .video-thumb {
-            width: 160px;
-            min-width: 160px;
-            height: 90px;
-            border-radius: var(--radius-sm);
-            object-fit: cover;
-            background: var(--bg-primary);
-        }
-
-        .video-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .video-channel {
+        .sec-sub {
             font-size: 12px;
-            color: var(--accent);
-            font-weight: 500;
-            margin-bottom: 4px;
+            color: var(--muted);
+            margin-left: 8px;
+            font-weight: 400
         }
 
-        .video-title {
-            font-size: 15px;
+        /* Channel Group */
+        .ch-group {
+            margin-bottom: 20px
+        }
+
+        .ch-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--blue);
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px
+        }
+
+        .ch-count {
+            font-size: 11px;
+            color: var(--muted);
+            font-weight: 400
+        }
+
+        /* Video Card */
+        .v-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 14px;
+            display: flex;
+            gap: 14px;
+            transition: var(--t);
+            cursor: pointer;
+            margin-bottom: 8px
+        }
+
+        .v-card:hover {
+            background: var(--card-h);
+            border-color: var(--blue);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .3)
+        }
+
+        .v-thumb {
+            width: 140px;
+            min-width: 140px;
+            height: 79px;
+            border-radius: var(--rs);
+            object-fit: cover;
+            background: var(--bg)
+        }
+
+        .v-info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .v-title {
+            font-size: 14px;
             font-weight: 600;
             line-height: 1.4;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
+            overflow: hidden
         }
 
-        .video-summary {
-            font-size: 13px;
-            color: var(--text-secondary);
+        .v-sum {
+            font-size: 12px;
+            color: var(--text2);
             line-height: 1.5;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
+            overflow: hidden
         }
 
-        .video-meta {
+        .v-meta {
             font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 6px;
+            color: var(--muted);
+            margin-top: 4px
         }
 
-        /* ===== Channel Cards ===== */
-        .channel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .channel-card {
-            background: var(--bg-card);
+        /* Channel Manage */
+        .ch-manage {
+            background: var(--card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 16px;
+            border-radius: var(--r);
+            padding: 16px
+        }
+
+        .ch-manage-h {
+            font-size: 13px;
+            color: var(--text2);
+            margin-bottom: 10px;
+            font-weight: 500
+        }
+
+        .ch-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: var(--transition);
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border)
         }
 
-        .channel-card:hover {
-            background: var(--bg-card-hover);
+        .ch-row:last-child {
+            border-bottom: none
         }
 
-        .channel-info {
+        .ch-name {
+            font-size: 13px;
+            font-weight: 500
+        }
+
+        .ch-id {
+            font-size: 11px;
+            color: var(--muted)
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px
+        }
+
+        .inp {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 13px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--rs);
+            color: var(--text);
+            outline: none;
+            transition: var(--t);
+            font-family: inherit
+        }
+
+        .inp:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px var(--blue-g)
+        }
+
+        .inp::placeholder {
+            color: var(--muted)
+        }
+
+        /* Analyze Modal */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 17, 23, .88);
+            z-index: 800;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 60px 20px 20px;
+            overflow-y: auto
+        }
+
+        .modal-bg.show {
+            display: flex
+        }
+
+        .modal {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            max-width: 800px;
+            width: 100%;
+            padding: 24px;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, .5)
+        }
+
+        .modal-h {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px
+        }
+
+        .modal-h h2 {
+            font-size: 18px;
+            font-weight: 600
+        }
+
+        .modal-x {
+            background: none;
+            border: none;
+            color: var(--muted);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px
+        }
+
+        .modal-x:hover {
+            color: var(--text);
+            background: var(--card)
+        }
+
+        /* Analysis Result */
+        .result {
+            margin-top: 16px
+        }
+
+        .result-box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 20px;
+            margin-top: 12px
+        }
+
+        .result-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px
+        }
+
+        .result-ch {
+            font-size: 12px;
+            color: var(--blue);
+            margin-bottom: 12px
+        }
+
+        .result-body {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text2)
+        }
+
+        .result-body p {
+            margin-bottom: 12px
+        }
+
+        .result-body strong {
+            color: var(--text)
+        }
+
+        .result-body ul,
+        .result-body ol {
+            padding-left: 20px;
+            margin-bottom: 12px
+        }
+
+        .result-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--blue);
+            margin-top: 12px;
+            text-decoration: none
+        }
+
+        .result-link:hover {
+            text-decoration: underline
+        }
+
+        /* History */
+        .hist-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
             gap: 12px;
+            cursor: pointer;
+            transition: var(--t)
         }
 
-        .channel-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
+        .hist-item:hover {
+            background: var(--card);
+            margin: 0 -12px;
+            padding: 10px 12px;
+            border-radius: var(--rs)
         }
 
-        .channel-name {
-            font-size: 14px;
+        .hist-thumb {
+            width: 60px;
+            height: 34px;
+            border-radius: 4px;
+            object-fit: cover
+        }
+
+        .hist-title {
+            font-size: 12px;
             font-weight: 500;
+            flex: 1
         }
 
-        .channel-id {
+        .hist-date {
             font-size: 11px;
-            color: var(--text-muted);
+            color: var(--muted);
+            white-space: nowrap
         }
 
-        /* ===== Input & Form ===== */
-        .input-group {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
+        /* Detail Modal */
+        .detail-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 17, 23, .88);
+            z-index: 900;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px;
+            overflow-y: auto
         }
 
-        .input-text {
-            flex: 1;
-            padding: 10px 14px;
-            font-size: 14px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            outline: none;
-            transition: var(--transition);
+        .detail-bg.show {
+            display: flex
         }
 
-        .input-text:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .input-text::placeholder {
-            color: var(--text-muted);
-        }
-
-        /* ===== Empty State ===== */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .empty-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-
-        .empty-desc {
-            font-size: 13px;
-            margin-top: 8px;
-        }
-
-        /* ===== Toast ===== */
+        /* Toast */
         .toast {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 18px;
+            border-radius: var(--rs);
+            font-size: 13px;
             font-weight: 500;
             z-index: 1000;
-            transform: translateY(100px);
+            transform: translateY(80px);
             opacity: 0;
-            transition: 0.3s ease;
+            transition: .3s ease
         }
 
         .toast.show {
             transform: translateY(0);
-            opacity: 1;
+            opacity: 1
         }
 
-        .toast-success {
-            background: var(--success);
-            color: white;
+        .toast-ok {
+            background: var(--green);
+            color: #fff
         }
 
-        .toast-error {
-            background: var(--danger);
-            color: white;
+        .toast-err {
+            background: var(--red);
+            color: #fff
         }
 
-        /* ===== Loading ===== */
-        .spinner {
+        /* Loading */
+        .spin {
             width: 20px;
             height: 20px;
             border: 2px solid var(--border);
-            border-top-color: var(--accent);
+            border-top-color: var(--blue);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: inline-block;
+            animation: sp .7s linear infinite;
+            display: inline-block
         }
 
-        @keyframes spin {
+        @keyframes sp {
             to {
-                transform: rotate(360deg);
+                transform: rotate(360deg)
             }
         }
 
-        .loading-overlay {
+        .ld {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(13, 17, 23, 0.8);
-            z-index: 500;
+            background: rgba(13, 17, 23, .8);
+            z-index: 950;
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px
         }
 
-        .loading-overlay.show {
-            display: flex;
+        .ld.show {
+            display: flex
         }
 
-        .loading-text {
+        .ld-t {
+            font-size: 13px;
+            color: var(--text2)
+        }
+
+        /* Empty */
+        .empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted)
+        }
+
+        .empty-i {
+            font-size: 40px;
+            margin-bottom: 12px
+        }
+
+        .empty-t {
             font-size: 14px;
-            color: var(--text-secondary);
+            color: var(--text2)
         }
 
-        /* ===== Detail Modal ===== */
-        .modal-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(13, 17, 23, 0.85);
-            z-index: 800;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-
-        .modal-backdrop.show {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            max-width: 800px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 24px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .modal-close:hover {
-            color: var(--text-primary);
-        }
-
-        .modal-body {
-            font-size: 14px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-        }
-
-        .modal-body h1,
-        .modal-body h2,
-        .modal-body h3 {
-            color: var(--text-primary);
-            margin: 16px 0 8px;
-        }
-
-        .modal-body strong {
-            color: var(--text-primary);
-        }
-
-        .modal-body ul,
-        .modal-body ol {
-            padding-left: 20px;
-        }
-
-        /* ===== URL Analyze ===== */
-        .analyze-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .analyze-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* ===== Responsive ===== */
-        @media (max-width: 768px) {
-            .status-cards {
-                grid-template-columns: 1fr;
+        /* Responsive */
+        @media(max-width:600px) {
+            .v-card {
+                flex-direction: column
             }
 
-            .video-card {
-                flex-direction: column;
-            }
-
-            .video-thumb {
+            .v-thumb {
                 width: 100%;
                 height: auto;
-                aspect-ratio: 16/9;
+                aspect-ratio: 16/9
             }
 
-            .container {
-                padding: 16px;
+            .main {
+                padding: 12px
             }
 
-            .tab-btn {
-                padding: 10px 14px;
-                font-size: 13px;
-            }
-
-            .input-group {
-                flex-direction: column;
+            .input-row {
+                flex-direction: column
             }
         }
     </style>
@@ -646,476 +655,309 @@
 
 <body>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="header-inner">
+    <header class="hd">
+        <div class="hd-in">
             <a href="/" class="logo">
-                <div class="logo-icon">▶</div>
-                YouTube 요약봇
+                <div class="logo-i">▶</div>YouTube 요약봇
             </a>
-            <span class="header-time" id="currentTime"></span>
+            <div class="hd-r">
+                <button class="btn btn-p btn-sm" onclick="openAnalyze()">🔍 영상 분석</button>
+                <button class="btn btn-g btn-sm" id="btnDigest" onclick="runDigest()">▶ 수집 실행</button>
+            </div>
         </div>
     </header>
 
-    <!-- Tab Navigation -->
-    <nav class="tab-nav">
-        <div class="tab-nav-inner">
-            <button class="tab-btn active" data-tab="dashboard">📊 대시보드</button>
-            <button class="tab-btn" data-tab="channels">📡 채널관리</button>
-            <button class="tab-btn" data-tab="archive">📁 보관함</button>
+    <main class="main">
+        <!-- 오늘의 핵심 -->
+        <div class="highlight" id="highlightCard">
+            <div class="hl-label">🔥 오늘의 핵심</div>
+            <div class="hl-text" id="highlightText">
+                <span class="hl-empty">아직 수집된 인사이트가 없습니다. '수집 실행'을 눌러주세요.</span>
+            </div>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <main class="container">
-
-        <!-- ===== 대시보드 탭 ===== -->
-        <div id="tab-dashboard" class="tab-content active">
-            <!-- Status Cards -->
-            <div class="status-cards">
-                <div class="status-card">
-                    <div class="status-label">등록 채널</div>
-                    <div class="status-value" id="statChannels">-<span class="unit">개</span></div>
-                </div>
-                <div class="status-card">
-                    <div class="status-label">총 요약</div>
-                    <div class="status-value" id="statSummaries">-<span class="unit">개</span></div>
-                </div>
-                <div class="status-card">
-                    <div class="status-label">마지막 실행</div>
-                    <div class="status-value" id="statLastRun" style="font-size:16px;">-</div>
-                </div>
+        <!-- 채널별 피드 -->
+        <div class="sec">
+            <div class="sec-h">
+                <h2 class="sec-t">📡 채널 인사이트</h2>
+                <button class="btn btn-g btn-sm" onclick="loadFeed()">🔄</button>
             </div>
-
-            <!-- URL 분석 -->
-            <div class="analyze-section">
-                <div class="analyze-title">🔍 YouTube 영상 직접 분석</div>
-                <div class="input-group">
-                    <input type="text" class="input-text" id="videoUrl" placeholder="YouTube URL을 입력하세요">
-                    <button class="btn btn-primary" id="btnAnalyze" onclick="analyzeVideo()">분석하기</button>
-                </div>
-            </div>
-
-            <!-- 오늘의 요약 -->
-            <div class="section-header">
-                <h2 class="section-title">📺 최근 요약</h2>
-                <div style="display:flex;gap:8px;">
-                    <button class="btn btn-ghost btn-sm" onclick="loadLatestDigest()">🔄 새로고침</button>
-                    <button class="btn btn-primary btn-sm" id="btnDigest" onclick="triggerDigest()">▶ 다이제스트 실행</button>
-                </div>
-            </div>
-            <div id="recentSummaries" class="video-list">
-                <div class="empty-state">
-                    <div class="empty-icon">📺</div>
-                    <div class="empty-title">요약된 영상이 없습니다</div>
-                    <div class="empty-desc">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 입력해서 분석하세요</div>
+            <div id="feedArea">
+                <div class="empty">
+                    <div class="empty-i">📡</div>
+                    <div class="empty-t">채널을 등록하고 수집을 실행하세요</div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== 채널관리 탭 ===== -->
-        <div id="tab-channels" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">📡 구독 채널 관리</h2>
-            </div>
-            <div class="input-group">
-                <input type="text" class="input-text" id="channelUrl"
-                    placeholder="YouTube 채널 URL (예: https://www.youtube.com/@blueoak1004)">
-                <button class="btn btn-primary" onclick="addChannel()">+ 채널 추가</button>
-            </div>
-            <div id="channelList" class="channel-list">
-                <div class="empty-state">
-                    <div class="empty-icon">📡</div>
-                    <div class="empty-title">등록된 채널이 없습니다</div>
-                    <div class="empty-desc">위 입력란에 YouTube 채널 URL을 입력해서 등록하세요</div>
-                </div>
+        <!-- 채널 관리 (인라인) -->
+        <div class="ch-manage">
+            <div class="ch-manage-h">📋 등록 채널</div>
+            <div id="chList"></div>
+            <div class="input-row">
+                <input class="inp" id="chInput" placeholder="YouTube 채널 URL (예: https://www.youtube.com/@blueoak1004)">
+                <button class="btn btn-p" onclick="addCh()">+ 추가</button>
             </div>
         </div>
-
-        <!-- ===== 보관함 탭 ===== -->
-        <div id="tab-archive" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">📁 분석 보관함</h2>
-            </div>
-            <div id="archiveList" class="video-list">
-                <div class="empty-state">
-                    <div class="empty-icon">📁</div>
-                    <div class="empty-title">보관된 분석이 없습니다</div>
-                </div>
-            </div>
-        </div>
-
     </main>
 
-    <!-- Detail Modal -->
-    <div id="detailModal" class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+    <!-- 영상 분석 모달 -->
+    <div id="analyzeModal" class="modal-bg" onclick="if(event.target===this)closeAnalyze()">
         <div class="modal">
-            <div class="modal-header">
-                <div>
-                    <div class="video-channel" id="modalChannel"></div>
-                    <h2 style="font-size:18px;" id="modalTitle"></h2>
-                </div>
-                <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-h">
+                <h2>🔍 영상 분석</h2>
+                <button class="modal-x" onclick="closeAnalyze()">✕</button>
             </div>
-            <div class="modal-body" id="modalBody"></div>
-            <div style="margin-top:16px;text-align:right;">
-                <a id="modalVideoLink" href="#" target="_blank" class="btn btn-ghost btn-sm">🔗 원본 영상 보기</a>
+            <div class="input-row" style="margin-top:0">
+                <input class="inp" id="videoUrl" placeholder="YouTube URL을 입력하세요"
+                    style="font-size:15px;padding:12px 14px">
+                <button class="btn btn-p" id="btnAnalyze" onclick="analyze()" style="padding:12px 20px">분석</button>
+            </div>
+
+            <!-- 분석 결과 -->
+            <div id="analyzeResult" class="result" style="display:none">
+                <div class="result-box">
+                    <div class="result-ch" id="resCh"></div>
+                    <div class="result-title" id="resTitle"></div>
+                    <div class="result-body" id="resBody"></div>
+                    <a class="result-link" id="resLink" href="#" target="_blank">🔗 원본 영상 보기</a>
+                </div>
+            </div>
+
+            <!-- 최근 분석 히스토리 -->
+            <div style="margin-top:20px">
+                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">최근 분석 히스토리</div>
+                <div id="histList"></div>
             </div>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner" style="width:40px;height:40px;border-width:3px;"></div>
-        <div class="loading-text" id="loadingText">처리 중...</div>
+    <!-- 상세 모달 -->
+    <div id="detailModal" class="detail-bg" onclick="if(event.target===this)closeDetail()">
+        <div class="modal">
+            <div class="modal-h">
+                <div>
+                    <div style="font-size:12px;color:var(--blue)" id="dCh"></div>
+                    <h2 id="dTitle" style="font-size:16px"></h2>
+                </div>
+                <button class="modal-x" onclick="closeDetail()">✕</button>
+            </div>
+            <div class="result-body" id="dBody"></div>
+            <a class="result-link" id="dLink" href="#" target="_blank">🔗 원본 영상 보기</a>
+        </div>
     </div>
 
-    <!-- Toast -->
+    <!-- Loading / Toast -->
+    <div id="ld" class="ld">
+        <div class="spin" style="width:36px;height:36px;border-width:3px"></div>
+        <div class="ld-t" id="ldText">처리 중...</div>
+    </div>
     <div id="toast" class="toast"></div>
 
     <script>
-        // ===== Config =====
-        const API = '';
+        const A = '';
 
-        // ===== Tab Switching =====
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        // Toast
+        function toast(m, ok = true) { const t = document.getElementById('toast'); t.textContent = m; t.className = 'toast ' + (ok ? 'toast-ok' : 'toast-err') + ' show'; setTimeout(() => t.classList.remove('show'), 3000) }
 
-                // 탭 전환 시 데이터 로드
-                if (btn.dataset.tab === 'channels') loadChannels();
-                if (btn.dataset.tab === 'archive') loadArchive();
-            });
-        });
+        // Loading
+        function showLd(t) { document.getElementById('ldText').textContent = t || '처리 중...'; document.getElementById('ld').classList.add('show') }
+        function hideLd() { document.getElementById('ld').classList.remove('show') }
 
-        // ===== Toast =====
-        function showToast(msg, type = 'success') {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = 'toast toast-' + type + ' show';
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
+        // API
+        async function api(u, m = 'GET', b = null) { const o = { method: m, headers: { 'Content-Type': 'application/json' } }; if (b) o.body = JSON.stringify(b); const r = await fetch(A + u, o); return r.json() }
 
-        // ===== Loading =====
-        function showLoading(text) {
-            document.getElementById('loadingText').textContent = text || '처리 중...';
-            document.getElementById('loadingOverlay').classList.add('show');
-        }
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.remove('show');
-        }
-
-        // ===== Time =====
-        function updateTime() {
-            const now = new Date();
-            const opts = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
-            document.getElementById('currentTime').textContent = now.toLocaleString('ko-KR', opts);
-        }
-        setInterval(updateTime, 60000);
-        updateTime();
-
-        // ===== API Helpers =====
-        async function api(url, method = 'GET', body = null) {
-            const opts = { method, headers: { 'Content-Type': 'application/json' } };
-            if (body) opts.body = JSON.stringify(body);
-            const res = await fetch(API + url, opts);
-            return res.json();
-        }
-
-        // ===== Dashboard: Load Stats =====
-        async function loadStats() {
+        // === Feed ===
+        async function loadFeed() {
             try {
-                const [channels, archive, digest] = await Promise.all([
-                    api('/api/channels'),
-                    api('/api/archive/list'),
-                    api('/api/daily_digest/latest')
-                ]);
+                const [archData, chData] = await Promise.all([api('/api/archive/list'), api('/api/channels')]);
+                const analyses = archData.analyses || [];
+                const channels = chData.channels || [];
+                const area = document.getElementById('feedArea');
 
-                // 채널 수
-                const chCount = channels.channels ? channels.channels.length : 0;
-                document.getElementById('statChannels').innerHTML = chCount + '<span class="unit">개</span>';
-
-                // 요약 수
-                const anaCount = archive.analyses ? archive.analyses.length : 0;
-                document.getElementById('statSummaries').innerHTML = anaCount + '<span class="unit">개</span>';
-
-                // 마지막 실행
-                if (digest.digest && digest.digest.completed_at) {
-                    const d = new Date(digest.digest.completed_at);
-                    document.getElementById('statLastRun').textContent = formatTimeAgo(d);
-                } else {
-                    document.getElementById('statLastRun').textContent = '미실행';
-                }
-            } catch (e) {
-                console.error('Stats load error:', e);
-            }
-        }
-
-        // ===== Dashboard: Load Recent Summaries =====
-        async function loadLatestDigest() {
-            try {
-                const data = await api('/api/archive/list');
-                const container = document.getElementById('recentSummaries');
-
-                if (!data.analyses || data.analyses.length === 0) {
-                    container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">📺</div>
-                    <div class="empty-title">요약된 영상이 없습니다</div>
-                    <div class="empty-desc">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 입력해서 분석하세요</div>
-                </div>`;
+                if (!analyses.length) {
+                    area.innerHTML = '<div class="empty"><div class="empty-i">📡</div><div class="empty-t">수집된 영상이 없습니다</div></div>';
+                    buildHighlight([]);
                     return;
                 }
 
-                container.innerHTML = data.analyses.slice(0, 20).map(a => `
-            <div class="video-card" onclick="showDetail(${a.id})">
-                <img class="video-thumb" src="${a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg'}" 
-                     alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'">
-                <div class="video-info">
-                    <div class="video-channel">${escHtml(a.channel_name || '알 수 없음')}</div>
-                    <div class="video-title">${escHtml(a.title)}</div>
-                    <div class="video-summary">${escHtml((a.summary || '').substring(0, 150))}</div>
-                    <div class="video-meta">${a.analysis_type === 'daily' ? '🤖 자동' : '👤 수동'} · ${formatDate(a.created_at)} · ${(a.char_count || 0).toLocaleString()}자</div>
-                </div>
-            </div>
-        `).join('');
-            } catch (e) {
-                console.error('Load summaries error:', e);
-            }
-        }
+                // 채널별 그룹핑
+                const groups = {};
+                analyses.forEach(a => {
+                    const ch = a.channel_name || '기타';
+                    if (!groups[ch]) groups[ch] = [];
+                    groups[ch].push(a);
+                });
 
-        // ===== Dashboard: Trigger Digest =====
-        async function triggerDigest() {
-            const btn = document.getElementById('btnDigest');
-            btn.disabled = true;
-            btn.textContent = '⏳ 실행 중...';
-            showLoading('데일리 다이제스트 실행 중... (2~3분 소요)');
-
-            try {
-                const data = await api('/api/daily_digest', 'POST', { hours: 48 });
-                hideLoading();
-
-                if (data.success) {
-                    showToast(`✅ ${data.total_videos}개 영상 수집, ${data.total_summarized}개 요약 완료`);
-                    loadStats();
-                    loadLatestDigest();
-                } else {
-                    showToast('❌ ' + (data.message || '실행 실패'), 'error');
-                }
-            } catch (e) {
-                hideLoading();
-                showToast('❌ 다이제스트 실행 오류', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = '▶ 다이제스트 실행';
-            }
-        }
-
-        // ===== Dashboard: Analyze Video =====
-        async function analyzeVideo() {
-            const url = document.getElementById('videoUrl').value.trim();
-            if (!url) { showToast('URL을 입력해주세요', 'error'); return; }
-
-            const btn = document.getElementById('btnAnalyze');
-            btn.disabled = true;
-            showLoading('영상 분석 중...');
-
-            try {
-                const data = await api('/api/analyze', 'POST', { video_url: url, analysis_type: 'single' });
-                hideLoading();
-
-                if (data.success) {
-                    showToast('✅ 분석 완료!');
-                    document.getElementById('videoUrl').value = '';
-                    loadStats();
-                    loadLatestDigest();
-
-                    // 결과 모달 표시
-                    if (data.summary) {
-                        document.getElementById('modalChannel').textContent = data.video_info?.channel_name || '';
-                        document.getElementById('modalTitle').textContent = data.video_info?.title || '';
-                        document.getElementById('modalBody').innerHTML = formatSummary(data.summary);
-                        document.getElementById('modalVideoLink').href = url;
-                        document.getElementById('detailModal').classList.add('show');
-                    }
-                } else {
-                    showToast('❌ ' + (data.message || '분석 실패'), 'error');
-                }
-            } catch (e) {
-                hideLoading();
-                showToast('❌ 분석 오류', 'error');
-            } finally {
-                btn.disabled = false;
-            }
-        }
-
-        // ===== Channels =====
-        async function loadChannels() {
-            try {
-                const data = await api('/api/channels');
-                const container = document.getElementById('channelList');
-
-                if (!data.channels || data.channels.length === 0) {
-                    container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">📡</div>
-                    <div class="empty-title">등록된 채널이 없습니다</div>
-                    <div class="empty-desc">위 입력란에 YouTube 채널 URL을 입력해서 등록하세요</div>
-                </div>`;
-                    return;
-                }
-
-                container.innerHTML = data.channels.map(ch => `
-            <div class="channel-card" id="ch-${ch.id}">
-                <div class="channel-info">
-                    <div class="channel-avatar">${(ch.channel_name || '?')[0]}</div>
-                    <div>
-                        <div class="channel-name">${escHtml(ch.channel_name || ch.channel_url)}</div>
-                        <div class="channel-id">${escHtml(ch.channel_id || '')}</div>
+                let html = '';
+                for (const [ch, vids] of Object.entries(groups)) {
+                    html += `<div class="ch-group">
+                <div class="ch-label">${esc(ch)} <span class="ch-count">${vids.length}개</span></div>`;
+                    vids.slice(0, 5).forEach(v => {
+                        html += `<div class="v-card" onclick="showDetail(${v.id})">
+                    <img class="v-thumb" src="${v.thumbnail_url || 'https://img.youtube.com/vi/' + v.video_id + '/hqdefault.jpg'}" alt="" loading="lazy">
+                    <div class="v-info">
+                        <div class="v-title">${esc(v.title)}</div>
+                        <div class="v-sum">${esc((v.summary || '').substring(0, 120))}</div>
+                        <div class="v-meta">${fmtDate(v.created_at)}</div>
                     </div>
-                </div>
-                <button class="btn btn-danger" onclick="deleteChannel(${ch.id}, '${escHtml(ch.channel_name)}')">삭제</button>
-            </div>
-        `).join('');
-            } catch (e) {
-                console.error('Load channels error:', e);
-            }
-        }
-
-        async function addChannel() {
-            const url = document.getElementById('channelUrl').value.trim();
-            if (!url) { showToast('채널 URL을 입력해주세요', 'error'); return; }
-
-            showLoading('채널 등록 중...');
-            try {
-                const data = await api('/api/channels', 'POST', { channel_url: url });
-                hideLoading();
-
-                if (data.success) {
-                    showToast(`✅ ${data.channel.channel_name} 등록 완료`);
-                    document.getElementById('channelUrl').value = '';
-                    loadChannels();
-                    loadStats();
-                } else {
-                    showToast('❌ ' + (data.message || '등록 실패'), 'error');
-                }
-            } catch (e) {
-                hideLoading();
-                showToast('❌ 채널 등록 오류', 'error');
-            }
-        }
-
-        async function deleteChannel(id, name) {
-            if (!confirm(`"${name}" 채널을 삭제할까요?`)) return;
-            try {
-                await api('/api/channels/' + id, 'DELETE');
-                showToast('🗑️ 채널 삭제됨');
-                loadChannels();
-                loadStats();
-            } catch (e) {
-                showToast('❌ 삭제 실패', 'error');
-            }
-        }
-
-        // ===== Archive =====
-        async function loadArchive() {
-            try {
-                const data = await api('/api/archive/list');
-                const container = document.getElementById('archiveList');
-
-                if (!data.analyses || data.analyses.length === 0) {
-                    container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">📁</div>
-                    <div class="empty-title">보관된 분석이 없습니다</div>
                 </div>`;
-                    return;
+                    });
+                    html += `</div>`;
                 }
+                area.innerHTML = html;
+                buildHighlight(analyses);
+            } catch (e) { console.error(e) }
+        }
 
-                container.innerHTML = data.analyses.map(a => `
-            <div class="video-card" onclick="showDetail(${a.id})">
-                <img class="video-thumb" src="${a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg'}" 
-                     alt="" loading="lazy">
-                <div class="video-info">
-                    <div class="video-channel">${escHtml(a.channel_name || '')}</div>
-                    <div class="video-title">${escHtml(a.title)}</div>
-                    <div class="video-meta">${a.analysis_type === 'daily' ? '🤖 자동' : '👤 수동'} · ${formatDate(a.created_at)} · ${(a.char_count || 0).toLocaleString()}자</div>
-                </div>
-            </div>
-        `).join('');
-            } catch (e) {
-                console.error('Load archive error:', e);
+        function buildHighlight(analyses) {
+            const el = document.getElementById('highlightText');
+            if (!analyses.length) {
+                el.innerHTML = '<span class="hl-empty">아직 수집된 인사이트가 없습니다. \'수집 실행\'을 눌러주세요.</span>';
+                return;
+            }
+            // 최근 5개 요약에서 첫 문장 추출
+            const summaries = analyses.slice(0, 5).map(a => {
+                const s = (a.summary || '').split(/[.!?\n]/)[0];
+                return s ? s.trim() : '';
+            }).filter(Boolean);
+            if (summaries.length) {
+                el.innerHTML = summaries.map(s => '• ' + esc(s)).join('<br>');
             }
         }
 
-        // ===== Detail Modal =====
+        // === Channels ===
+        async function loadCh() {
+            try {
+                const d = await api('/api/channels');
+                const el = document.getElementById('chList');
+                if (!d.channels || !d.channels.length) { el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:8px 0">등록된 채널이 없습니다</div>'; return }
+                el.innerHTML = d.channels.map(c => `
+            <div class="ch-row">
+                <div><div class="ch-name">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div>
+                <button class="btn btn-d" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button>
+            </div>`).join('');
+            } catch (e) { console.error(e) }
+        }
+
+        async function addCh() {
+            const url = document.getElementById('chInput').value.trim();
+            if (!url) { toast('채널 URL을 입력해주세요', false); return }
+            showLd('채널 등록 중...');
+            try {
+                const d = await api('/api/channels', 'POST', { channel_url: url });
+                hideLd();
+                if (d.success) { toast('✅ ' + d.channel.channel_name + ' 등록 완료'); document.getElementById('chInput').value = ''; loadCh() }
+                else toast('❌ ' + (d.message || '등록 실패'), false);
+            } catch (e) { hideLd(); toast('❌ 오류', false) }
+        }
+
+        async function delCh(id, name) {
+            if (!confirm('"' + name + '" 삭제할까요?')) return;
+            try { await api('/api/channels/' + id, 'DELETE'); toast('🗑️ 삭제됨'); loadCh() } catch (e) { toast('❌ 실패', false) }
+        }
+
+        // === Digest ===
+        async function runDigest() {
+            const btn = document.getElementById('btnDigest');
+            btn.disabled = true; btn.textContent = '⏳ 수집 중...';
+            showLd('채널 인사이트 수집 중... (2~3분 소요)');
+            try {
+                const d = await api('/api/daily_digest', 'POST', { hours: 48 });
+                hideLd();
+                if (d.success) { toast(`✅ ${d.total_videos}개 수집, ${d.total_summarized}개 요약`); loadFeed() }
+                else toast('❌ ' + (d.message || '실패'), false);
+            } catch (e) { hideLd(); toast('❌ 오류', false) }
+            finally { btn.disabled = false; btn.textContent = '▶ 수집 실행' }
+        }
+
+        // === Analyze Modal ===
+        function openAnalyze() { document.getElementById('analyzeModal').classList.add('show'); loadHist() }
+        function closeAnalyze() { document.getElementById('analyzeModal').classList.remove('show') }
+
+        async function analyze() {
+            const url = document.getElementById('videoUrl').value.trim();
+            if (!url) { toast('URL을 입력해주세요', false); return }
+            const btn = document.getElementById('btnAnalyze');
+            btn.disabled = true; showLd('영상 분석 중...');
+            try {
+                const d = await api('/api/analyze', 'POST', { video_url: url, analysis_type: 'single' });
+                hideLd();
+                if (d.success) {
+                    document.getElementById('resCh').textContent = d.video_info?.channel_name || '';
+                    document.getElementById('resTitle').textContent = d.video_info?.title || '';
+                    document.getElementById('resBody').innerHTML = fmt(d.summary || '');
+                    document.getElementById('resLink').href = url;
+                    document.getElementById('analyzeResult').style.display = 'block';
+                    document.getElementById('videoUrl').value = '';
+                    toast('✅ 분석 완료!');
+                    loadHist(); loadFeed();
+                } else toast('❌ ' + (d.message || '실패'), false);
+            } catch (e) { hideLd(); toast('❌ 오류', false) }
+            finally { btn.disabled = false }
+        }
+
+        async function loadHist() {
+            try {
+                const d = await api('/api/archive/list');
+                const el = document.getElementById('histList');
+                const singles = (d.analyses || []).filter(a => a.analysis_type === 'single').slice(0, 8);
+                if (!singles.length) { el.innerHTML = '<div style="font-size:12px;color:var(--muted)">아직 분석 히스토리가 없습니다</div>'; return }
+                el.innerHTML = singles.map(a => `
+            <div class="hist-item" onclick="showDetailInModal(${a.id})">
+                <img class="hist-thumb" src="${a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg'}" alt="" loading="lazy">
+                <div class="hist-title">${esc(a.title)}</div>
+                <div class="hist-date">${fmtDate(a.created_at)}</div>
+            </div>`).join('');
+            } catch (e) { console.error(e) }
+        }
+
+        // === Detail ===
         async function showDetail(id) {
             try {
-                const data = await api('/api/archive/' + id);
-
-                if (data.success && data.analysis) {
-                    const a = data.analysis;
-                    document.getElementById('modalChannel').textContent = a.channel_name || '';
-                    document.getElementById('modalTitle').textContent = a.title || '';
-                    document.getElementById('modalBody').innerHTML = formatSummary(a.summary || '요약 내용이 없습니다.');
-                    document.getElementById('modalVideoLink').href = 'https://www.youtube.com/watch?v=' + a.video_id;
+                const d = await api('/api/archive/' + id);
+                if (d.success && d.analysis) {
+                    const a = d.analysis;
+                    document.getElementById('dCh').textContent = a.channel_name || '';
+                    document.getElementById('dTitle').textContent = a.title || '';
+                    document.getElementById('dBody').innerHTML = fmt(a.summary || '요약 내용이 없습니다.');
+                    document.getElementById('dLink').href = 'https://www.youtube.com/watch?v=' + a.video_id;
                     document.getElementById('detailModal').classList.add('show');
-                } else {
-                    showToast('상세 내용을 불러올 수 없습니다', 'error');
+                } else toast('불러올 수 없습니다', false);
+            } catch (e) { toast('오류', false) }
+        }
+
+        async function showDetailInModal(id) {
+            try {
+                const d = await api('/api/archive/' + id);
+                if (d.success && d.analysis) {
+                    const a = d.analysis;
+                    document.getElementById('resCh').textContent = a.channel_name || '';
+                    document.getElementById('resTitle').textContent = a.title || '';
+                    document.getElementById('resBody').innerHTML = fmt(a.summary || '');
+                    document.getElementById('resLink').href = 'https://www.youtube.com/watch?v=' + a.video_id;
+                    document.getElementById('analyzeResult').style.display = 'block';
                 }
-            } catch (e) {
-                console.error('Detail load error:', e);
-                showToast('상세 내용을 불러올 수 없습니다', 'error');
-            }
+            } catch (e) { console.error(e) }
         }
 
-        function closeModal() {
-            document.getElementById('detailModal').classList.remove('show');
-        }
+        function closeDetail() { document.getElementById('detailModal').classList.remove('show') }
 
-        // ===== Utility =====
-        function escHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
+        // === Util ===
+        function esc(s) { return s ? s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : '' }
+        function fmtDate(s) { if (!s) return ''; const d = new Date(s); return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) }
+        function fmt(t) { if (!t) return ''; return t.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/^/, '<p>') + '</p>' }
 
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            const d = new Date(dateStr);
-            return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }
-
-        function formatTimeAgo(date) {
-            const now = new Date();
-            const diff = Math.floor((now - date) / 1000);
-            if (diff < 60) return '방금 전';
-            if (diff < 3600) return Math.floor(diff / 60) + '분 전';
-            if (diff < 86400) return Math.floor(diff / 3600) + '시간 전';
-            return Math.floor(diff / 86400) + '일 전';
-        }
-
-        function formatSummary(text) {
-            if (!text) return '';
-            // Simple markdown-like formatting
-            return text
-                .replace(/\n\n/g, '</p><p>')
-                .replace(/\n/g, '<br>')
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                .replace(/^/, '<p>') + '</p>';
-        }
-
-        // Keyboard shortcut: Escape to close modal
+        // Keyboard
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeModal();
-            if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyzeVideo();
+            if (e.key === 'Escape') { closeDetail(); closeAnalyze() }
+            if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyze();
+            if (e.key === 'Enter' && document.activeElement.id === 'chInput') addCh();
         });
 
-        // ===== Init =====
-        loadStats();
-        loadLatestDigest();
+        // Init
+        loadFeed();
+        loadCh();
     </script>
 </body>
 
