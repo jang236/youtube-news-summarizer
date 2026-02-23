@@ -23,6 +23,7 @@ import pytz
 from youtube_transcript_extractor import YouTubeTranscriptExtractor
 from gemini_summarizer import GeminiSummarizer
 from rss_collector import RSSCollector
+from kakao_sender import KakaoSender, create_kakao_sender
 
 # 환경 변수 로드
 load_dotenv()
@@ -44,6 +45,7 @@ KST = pytz.timezone('Asia/Seoul')
 # 모듈 초기화
 transcript_extractor = YouTubeTranscriptExtractor()
 rss_collector = RSSCollector()
+kakao_sender = create_kakao_sender()
 
 # DB 경로
 DB_PATH = os.path.join(os.path.dirname(__file__), 'archive.db')
@@ -788,7 +790,7 @@ def run_daily_digest(hours: int = 24) -> dict:
 
     logger.info(f"🎉 데일리 다이제스트 완료: {digest_summary}")
 
-    return {
+    result = {
         'success': True,
         'message': digest_summary,
         'total_channels': len(channels),
@@ -796,6 +798,16 @@ def run_daily_digest(hours: int = 24) -> dict:
         'total_summarized': len(summarized),
         'summarized': summarized,
     }
+
+    # 카카오톡 자동 발송
+    if kakao_sender.is_configured() and summarized:
+        try:
+            kakao_sender.send_daily_digest(result)
+            logger.info("📩 카카오톡 데일리 다이제스트 발송 완료")
+        except Exception as e:
+            logger.warning(f"⚠️ 카카오톡 발송 실패: {e}")
+
+    return result
 
 
 # =========================================================
@@ -829,6 +841,43 @@ def test_rss():
                 'url': v['url'],
                 'thumbnail_url': v['thumbnail_url'],
             } for v in videos]
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+
+# =========================================================
+# API: 카카오톡 (신규)
+# =========================================================
+@app.route('/api/kakao/test', methods=['POST'])
+def test_kakao():
+    """카카오톡 테스트 메시지 발송"""
+    try:
+        if not kakao_sender.is_configured():
+            return jsonify({
+                'success': False,
+                'message': '카카오톡이 설정되지 않았습니다. KAKAO_REST_API_KEY, KAKAO_ACCESS_TOKEN, KAKAO_REFRESH_TOKEN 환경변수를 설정해주세요.'
+            })
+
+        success = kakao_sender.send_text('[YouTube 요약봇] 카카오톡 연동 테스트 성공! 🎉')
+        return jsonify({
+            'success': success,
+            'message': '카카오톡 발송 성공!' if success else '카카오톡 발송 실패'
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+
+@app.route('/api/kakao/status', methods=['GET'])
+def kakao_status():
+    """카카오톡 설정 상태 확인"""
+    try:
+        configured = kakao_sender.is_configured()
+        token_valid = kakao_sender.check_token() if configured else False
+        return jsonify({
+            'success': True,
+            'configured': configured,
+            'token_valid': token_valid,
         })
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
