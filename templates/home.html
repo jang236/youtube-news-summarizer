@@ -1054,39 +1054,17 @@
         // ===== Detail Modal =====
         async function showDetail(id) {
             try {
-                const res = await fetch(API + '/archive/' + id);
-                const html = await res.text();
+                const data = await api('/api/archive/' + id);
 
-                // Parse the HTML to extract summary content
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-
-                // Try to get data from API endpoint fallback
-                const data = await api('/api/archive/list');
-                const item = data.analyses?.find(a => a.id === id);
-
-                if (item) {
-                    // We need the full summary - fetch the detail page
-                    const detailRes = await fetch(API + '/archive/' + id);
-                    const detailHtml = await detailRes.text();
-                    const detailDoc = new DOMParser().parseFromString(detailHtml, 'text/html');
-
-                    const summaryEl = detailDoc.querySelector('.summary-content, .markdown-body, pre, .content');
-                    let summaryText = '';
-
-                    if (summaryEl) {
-                        summaryText = summaryEl.innerHTML;
-                    } else {
-                        // Fallback: extract from body
-                        const body = detailDoc.querySelector('body');
-                        summaryText = body ? body.innerHTML : '요약 내용을 불러올 수 없습니다.';
-                    }
-
-                    document.getElementById('modalChannel').textContent = item.channel_name || '';
-                    document.getElementById('modalTitle').textContent = item.title || '';
-                    document.getElementById('modalBody').innerHTML = summaryText;
-                    document.getElementById('modalVideoLink').href = 'https://www.youtube.com/watch?v=' + item.video_id;
+                if (data.success && data.analysis) {
+                    const a = data.analysis;
+                    document.getElementById('modalChannel').textContent = a.channel_name || '';
+                    document.getElementById('modalTitle').textContent = a.title || '';
+                    document.getElementById('modalBody').innerHTML = formatSummary(a.summary || '요약 내용이 없습니다.');
+                    document.getElementById('modalVideoLink').href = 'https://www.youtube.com/watch?v=' + a.video_id;
                     document.getElementById('detailModal').classList.add('show');
+                } else {
+                    showToast('상세 내용을 불러올 수 없습니다', 'error');
                 }
             } catch (e) {
                 console.error('Detail load error:', e);
