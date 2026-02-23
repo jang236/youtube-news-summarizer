@@ -6,66 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>YouTube 요약봇</title>
     <meta name="description" content="AI 기반 YouTube 영상 자동 요약 대시보드">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* ===== Reset & Base ===== */
         *,
         *::before,
         *::after {
             box-sizing: border-box;
             margin: 0;
-            padding: 0;
+            padding: 0
         }
 
         :root {
-            --bg-primary: #0d1117;
-            --bg-secondary: #161b22;
-            --bg-card: #1c2333;
-            --bg-card-hover: #242d3d;
-            --bg-input: #0d1117;
+            --bg: #0d1117;
+            --bg2: #161b22;
+            --card: #1c2333;
+            --card-h: #242d3d;
+            --input: #0d1117;
             --border: #30363d;
-            --border-light: #21262d;
-            --text-primary: #e6edf3;
-            --text-secondary: #8b949e;
-            --text-muted: #6e7681;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --accent-glow: rgba(59, 130, 246, 0.15);
-            --success: #2ea043;
-            --warning: #d29922;
-            --danger: #f85149;
-            --radius: 12px;
-            --radius-sm: 8px;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
-            --transition: 0.2s ease;
+            --border-l: #21262d;
+            --t1: #e6edf3;
+            --t2: #8b949e;
+            --t3: #6e7681;
+            --blue: #3b82f6;
+            --blue-h: #2563eb;
+            --blue-g: rgba(59, 130, 246, .15);
+            --green: #2ea043;
+            --red: #f85149;
+            --orange: #d29922;
+            --purple: #8b5cf6;
+            --r: 12px;
+            --rs: 8px;
+            --tr: .2s ease;
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--t1);
             line-height: 1.6;
-            min-height: 100vh;
+            min-height: 100vh
         }
 
         /* ===== Header ===== */
-        .header {
-            background: var(--bg-secondary);
+        .hd {
+            background: var(--bg2);
             border-bottom: 1px solid var(--border);
             padding: 0 24px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 100
         }
 
-        .header-inner {
+        .hd-in {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 56px;
+            height: 56px
         }
 
         .logo {
@@ -74,11 +72,11 @@
             gap: 10px;
             font-weight: 700;
             font-size: 18px;
-            color: var(--text-primary);
-            text-decoration: none;
+            color: var(--t1);
+            text-decoration: none
         }
 
-        .logo-icon {
+        .logo-i {
             width: 32px;
             height: 32px;
             background: linear-gradient(135deg, #f85149, #ff6b6b);
@@ -86,138 +84,149 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 16px;
+            font-size: 16px
         }
 
-        .header-time {
+        .hd-time {
             font-size: 13px;
-            color: var(--text-muted);
+            color: var(--t3)
         }
 
-        /* ===== Tab Navigation ===== */
-        .tab-nav {
-            background: var(--bg-secondary);
+        /* ===== Tabs ===== */
+        .tabs {
+            background: var(--bg2);
             border-bottom: 1px solid var(--border);
-            padding: 0 24px;
+            padding: 0 24px
         }
 
-        .tab-nav-inner {
+        .tabs-in {
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            gap: 0;
+            gap: 0
         }
 
-        .tab-btn {
+        .tab {
             padding: 12px 20px;
             font-size: 14px;
             font-weight: 500;
-            color: var(--text-secondary);
+            color: var(--t2);
             background: none;
             border: none;
             border-bottom: 2px solid transparent;
             cursor: pointer;
-            transition: var(--transition);
+            transition: var(--tr);
             white-space: nowrap;
+            font-family: inherit
         }
 
-        .tab-btn:hover {
-            color: var(--text-primary);
+        .tab:hover {
+            color: var(--t1)
         }
 
-        .tab-btn.active {
-            color: var(--accent);
-            border-bottom-color: var(--accent);
+        .tab.on {
+            color: var(--blue);
+            border-bottom-color: var(--blue)
         }
 
-        /* ===== Main Container ===== */
-        .container {
+        /* ===== Container ===== */
+        .ct {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 24px
         }
 
-        /* ===== Tab Content ===== */
-        .tab-content {
+        .pane {
             display: none;
+            animation: fi .3s ease
         }
 
-        .tab-content.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
+        .pane.on {
+            display: block
         }
 
-        @keyframes fadeIn {
+        @keyframes fi {
             from {
                 opacity: 0;
-                transform: translateY(8px);
+                transform: translateY(8px)
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0)
             }
         }
 
         /* ===== Status Cards ===== */
-        .status-cards {
+        .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 24px
         }
 
-        .status-card {
-            background: var(--bg-card);
+        .stat {
+            background: var(--card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--r);
             padding: 20px;
-            transition: var(--transition);
+            cursor: pointer;
+            transition: var(--tr)
         }
 
-        .status-card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent-glow);
+        .stat:hover {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 1px var(--blue-g)
         }
 
-        .status-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
-
-        .status-value {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .status-value .unit {
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--text-secondary);
-            margin-left: 4px;
-        }
-
-        .status-sub {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* ===== Section ===== */
-        .section-header {
+        .stat-top {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
+            gap: 10px;
+            margin-bottom: 10px
         }
 
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px
+        }
+
+        .stat-icon-ch {
+            background: rgba(59, 130, 246, .15);
+            color: var(--blue)
+        }
+
+        .stat-icon-sum {
+            background: rgba(139, 92, 246, .15);
+            color: var(--purple)
+        }
+
+        .stat-icon-run {
+            background: rgba(46, 160, 67, .15);
+            color: var(--green)
+        }
+
+        .stat-val {
+            font-size: 28px;
+            font-weight: 700
+        }
+
+        .stat-unit {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--t2);
+            margin-left: 4px
+        }
+
+        .stat-sub {
+            font-size: 12px;
+            color: var(--t3);
+            margin-top: 4px
         }
 
         /* ===== Buttons ===== */
@@ -229,500 +238,631 @@
             font-size: 13px;
             font-weight: 500;
             border: none;
-            border-radius: var(--radius-sm);
+            border-radius: var(--rs);
             cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
+            transition: var(--tr);
+            font-family: inherit;
+            text-decoration: none
         }
 
-        .btn-primary {
-            background: var(--accent);
-            color: white;
+        .btn-p {
+            background: var(--blue);
+            color: #fff
         }
 
-        .btn-primary:hover {
-            background: var(--accent-hover);
+        .btn-p:hover {
+            background: var(--blue-h)
         }
 
-        .btn-primary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .btn-p:disabled {
+            opacity: .5;
+            cursor: not-allowed
         }
 
-        .btn-ghost {
+        .btn-g {
             background: transparent;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
+            color: var(--t2);
+            border: 1px solid var(--border)
         }
 
-        .btn-ghost:hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
+        .btn-g:hover {
+            background: var(--card);
+            color: var(--t1)
         }
 
-        .btn-danger {
+        .btn-d {
             background: transparent;
-            color: var(--danger);
-            border: 1px solid var(--danger);
+            color: var(--red);
+            border: 1px solid rgba(248, 81, 73, .3);
             padding: 4px 10px;
-            font-size: 12px;
+            font-size: 12px
         }
 
-        .btn-danger:hover {
-            background: rgba(248, 81, 73, 0.1);
+        .btn-d:hover {
+            background: rgba(248, 81, 73, .1)
         }
 
         .btn-sm {
             padding: 6px 12px;
-            font-size: 12px;
+            font-size: 12px
         }
 
-        /* ===== Video Cards ===== */
-        .video-list {
+        .btn-sum {
+            background: rgba(59, 130, 246, .1);
+            color: var(--blue);
+            border: 1px solid rgba(59, 130, 246, .25);
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 6px
+        }
+
+        .btn-sum:hover {
+            background: rgba(59, 130, 246, .2)
+        }
+
+        /* ===== Section ===== */
+        .sec-h {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px
+        }
+
+        .sec-t {
+            font-size: 18px;
+            font-weight: 600
+        }
+
+        .sec-link {
+            font-size: 13px;
+            color: var(--blue);
+            cursor: pointer;
+            text-decoration: none
+        }
+
+        .sec-link:hover {
+            text-decoration: underline
+        }
+
+        /* ===== Video Card ===== */
+        .v-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 12px
         }
 
-        .video-card {
-            background: var(--bg-card);
+        .v-wrap {
+            border-radius: var(--r);
+            overflow: hidden;
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            transition: var(--tr)
+        }
+
+        .v-wrap:hover {
+            border-color: rgba(59, 130, 246, .3)
+        }
+
+        .v-card {
+            background: var(--card);
             padding: 16px;
             display: flex;
             gap: 16px;
-            transition: var(--transition);
-            cursor: pointer;
+            transition: var(--tr)
         }
 
-        .video-card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-lg);
+        .v-thumb-wrap {
+            position: relative;
+            min-width: 180px;
+            width: 180px
         }
 
-        .video-thumb {
-            width: 160px;
-            min-width: 160px;
-            height: 90px;
-            border-radius: var(--radius-sm);
+        .v-thumb {
+            width: 180px;
+            height: 101px;
+            border-radius: var(--rs);
             object-fit: cover;
-            background: var(--bg-primary);
+            background: var(--bg)
         }
 
-        .video-info {
+        .v-dur {
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+            background: rgba(0, 0, 0, .8);
+            color: #fff;
+            font-size: 10px;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-weight: 500
+        }
+
+        .v-info {
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column
         }
 
-        .video-channel {
+        .v-ch {
             font-size: 12px;
-            color: var(--accent);
+            color: var(--blue);
             font-weight: 500;
-            margin-bottom: 4px;
+            margin-bottom: 2px
         }
 
-        .video-title {
+        .v-title {
             font-size: 15px;
             font-weight: 600;
             line-height: 1.4;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
+            overflow: hidden
         }
 
-        .video-summary {
+        .v-preview {
             font-size: 13px;
-            color: var(--text-secondary);
+            color: var(--t2);
             line-height: 1.5;
+            flex: 1;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            overflow: hidden;
+            overflow: hidden
         }
 
-        .video-meta {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 6px;
-        }
-
-        /* ===== Channel Cards ===== */
-        .channel-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .channel-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 14px 16px;
+        .v-bottom {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: var(--transition);
+            margin-top: 8px
         }
 
-        .channel-card:hover {
-            background: var(--bg-card-hover);
-        }
-
-        .channel-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .channel-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .channel-name {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .channel-id {
+        .v-meta {
             font-size: 11px;
-            color: var(--text-muted);
+            color: var(--t3)
         }
 
-        /* ===== Input & Form ===== */
-        .input-group {
+        .v-tags {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-
-        .input-text {
-            flex: 1;
-            padding: 10px 14px;
-            font-size: 14px;
-            background: var(--bg-input);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .input-text:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        .input-text::placeholder {
-            color: var(--text-muted);
-        }
-
-        /* ===== Empty State ===== */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .empty-title {
-            font-size: 16px;
-            font-weight: 500;
-            color: var(--text-secondary);
-        }
-
-        .empty-desc {
-            font-size: 13px;
-            margin-top: 8px;
-        }
-
-        /* ===== Toast ===== */
-        .toast {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 12px 20px;
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-            font-weight: 500;
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: 0.3s ease;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        .toast-success {
-            background: var(--success);
-            color: white;
-        }
-
-        .toast-error {
-            background: var(--danger);
-            color: white;
-        }
-
-        /* ===== Loading ===== */
-        .spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            display: inline-block;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(13, 17, 23, 0.8);
-            z-index: 500;
             align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 16px;
+            gap: 4px;
+            flex-wrap: wrap
         }
 
-        .loading-overlay.show {
-            display: flex;
-        }
-
-        .loading-text {
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        /* ===== Detail Modal ===== */
-        .modal-backdrop {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(13, 17, 23, 0.85);
-            z-index: 800;
-            align-items: center;
-            justify-content: center;
-            padding: 24px;
-        }
-
-        .modal-backdrop.show {
-            display: flex;
-        }
-
-        .modal {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            max-width: 800px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 24px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .modal-close:hover {
-            color: var(--text-primary);
-        }
-
-        .modal-body {
-            font-size: 14px;
-            line-height: 1.7;
-            color: var(--text-secondary);
-        }
-
-        .modal-body h1,
-        .modal-body h2,
-        .modal-body h3 {
-            color: var(--text-primary);
-            margin: 16px 0 8px;
-        }
-
-        .modal-body strong {
-            color: var(--text-primary);
-        }
-
-        .modal-body ul,
-        .modal-body ol {
-            padding-left: 20px;
-        }
-
-        /* ===== URL Analyze ===== */
-        .analyze-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .analyze-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 12px;
-            color: var(--text-secondary);
-        }
-
-        /* ===== AI Tags ===== */
+        /* ===== Tags ===== */
         .tag {
             display: inline-block;
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 11px;
-            font-weight: 500;
-            margin-right: 4px;
-            margin-top: 4px
+            font-weight: 500
         }
 
-        .tag-positive {
+        .tag-pos {
             background: rgba(46, 160, 67, .15);
             color: #3fb950
         }
 
-        .tag-negative {
+        .tag-neg {
             background: rgba(248, 81, 73, .15);
             color: #f85149
         }
 
-        .tag-neutral {
+        .tag-neu {
             background: rgba(139, 148, 158, .15);
             color: #8b949e
         }
 
-        .tag-urgent {
+        .tag-urg {
             background: rgba(248, 81, 73, .2);
             color: #f85149;
             border: 1px solid rgba(248, 81, 73, .3)
         }
 
-        .tag-major {
+        .tag-maj {
             background: rgba(210, 153, 34, .15);
             color: #d29922
         }
 
-        .tag-normal {
+        .tag-nor {
             background: rgba(139, 148, 158, .1);
             color: #6e7681
         }
 
-        .tag-stock {
-            background: rgba(59, 130, 246, .12);
+        .tag-stk {
+            background: rgba(59, 130, 246, .1);
             color: #58a6ff;
-            border: 1px solid rgba(59, 130, 246, .2)
+            border: 1px solid rgba(59, 130, 246, .15)
         }
 
-        .ai-section {
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 12px;
-            margin-top: 12px;
-            margin-bottom: 8px
+        /* ===== AI Comment (Inline Expand) ===== */
+        .ai-panel {
+            display: none;
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            padding: 20px;
+            animation: fi .3s ease
         }
 
-        .ai-section-title {
+        .ai-panel.open {
+            display: block
+        }
+
+        .ai-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px
+        }
+
+        .ai-badge {
             font-size: 12px;
-            color: var(--accent);
+            color: var(--blue);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .ai-close {
+            background: none;
+            border: none;
+            color: var(--t3);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px
+        }
+
+        .ai-close:hover {
+            color: var(--t1);
+            background: var(--card)
+        }
+
+        .ai-tags {
+            margin-bottom: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+
+        .ai-sec {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--rs);
+            padding: 14px;
+            margin-bottom: 10px
+        }
+
+        .ai-sec-t {
+            font-size: 12px;
+            color: var(--blue);
             font-weight: 600;
             margin-bottom: 8px
         }
 
         .ai-point {
             font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-bottom: 4px;
-            padding-left: 16px;
-            text-indent: -16px
+            color: var(--t2);
+            line-height: 1.7;
+            margin-bottom: 3px;
+            padding-left: 14px;
+            text-indent: -14px
         }
 
         .ai-insight {
             font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            margin-top: 8px
+            color: var(--t2);
+            line-height: 1.7;
+            margin-top: 6px
         }
 
         .ai-insight strong {
-            color: var(--text-primary)
+            color: var(--t1)
+        }
+
+        .ai-summary {
+            font-size: 14px;
+            color: var(--t2);
+            line-height: 1.8;
+            margin-top: 14px
+        }
+
+        .ai-summary p {
+            margin-bottom: 10px
+        }
+
+        .ai-summary strong {
+            color: var(--t1)
+        }
+
+        .ai-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--blue);
+            margin-top: 10px;
+            text-decoration: none
+        }
+
+        .ai-link:hover {
+            text-decoration: underline
+        }
+
+        /* ===== Analyze Section ===== */
+        .analyze {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 20px;
+            margin-bottom: 24px
+        }
+
+        .analyze-t {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: var(--t2)
+        }
+
+        .inp-row {
+            display: flex;
+            gap: 8px
+        }
+
+        .inp {
+            flex: 1;
+            padding: 10px 14px;
+            font-size: 14px;
+            background: var(--input);
+            border: 1px solid var(--border);
+            border-radius: var(--rs);
+            color: var(--t1);
+            outline: none;
+            transition: var(--tr);
+            font-family: inherit
+        }
+
+        .inp:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px var(--blue-g)
+        }
+
+        .inp::placeholder {
+            color: var(--t3)
+        }
+
+        /* ===== Channel Cards ===== */
+        .ch-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .ch-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: var(--tr)
+        }
+
+        .ch-card:hover {
+            background: var(--card-h)
+        }
+
+        .ch-info {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .ch-av {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blue), var(--purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff
+        }
+
+        .ch-name {
+            font-size: 14px;
+            font-weight: 500
+        }
+
+        .ch-id {
+            font-size: 11px;
+            color: var(--t3)
+        }
+
+        /* ===== Empty ===== */
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--t3)
+        }
+
+        .empty-i {
+            font-size: 48px;
+            margin-bottom: 16px
+        }
+
+        .empty-t {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--t2)
+        }
+
+        .empty-d {
+            font-size: 13px;
+            margin-top: 8px
+        }
+
+        /* ===== Modal (for URL analysis result) ===== */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 17, 23, .85);
+            z-index: 800;
+            align-items: center;
+            justify-content: center;
+            padding: 24px
+        }
+
+        .modal-bg.show {
+            display: flex
+        }
+
+        .modal {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .4)
+        }
+
+        .modal-h {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px
+        }
+
+        .modal-x {
+            background: none;
+            border: none;
+            color: var(--t3);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px
+        }
+
+        .modal-x:hover {
+            color: var(--t1)
+        }
+
+        /* ===== Toast / Loading ===== */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 20px;
+            border-radius: var(--rs);
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: .3s ease
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1
+        }
+
+        .toast-ok {
+            background: var(--green);
+            color: #fff
+        }
+
+        .toast-err {
+            background: var(--red);
+            color: #fff
+        }
+
+        .spin {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--blue);
+            border-radius: 50%;
+            animation: sp .8s linear infinite;
+            display: inline-block
+        }
+
+        @keyframes sp {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .ld {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(13, 17, 23, .8);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 16px
+        }
+
+        .ld.show {
+            display: flex
+        }
+
+        .ld-t {
+            font-size: 14px;
+            color: var(--t2)
         }
 
         /* ===== Responsive ===== */
-        @media (max-width: 768px) {
-            .status-cards {
-                grid-template-columns: 1fr;
+        @media(max-width:768px) {
+            .stats {
+                grid-template-columns: 1fr
             }
 
-            .video-card {
-                flex-direction: column;
+            .v-card {
+                flex-direction: column
             }
 
-            .video-thumb {
+            .v-thumb-wrap {
+                width: 100%;
+                min-width: 100%
+            }
+
+            .v-thumb {
                 width: 100%;
                 height: auto;
-                aspect-ratio: 16/9;
+                aspect-ratio: 16/9
             }
 
-            .container {
-                padding: 16px;
+            .ct {
+                padding: 16px
             }
 
-            .tab-btn {
+            .tab {
                 padding: 10px 14px;
-                font-size: 13px;
+                font-size: 13px
             }
 
-            .input-group {
-                flex-direction: column;
+            .inp-row {
+                flex-direction: column
             }
         }
     </style>
@@ -731,528 +871,390 @@
 <body>
 
     <!-- Header -->
-    <header class="header">
-        <div class="header-inner">
+    <header class="hd">
+        <div class="hd-in">
             <a href="/" class="logo">
-                <div class="logo-icon">▶</div>
-                YouTube 요약봇
+                <div class="logo-i">▶</div>YouTube 요약봇
             </a>
-            <span class="header-time" id="currentTime"></span>
+            <span class="hd-time" id="clock"></span>
         </div>
     </header>
 
-    <!-- Tab Navigation -->
-    <nav class="tab-nav">
-        <div class="tab-nav-inner">
-            <button class="tab-btn active" data-tab="dashboard">📊 대시보드</button>
-            <button class="tab-btn" data-tab="channels">📡 채널관리</button>
-            <button class="tab-btn" data-tab="archive">📁 보관함</button>
+    <!-- Tabs -->
+    <nav class="tabs">
+        <div class="tabs-in">
+            <button class="tab on" data-t="dash">📊 대시보드</button>
+            <button class="tab" data-t="ch">📡 채널관리</button>
+            <button class="tab" data-t="arch">📁 보관함</button>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="container">
+    <main class="ct">
 
-        <!-- ===== 대시보드 탭 ===== -->
-        <div id="tab-dashboard" class="tab-content active">
+        <!-- ===== 대시보드 ===== -->
+        <div id="p-dash" class="pane on">
             <!-- Status Cards -->
-            <div class="status-cards">
-                <div class="status-card">
-                    <div class="status-label">등록 채널</div>
-                    <div class="status-value" id="statChannels">-<span class="unit">개</span></div>
+            <div class="stats">
+                <div class="stat" onclick="switchTab('ch')">
+                    <div class="stat-top">
+                        <div class="stat-icon stat-icon-ch">▶</div>
+                    </div>
+                    <div class="stat-val" id="sChN">-<span class="stat-unit">개</span></div>
+                    <div class="stat-sub">등록 채널 · 채널 추가하기</div>
                 </div>
-                <div class="status-card">
-                    <div class="status-label">총 요약</div>
-                    <div class="status-value" id="statSummaries">-<span class="unit">개</span></div>
+                <div class="stat" onclick="switchTab('arch')">
+                    <div class="stat-top">
+                        <div class="stat-icon stat-icon-sum">📄</div>
+                    </div>
+                    <div class="stat-val" id="sSumN">-<span class="stat-unit">개</span></div>
+                    <div class="stat-sub">오늘 요약 · 새로운 요약 확인</div>
                 </div>
-                <div class="status-card">
-                    <div class="status-label">마지막 실행</div>
-                    <div class="status-value" id="statLastRun" style="font-size:16px;">-</div>
+                <div class="stat" onclick="triggerDigest()">
+                    <div class="stat-top">
+                        <div class="stat-icon stat-icon-run">✅</div>
+                    </div>
+                    <div class="stat-val" id="sRun" style="font-size:16px">-</div>
+                    <div class="stat-sub">마지막 실행 · 클릭하여 실행</div>
                 </div>
             </div>
 
             <!-- URL 분석 -->
-            <div class="analyze-section">
-                <div class="analyze-title">🔍 YouTube 영상 직접 분석</div>
-                <div class="input-group">
-                    <input type="text" class="input-text" id="videoUrl" placeholder="YouTube URL을 입력하세요">
-                    <button class="btn btn-primary" id="btnAnalyze" onclick="analyzeVideo()">분석하기</button>
+            <div class="analyze">
+                <div class="analyze-t">🔍 YouTube 영상 직접 분석</div>
+                <div class="inp-row">
+                    <input class="inp" id="videoUrl" placeholder="YouTube URL을 입력하세요">
+                    <button class="btn btn-p" id="btnAn" onclick="analyzeVideo()">분석하기</button>
                 </div>
             </div>
 
             <!-- 오늘의 요약 -->
-            <div class="section-header">
-                <h2 class="section-title">📺 최근 요약</h2>
-                <div style="display:flex;gap:8px;">
-                    <button class="btn btn-ghost btn-sm" onclick="loadLatestDigest()">🔄 새로고침</button>
-                    <button class="btn btn-primary btn-sm" id="btnDigest" onclick="triggerDigest()">▶ 다이제스트 실행</button>
+            <div class="sec-h">
+                <h2 class="sec-t">오늘의 요약</h2>
+                <div style="display:flex;gap:8px;align-items:center">
+                    <a class="sec-link" onclick="switchTab('arch')">전체보기</a>
+                    <button class="btn btn-g btn-sm" onclick="loadDash()">🔄</button>
+                    <button class="btn btn-p btn-sm" id="btnDig" onclick="triggerDigest()">▶ 다이제스트 실행</button>
                 </div>
             </div>
-            <div id="recentSummaries" class="video-list">
-                <div class="empty-state">
-                    <div class="empty-icon">📺</div>
-                    <div class="empty-title">요약된 영상이 없습니다</div>
-                    <div class="empty-desc">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 입력해서 분석하세요</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== 채널관리 탭 ===== -->
-        <div id="tab-channels" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">📡 구독 채널 관리</h2>
-            </div>
-            <div class="input-group">
-                <input type="text" class="input-text" id="channelUrl"
-                    placeholder="YouTube 채널 URL (예: https://www.youtube.com/@blueoak1004)">
-                <button class="btn btn-primary" onclick="addChannel()">+ 채널 추가</button>
-            </div>
-            <div id="channelList" class="channel-list">
-                <div class="empty-state">
-                    <div class="empty-icon">📡</div>
-                    <div class="empty-title">등록된 채널이 없습니다</div>
-                    <div class="empty-desc">위 입력란에 YouTube 채널 URL을 입력해서 등록하세요</div>
+            <div id="dashList" class="v-list">
+                <div class="empty">
+                    <div class="empty-i">📺</div>
+                    <div class="empty-t">요약된 영상이 없습니다</div>
+                    <div class="empty-d">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 분석하세요</div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== 보관함 탭 ===== -->
-        <div id="tab-archive" class="tab-content">
-            <div class="section-header">
-                <h2 class="section-title">📁 분석 보관함</h2>
+        <!-- ===== 채널관리 ===== -->
+        <div id="p-ch" class="pane">
+            <div class="sec-h">
+                <h2 class="sec-t">📡 구독 채널 관리</h2>
             </div>
-            <div id="archiveList" class="video-list">
-                <div class="empty-state">
-                    <div class="empty-icon">📁</div>
-                    <div class="empty-title">보관된 분석이 없습니다</div>
+            <div class="inp-row" style="margin-bottom:20px">
+                <input class="inp" id="chUrl" placeholder="YouTube 채널 URL (예: https://www.youtube.com/@blueoak1004)">
+                <button class="btn btn-p" onclick="addCh()">+ 채널 추가</button>
+            </div>
+            <div id="chList" class="ch-list">
+                <div class="empty">
+                    <div class="empty-i">📡</div>
+                    <div class="empty-t">등록된 채널이 없습니다</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 보관함 ===== -->
+        <div id="p-arch" class="pane">
+            <div class="sec-h">
+                <h2 class="sec-t">📁 분석 보관함</h2>
+            </div>
+            <div id="archList" class="v-list">
+                <div class="empty">
+                    <div class="empty-i">📁</div>
+                    <div class="empty-t">보관된 분석이 없습니다</div>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Detail Modal -->
-    <div id="detailModal" class="modal-backdrop" onclick="if(event.target===this)closeModal()">
+    <!-- URL Analysis Result Modal -->
+    <div id="resModal" class="modal-bg" onclick="if(event.target===this)closeRes()">
         <div class="modal">
-            <div class="modal-header">
+            <div class="modal-h">
                 <div>
-                    <div class="video-channel" id="modalChannel"></div>
-                    <h2 style="font-size:18px;" id="modalTitle"></h2>
+                    <div style="font-size:12px;color:var(--blue)" id="resCh"></div>
+                    <h2 style="font-size:18px" id="resTitle"></h2>
                 </div>
-                <button class="modal-close" onclick="closeModal()">✕</button>
+                <button class="modal-x" onclick="closeRes()">✕</button>
             </div>
-            <div class="modal-body" id="modalBody"></div>
-            <div style="margin-top:16px;text-align:right;">
-                <a id="modalVideoLink" href="#" target="_blank" class="btn btn-ghost btn-sm">🔗 원본 영상 보기</a>
-            </div>
+            <div id="resBody"></div>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
-        <div class="spinner" style="width:40px;height:40px;border-width:3px;"></div>
-        <div class="loading-text" id="loadingText">처리 중...</div>
+    <!-- Loading / Toast -->
+    <div id="ld" class="ld">
+        <div class="spin" style="width:40px;height:40px;border-width:3px"></div>
+        <div class="ld-t" id="ldT">처리 중...</div>
     </div>
-
-    <!-- Toast -->
     <div id="toast" class="toast"></div>
 
     <script>
-        // ===== Config =====
-        const API = '';
+        const A = '';
 
-        // ===== Tab Switching =====
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                btn.classList.add('active');
-                document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        // ===== Tabs =====
+        function switchTab(t) {
+            document.querySelectorAll('.tab').forEach(b => { b.classList.toggle('on', b.dataset.t === t) });
+            document.querySelectorAll('.pane').forEach(p => { p.classList.toggle('on', p.id === 'p-' + t) });
+            if (t === 'ch') loadCh(); if (t === 'arch') loadArch();
+        }
+        document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
 
-                // 탭 전환 시 데이터 로드
-                if (btn.dataset.tab === 'channels') loadChannels();
-                if (btn.dataset.tab === 'archive') loadArchive();
-            });
-        });
+        // ===== Utils =====
+        function toast(m, ok = true) { const t = document.getElementById('toast'); t.textContent = m; t.className = 'toast ' + (ok ? 'toast-ok' : 'toast-err') + ' show'; setTimeout(() => t.classList.remove('show'), 3000) }
+        function showLd(t) { document.getElementById('ldT').textContent = t || '처리 중...'; document.getElementById('ld').classList.add('show') }
+        function hideLd() { document.getElementById('ld').classList.remove('show') }
+        function esc(s) { return s ? s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : '' }
+        function fmtDate(s) { if (!s) return ''; const d = new Date(s); return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) }
+        function fmtSum(t) { if (!t) return ''; return '<p>' + t.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>' }
+        async function api(u, m = 'GET', b = null) { const o = { method: m, headers: { 'Content-Type': 'application/json' } }; if (b) o.body = JSON.stringify(b); const r = await fetch(A + u, o); return r.json() }
 
-        // ===== Toast =====
-        function showToast(msg, type = 'success') {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = 'toast toast-' + type + ' show';
-            setTimeout(() => t.classList.remove('show'), 3000);
+        // ===== Sentiment/Importance Helpers =====
+        function sTag(s) {
+            if (s === 'positive') return '<span class="tag tag-pos">🟢 호재</span>';
+            if (s === 'negative') return '<span class="tag tag-neg">🔴 악재</span>';
+            return '<span class="tag tag-neu">🟡 중립</span>';
+        }
+        function iTag(i) {
+            if (i === 'urgent') return '<span class="tag tag-urg">🚨 긴급</span>';
+            if (i === 'major') return '<span class="tag tag-maj">⭐ 주요</span>';
+            return '<span class="tag tag-nor">ℹ️ 일반</span>';
+        }
+        function stockTags(raw) {
+            let arr = []; try { arr = typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { }
+            return arr.slice(0, 5).map(s => '<span class="tag tag-stk">' + esc(s) + '</span>').join('');
+        }
+        function pointsArr(raw) {
+            try { return typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { return [] }
         }
 
-        // ===== Loading =====
-        function showLoading(text) {
-            document.getElementById('loadingText').textContent = text || '처리 중...';
-            document.getElementById('loadingOverlay').classList.add('show');
+        // ===== Build AI Panel HTML =====
+        function buildAiPanel(a, id) {
+            let h = '<div class="ai-panel" id="ai-' + id + '">';
+            h += '<div class="ai-header"><div class="ai-badge">🤖 AI 코멘트</div><button class="ai-close" onclick="closeAi(' + id + ')">✕</button></div>';
+
+            // Tags
+            h += '<div class="ai-tags">' + sTag(a.sentiment) + iTag(a.importance) + stockTags(a.key_stocks) + '</div>';
+
+            // Key Points
+            const pts = pointsArr(a.key_points);
+            if (pts.length) {
+                h += '<div class="ai-sec"><div class="ai-sec-t">📋 핵심 포인트</div>';
+                pts.forEach(p => { h += '<div class="ai-point">• ' + esc(p) + '</div>' });
+                h += '</div>';
+            }
+
+            // Market + Insight
+            if (a.market_impact || a.investment_insight) {
+                h += '<div class="ai-sec">';
+                if (a.market_impact) h += '<div class="ai-insight"><strong>📊 시장 영향:</strong> ' + esc(a.market_impact) + '</div>';
+                if (a.investment_insight) h += '<div class="ai-insight"><strong>💡 투자 시사점:</strong> ' + esc(a.investment_insight) + '</div>';
+                h += '</div>';
+            }
+
+            // Full Summary
+            h += '<div class="ai-summary">' + fmtSum(a.summary || '') + '</div>';
+            h += '<a class="ai-link" href="https://www.youtube.com/watch?v=' + a.video_id + '" target="_blank">🔗 원본 영상 보기</a>';
+            h += '</div>';
+            return h;
         }
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.remove('show');
+
+        // ===== Build Video Card HTML =====
+        function buildCard(a) {
+            const thumb = a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg';
+            return `
+    <div class="v-wrap" id="wrap-${a.id}">
+        <div class="v-card">
+            <div class="v-thumb-wrap">
+                <img class="v-thumb" src="${thumb}" alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'">
+            </div>
+            <div class="v-info">
+                <div class="v-ch">${esc(a.channel_name || '')}</div>
+                <div class="v-title">${esc(a.title)}</div>
+                <div class="v-preview">${esc((a.summary || '').substring(0, 120))}</div>
+                <div class="v-bottom">
+                    <div>
+                        <span class="v-meta">${a.analysis_type === 'daily' ? '🤖 자동' : '👤 수동'} · ${fmtDate(a.created_at)}</span>
+                    </div>
+                    <button class="btn-sum" onclick="event.stopPropagation();toggleAi(${a.id})">요약 보기</button>
+                </div>
+            </div>
+        </div>
+        ${buildAiPanel(a, a.id)}
+    </div>`;
         }
 
-        // ===== Time =====
-        function updateTime() {
-            const now = new Date();
-            const opts = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
-            document.getElementById('currentTime').textContent = now.toLocaleString('ko-KR', opts);
-        }
-        setInterval(updateTime, 60000);
-        updateTime();
-
-        // ===== API Helpers =====
-        async function api(url, method = 'GET', body = null) {
-            const opts = { method, headers: { 'Content-Type': 'application/json' } };
-            if (body) opts.body = JSON.stringify(body);
-            const res = await fetch(API + url, opts);
-            return res.json();
-        }
-
-        // ===== Dashboard: Load Stats =====
-        async function loadStats() {
-            try {
-                const [channels, archive, digest] = await Promise.all([
-                    api('/api/channels'),
-                    api('/api/archive/list'),
-                    api('/api/daily_digest/latest')
-                ]);
-
-                // 채널 수
-                const chCount = channels.channels ? channels.channels.length : 0;
-                document.getElementById('statChannels').innerHTML = chCount + '<span class="unit">개</span>';
-
-                // 요약 수
-                const anaCount = archive.analyses ? archive.analyses.length : 0;
-                document.getElementById('statSummaries').innerHTML = anaCount + '<span class="unit">개</span>';
-
-                // 마지막 실행
-                if (digest.digest && digest.digest.completed_at) {
-                    const d = new Date(digest.digest.completed_at);
-                    document.getElementById('statLastRun').textContent = formatTimeAgo(d);
-                } else {
-                    document.getElementById('statLastRun').textContent = '미실행';
+        // ===== Toggle AI Panel =====
+        function toggleAi(id) {
+            const panel = document.getElementById('ai-' + id);
+            if (!panel) return;
+            // Close all other panels first
+            document.querySelectorAll('.ai-panel.open').forEach(p => { if (p.id !== 'ai-' + id) p.classList.remove('open') });
+            panel.classList.toggle('open');
+            if (panel.classList.contains('open')) {
+                // If panel data is just from list (may not have full detail), fetch it
+                if (!panel.dataset.loaded) {
+                    fetchAndFillAi(id);
                 }
-            } catch (e) {
-                console.error('Stats load error:', e);
             }
         }
-
-        // ===== Dashboard: Load Recent Summaries =====
-        async function loadLatestDigest() {
+        async function fetchAndFillAi(id) {
+            const panel = document.getElementById('ai-' + id);
+            if (!panel || panel.dataset.loaded) return;
             try {
-                const data = await api('/api/archive/list');
-                const container = document.getElementById('recentSummaries');
+                const d = await api('/api/archive/' + id);
+                if (d.success && d.analysis) {
+                    const a = d.analysis;
+                    panel.outerHTML = buildAiPanel(a, id).replace('class="ai-panel"', 'class="ai-panel open"');
+                    const np = document.getElementById('ai-' + id);
+                    if (np) np.dataset.loaded = '1';
+                }
+            } catch (e) { console.error(e) }
+        }
+        function closeAi(id) { const p = document.getElementById('ai-' + id); if (p) p.classList.remove('open') }
 
-                if (!data.analyses || data.analyses.length === 0) {
-                    container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">📺</div>
-                    <div class="empty-title">요약된 영상이 없습니다</div>
-                    <div class="empty-desc">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 입력해서 분석하세요</div>
-                </div>`;
+        // ===== Dashboard =====
+        async function loadDash() {
+            try {
+                const [archD, chD, digD] = await Promise.all([api('/api/archive/list'), api('/api/channels'), api('/api/daily_digest/latest')]);
+
+                // Stats
+                const chs = chD.channels || [];
+                const ans = archD.analyses || [];
+                document.getElementById('sChN').innerHTML = chs.length + '<span class="stat-unit">개</span>';
+                document.getElementById('sSumN').innerHTML = ans.length + '<span class="stat-unit">개</span>';
+                if (digD.success && digD.digest) {
+                    const d = new Date(digD.digest.completed_at || digD.digest.created_at);
+                    const ago = Math.round((Date.now() - d.getTime()) / 60000);
+                    document.getElementById('sRun').textContent = ago < 60 ? ago + '분 전' : Math.round(ago / 60) + '시간 전';
+                } else {
+                    document.getElementById('sRun').textContent = '미실행';
+                }
+
+                // Video list
+                const ct = document.getElementById('dashList');
+                if (!ans.length) {
+                    ct.innerHTML = '<div class="empty"><div class="empty-i">📺</div><div class="empty-t">요약된 영상이 없습니다</div><div class="empty-d">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 분석하세요</div></div>';
                     return;
                 }
-
-                container.innerHTML = data.analyses.slice(0, 20).map(a => {
-                    const sEmoji = a.sentiment === 'positive' ? '\ud83d\udfe2' : a.sentiment === 'negative' ? '\ud83d\udd34' : '\ud83d\udfe1';
-                    const sLabel = a.sentiment === 'positive' ? '\ud638\uc7ac' : a.sentiment === 'negative' ? '\uc545\uc7ac' : '\uc911\ub9bd';
-                    const iClass = a.importance === 'urgent' ? 'tag-urgent' : a.importance === 'major' ? 'tag-major' : 'tag-normal';
-                    const iLabel = a.importance === 'urgent' ? '\uae34\uae09' : a.importance === 'major' ? '\uc8fc\uc694' : '\uc77c\ubc18';
-                    let stocks = [];
-                    try { stocks = typeof a.key_stocks === 'string' ? JSON.parse(a.key_stocks) : (a.key_stocks || []); } catch (e) { }
-                    const stockTags = stocks.slice(0, 3).map(s => `<span class="tag tag-stock">${escHtml(s)}</span>`).join('');
-
-                    return `
-            <div class="video-card" onclick="showDetail(${a.id})">
-                <img class="video-thumb" src="${a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg'}" 
-                     alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'">
-                <div class="video-info">
-                    <div class="video-channel">${escHtml(a.channel_name || '\uc54c \uc218 \uc5c6\uc74c')}</div>
-                    <div class="video-title">${escHtml(a.title)}</div>
-                    <div class="video-summary">${escHtml((a.summary || '').substring(0, 150))}</div>
-                    <div style="margin-top:6px">
-                        <span class="tag tag-${a.sentiment || 'neutral'}">${sEmoji} ${sLabel}</span>
-                        <span class="tag ${iClass}">${iLabel}</span>
-                        ${stockTags}
-                    </div>
-                    <div class="video-meta">${a.analysis_type === 'daily' ? '\ud83e\udd16 \uc790\ub3d9' : '\ud83d\udc64 \uc218\ub3d9'} \xb7 ${formatDate(a.created_at)}</div>
-                </div>
-            </div>`;
-                }).join('');
-            } catch (e) {
-                console.error('Load summaries error:', e);
-            }
-        }
-
-        // ===== Dashboard: Trigger Digest =====
-        async function triggerDigest() {
-            const btn = document.getElementById('btnDigest');
-            btn.disabled = true;
-            btn.textContent = '⏳ 실행 중...';
-            showLoading('데일리 다이제스트 실행 중... (2~3분 소요)');
-
-            try {
-                const data = await api('/api/daily_digest', 'POST', { hours: 48 });
-                hideLoading();
-
-                if (data.success) {
-                    showToast(`✅ ${data.total_videos}개 영상 수집, ${data.total_summarized}개 요약 완료`);
-                    loadStats();
-                    loadLatestDigest();
-                } else {
-                    showToast('❌ ' + (data.message || '실행 실패'), 'error');
-                }
-            } catch (e) {
-                hideLoading();
-                showToast('❌ 다이제스트 실행 오류', 'error');
-            } finally {
-                btn.disabled = false;
-                btn.textContent = '▶ 다이제스트 실행';
-            }
-        }
-
-        // ===== Dashboard: Analyze Video =====
-        async function analyzeVideo() {
-            const url = document.getElementById('videoUrl').value.trim();
-            if (!url) { showToast('URL을 입력해주세요', 'error'); return; }
-
-            const btn = document.getElementById('btnAnalyze');
-            btn.disabled = true;
-            showLoading('영상 분석 중...');
-
-            try {
-                const data = await api('/api/analyze', 'POST', { video_url: url, analysis_type: 'single' });
-                hideLoading();
-
-                if (data.success) {
-                    showToast('✅ 분석 완료!');
-                    document.getElementById('videoUrl').value = '';
-                    loadStats();
-                    loadLatestDigest();
-
-                    // 결과 모달 표시
-                    if (data.summary) {
-                        document.getElementById('modalChannel').textContent = data.video_info?.channel_name || '';
-                        document.getElementById('modalTitle').textContent = data.video_info?.title || '';
-                        document.getElementById('modalBody').innerHTML = formatSummary(data.summary);
-                        document.getElementById('modalVideoLink').href = url;
-                        document.getElementById('detailModal').classList.add('show');
-                    }
-                } else {
-                    showToast('❌ ' + (data.message || '분석 실패'), 'error');
-                }
-            } catch (e) {
-                hideLoading();
-                showToast('❌ 분석 오류', 'error');
-            } finally {
-                btn.disabled = false;
-            }
+                ct.innerHTML = ans.slice(0, 15).map(a => buildCard(a)).join('');
+            } catch (e) { console.error(e) }
         }
 
         // ===== Channels =====
-        async function loadChannels() {
+        async function loadCh() {
             try {
-                const data = await api('/api/channels');
-                const container = document.getElementById('channelList');
-
-                if (!data.channels || data.channels.length === 0) {
-                    container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">📡</div>
-                    <div class="empty-title">등록된 채널이 없습니다</div>
-                    <div class="empty-desc">위 입력란에 YouTube 채널 URL을 입력해서 등록하세요</div>
-                </div>`;
-                    return;
-                }
-
-                container.innerHTML = data.channels.map(ch => `
-            <div class="channel-card" id="ch-${ch.id}">
-                <div class="channel-info">
-                    <div class="channel-avatar">${(ch.channel_name || '?')[0]}</div>
-                    <div>
-                        <div class="channel-name">${escHtml(ch.channel_name || ch.channel_url)}</div>
-                        <div class="channel-id">${escHtml(ch.channel_id || '')}</div>
-                    </div>
+                const d = await api('/api/channels');
+                const el = document.getElementById('chList');
+                if (!d.channels || !d.channels.length) { el.innerHTML = '<div class="empty"><div class="empty-i">📡</div><div class="empty-t">등록된 채널이 없습니다</div></div>'; return }
+                el.innerHTML = d.channels.map(c => `
+            <div class="ch-card" id="ch-${c.id}">
+                <div class="ch-info">
+                    <div class="ch-av">${(c.channel_name || '?')[0]}</div>
+                    <div><div class="ch-name">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div>
                 </div>
-                <button class="btn btn-danger" onclick="deleteChannel(${ch.id}, '${escHtml(ch.channel_name)}')">삭제</button>
-            </div>
-        `).join('');
-            } catch (e) {
-                console.error('Load channels error:', e);
-            }
+                <button class="btn btn-d" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button>
+            </div>`).join('');
+            } catch (e) { console.error(e) }
         }
-
-        async function addChannel() {
-            const url = document.getElementById('channelUrl').value.trim();
-            if (!url) { showToast('채널 URL을 입력해주세요', 'error'); return; }
-
-            showLoading('채널 등록 중...');
+        async function addCh() {
+            const url = document.getElementById('chUrl').value.trim();
+            if (!url) { toast('채널 URL을 입력해주세요', false); return }
+            showLd('채널 등록 중...');
             try {
-                const data = await api('/api/channels', 'POST', { channel_url: url });
-                hideLoading();
-
-                if (data.success) {
-                    showToast(`✅ ${data.channel.channel_name} 등록 완료`);
-                    document.getElementById('channelUrl').value = '';
-                    loadChannels();
-                    loadStats();
-                } else {
-                    showToast('❌ ' + (data.message || '등록 실패'), 'error');
-                }
-            } catch (e) {
-                hideLoading();
-                showToast('❌ 채널 등록 오류', 'error');
-            }
+                const d = await api('/api/channels', 'POST', { channel_url: url }); hideLd();
+                if (d.success) { toast('✅ ' + d.channel.channel_name + ' 등록'); document.getElementById('chUrl').value = ''; loadCh(); loadDash() }
+                else toast('❌ ' + (d.message || '실패'), false)
+            } catch (e) { hideLd(); toast('❌ 오류', false) }
         }
-
-        async function deleteChannel(id, name) {
-            if (!confirm(`"${name}" 채널을 삭제할까요?`)) return;
-            try {
-                await api('/api/channels/' + id, 'DELETE');
-                showToast('🗑️ 채널 삭제됨');
-                loadChannels();
-                loadStats();
-            } catch (e) {
-                showToast('❌ 삭제 실패', 'error');
-            }
+        async function delCh(id, name) {
+            if (!confirm('"' + name + '" 삭제할까요?')) return;
+            try { await api('/api/channels/' + id, 'DELETE'); toast('🗑️ 삭제'); loadCh(); loadDash() } catch (e) { toast('❌', false) }
         }
 
         // ===== Archive =====
-        async function loadArchive() {
+        async function loadArch() {
             try {
-                const data = await api('/api/archive/list');
-                const container = document.getElementById('archiveList');
-
-                if (!data.analyses || data.analyses.length === 0) {
-                    container.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">📁</div>
-                    <div class="empty-title">보관된 분석이 없습니다</div>
-                </div>`;
-                    return;
-                }
-
-                container.innerHTML = data.analyses.map(a => `
-            <div class="video-card" onclick="showDetail(${a.id})">
-                <img class="video-thumb" src="${a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg'}" 
-                     alt="" loading="lazy">
-                <div class="video-info">
-                    <div class="video-channel">${escHtml(a.channel_name || '')}</div>
-                    <div class="video-title">${escHtml(a.title)}</div>
-                    <div class="video-meta">${a.analysis_type === 'daily' ? '🤖 자동' : '👤 수동'} · ${formatDate(a.created_at)} · ${(a.char_count || 0).toLocaleString()}자</div>
-                </div>
-            </div>
-        `).join('');
-            } catch (e) {
-                console.error('Load archive error:', e);
-            }
+                const d = await api('/api/archive/list');
+                const ct = document.getElementById('archList');
+                if (!d.analyses || !d.analyses.length) { ct.innerHTML = '<div class="empty"><div class="empty-i">📁</div><div class="empty-t">보관된 분석이 없습니다</div></div>'; return }
+                ct.innerHTML = d.analyses.map(a => buildCard(a)).join('');
+            } catch (e) { console.error(e) }
         }
 
-        // ===== Detail Modal =====
-        async function showDetail(id) {
+        // ===== Digest =====
+        async function triggerDigest() {
+            const btn = document.getElementById('btnDig');
+            btn.disabled = true; btn.textContent = '⏳ 실행 중...';
+            showLd('데일리 다이제스트 실행 중... (2~3분 소요)');
             try {
-                const data = await api('/api/archive/' + id);
+                const d = await api('/api/daily_digest', 'POST', { hours: 48 }); hideLd();
+                if (d.success) { toast('✅ ' + d.total_videos + '개 수집, ' + d.total_summarized + '개 요약'); loadDash() }
+                else toast('❌ ' + (d.message || '실패'), false)
+            } catch (e) { hideLd(); toast('❌ 오류', false) }
+            finally { btn.disabled = false; btn.textContent = '▶ 다이제스트 실행' }
+        }
 
-                if (data.success && data.analysis) {
-                    const a = data.analysis;
-                    document.getElementById('modalChannel').textContent = a.channel_name || '';
-                    document.getElementById('modalTitle').textContent = a.title || '';
+        // ===== URL Analysis =====
+        async function analyzeVideo() {
+            const url = document.getElementById('videoUrl').value.trim();
+            if (!url) { toast('URL을 입력해주세요', false); return }
+            const btn = document.getElementById('btnAn'); btn.disabled = true;
+            showLd('영상 분석 중...');
+            try {
+                const d = await api('/api/analyze', 'POST', { video_url: url, analysis_type: 'single' }); hideLd();
+                if (d.success) {
+                    // Show result in modal
+                    document.getElementById('resCh').textContent = d.video_info?.channel_name || '';
+                    document.getElementById('resTitle').textContent = d.video_info?.title || '';
 
-                    // Build structured AI commentary
-                    let html = '';
-
-                    // Sentiment + Importance + Stocks
-                    const sEmoji = a.sentiment === 'positive' ? '\ud83d\udfe2' : a.sentiment === 'negative' ? '\ud83d\udd34' : '\ud83d\udfe1';
-                    const sLabel = a.sentiment === 'positive' ? '\ud638\uc7ac' : a.sentiment === 'negative' ? '\uc545\uc7ac' : '\uc911\ub9bd';
-                    const iClass = a.importance === 'urgent' ? 'tag-urgent' : a.importance === 'major' ? 'tag-major' : 'tag-normal';
-                    const iLabel = a.importance === 'urgent' ? '\ud83d\udea8 \uae34\uae09' : a.importance === 'major' ? '\u2b50 \uc8fc\uc694' : '\u2139\ufe0f \uc77c\ubc18';
-
-                    let stocks = [];
-                    try { stocks = typeof a.key_stocks === 'string' ? JSON.parse(a.key_stocks) : (a.key_stocks || []); } catch (e) { }
-                    let points = [];
-                    try { points = typeof a.key_points === 'string' ? JSON.parse(a.key_points) : (a.key_points || []); } catch (e) { }
-
-                    html += '<div style="margin-bottom:16px">';
-                    html += '<span class="tag tag-' + (a.sentiment || 'neutral') + '">' + sEmoji + ' ' + sLabel + '</span>';
-                    html += '<span class="tag ' + iClass + '">' + iLabel + '</span>';
-                    html += stocks.map(s => '<span class="tag tag-stock">' + escHtml(s) + '</span>').join('');
-                    html += '</div>';
-
-                    // Key Points
-                    if (points.length) {
-                        html += '<div class="ai-section"><div class="ai-section-title">\ud83d\udccb \ud575\uc2ec \ud3ec\uc778\ud2b8</div>';
-                        points.forEach(p => { html += '<div class="ai-point">\u2022 ' + escHtml(p) + '</div>'; });
-                        html += '</div>';
+                    let h = '<div class="ai-tags">' + sTag(d.sentiment) + iTag(d.importance) + stockTags(d.key_stocks) + '</div>';
+                    const pts = d.key_points || [];
+                    if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">📋 핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-point">• ' + esc(p) + '</div>' }); h += '</div>' }
+                    if (d.market_impact || d.investment_insight) {
+                        h += '<div class="ai-sec">';
+                        if (d.market_impact) h += '<div class="ai-insight"><strong>📊 시장 영향:</strong> ' + esc(d.market_impact) + '</div>';
+                        if (d.investment_insight) h += '<div class="ai-insight"><strong>💡 투자 시사점:</strong> ' + esc(d.investment_insight) + '</div>';
+                        h += '</div>';
                     }
+                    h += '<div class="ai-summary">' + fmtSum(d.summary || '') + '</div>';
+                    h += '<a class="ai-link" href="' + esc(url) + '" target="_blank">🔗 원본 영상 보기</a>';
 
-                    // Market Impact + Investment Insight
-                    if (a.market_impact || a.investment_insight) {
-                        html += '<div class="ai-section">';
-                        if (a.market_impact) html += '<div class="ai-insight"><strong>\ud83d\udcca \uc2dc\uc7a5 \uc601\ud5a5:</strong> ' + escHtml(a.market_impact) + '</div>';
-                        if (a.investment_insight) html += '<div class="ai-insight"><strong>\ud83d\udca1 \ud22c\uc790 \uc2dc\uc0ac\uc810:</strong> ' + escHtml(a.investment_insight) + '</div>';
-                        html += '</div>';
-                    }
-
-                    // Full Summary
-                    html += '<div style="margin-top:16px">' + formatSummary(a.summary || '') + '</div>';
-
-                    document.getElementById('modalBody').innerHTML = html;
-                    document.getElementById('modalVideoLink').href = 'https://www.youtube.com/watch?v=' + a.video_id;
-                    document.getElementById('detailModal').classList.add('show');
-                } else {
-                    showToast('\uc0c1\uc138 \ub0b4\uc6a9\uc744 \ubd88\ub7ec\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4', 'error');
-                }
-            } catch (e) {
-                console.error('Detail load error:', e);
-                showToast('\uc0c1\uc138 \ub0b4\uc6a9\uc744 \ubd88\ub7ec\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4', 'error');
-            }
+                    document.getElementById('resBody').innerHTML = h;
+                    document.getElementById('resModal').classList.add('show');
+                    document.getElementById('videoUrl').value = '';
+                    toast('✅ 분석 완료!'); loadDash();
+                } else toast('❌ ' + (d.message || '실패'), false)
+            } catch (e) { hideLd(); toast('❌ 오류', false) }
+            finally { btn.disabled = false }
         }
+        function closeRes() { document.getElementById('resModal').classList.remove('show') }
 
-        function closeModal() {
-            document.getElementById('detailModal').classList.remove('show');
+        // ===== Clock =====
+        function updateClock() {
+            const d = new Date();
+            document.getElementById('clock').textContent = d.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' }) + ' ' + d.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
         }
+        setInterval(updateClock, 60000); updateClock();
 
-        // ===== Utility =====
-        function escHtml(str) {
-            if (!str) return '';
-            return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        }
-
-        function formatDate(dateStr) {
-            if (!dateStr) return '';
-            const d = new Date(dateStr);
-            return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-        }
-
-        function formatTimeAgo(date) {
-            const now = new Date();
-            const diff = Math.floor((now - date) / 1000);
-            if (diff < 60) return '방금 전';
-            if (diff < 3600) return Math.floor(diff / 60) + '분 전';
-            if (diff < 86400) return Math.floor(diff / 3600) + '시간 전';
-            return Math.floor(diff / 86400) + '일 전';
-        }
-
-        function formatSummary(text) {
-            if (!text) return '';
-            // Simple markdown-like formatting
-            return text
-                .replace(/\n\n/g, '</p><p>')
-                .replace(/\n/g, '<br>')
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                .replace(/^/, '<p>') + '</p>';
-        }
-
-        // Keyboard shortcut: Escape to close modal
+        // ===== Keyboard =====
         document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeModal();
+            if (e.key === 'Escape') closeRes();
             if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyzeVideo();
+            if (e.key === 'Enter' && document.activeElement.id === 'chUrl') addCh();
         });
 
-        // ===== Init =====
-        loadStats();
-        loadLatestDigest();
+        // Init
+        loadDash();
     </script>
 </body>
 
