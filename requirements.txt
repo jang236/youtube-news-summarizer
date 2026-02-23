@@ -8,3 +8,5 @@ lxml==4.9.3
 requests>=2.31.0
 pytz>=2023.3
 youtube-data-api
+apscheduler>=3.10.0
+feedparser>=6.0.0
