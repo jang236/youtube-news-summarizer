@@ -1,0 +1,813 @@
+{% extends "base.html" %}
+
+{% block title %}보관함 - YouTube 뉴스 요약기 (부코드AI){% endblock %}
+
+{% block content %}
+<!-- 보관함 헤더 -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card summary-card">
+            <div class="card-body text-center">
+                <h2 class="mb-3">
+                    <i class="fas fa-archive me-2"></i>
+                    뉴스 요약 보관함
+                </h2>
+                <p class="mb-0">
+                    <i class="fab fa-google me-2"></i>
+                    <strong>Gemini 2.5 Pro</strong>가 분석한 모든 뉴스 요약을 확인하세요
+                    <span class="badge bg-success ms-2">{{ summaries|length }}개 저장됨</span>
+                    <span class="badge bg-primary ms-2">완전 무료</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 필터 및 검색 -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label for="search" class="form-label">키워드 검색</label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="search" 
+                                   name="search" 
+                                   value="{{ request.args.get('search', '') }}" 
+                                   placeholder="제목이나 내용으로 검색">
+                        </div>
+                    </div>
+                    
+                    <!-- 개선사항 반영: 모드 및 분석 방식 필터 추가 -->
+                    <div class="col-md-2">
+                        <label for="collection_mode" class="form-label">수집 방식</label>
+                        <select class="form-select" id="collection_mode" name="collection_mode">
+                            <option value="">전체</option>
+                            <option value="channel" {% if request.args.get('collection_mode') == 'channel' %}selected{% endif %}>채널 모드</option>
+                            <option value="video" {% if request.args.get('collection_mode') == 'video' %}selected{% endif %}>영상 모드</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <label for="analysis_type" class="form-label">분석 방식</label>
+                        <select class="form-select" id="analysis_type" name="analysis_type">
+                            <option value="">전체</option>
+                            <option value="general" {% if request.args.get('analysis_type') == 'general' %}selected{% endif %}>일반 분석</option>
+                            <option value="detailed" {% if request.args.get('analysis_type') == 'detailed' %}selected{% endif %}>다각화 분석</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <label for="date_from" class="form-label">시작 날짜</label>
+                        <input type="date" 
+                               class="form-control" 
+                               id="date_from" 
+                               name="date_from" 
+                               value="{{ request.args.get('date_from', '') }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="date_to" class="form-label">종료 날짜</label>
+                        <input type="date" 
+                               class="form-control" 
+                               id="date_to" 
+                               name="date_to" 
+                               value="{{ request.args.get('date_to', '') }}">
+                    </div>
+                    <div class="col-md-1">
+                        <label class="form-label">&nbsp;</label>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-filter me-1"></i>
+                                필터
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                {% if request.args.get('search') or request.args.get('collection_mode') or request.args.get('analysis_type') or request.args.get('date_from') or request.args.get('date_to') %}
+                <div class="mt-3">
+                    <a href="{{ url_for('archive') }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-times me-1"></i>
+                        필터 초기화
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 통계 정보 (개선사항 반영) -->
+<div class="row mb-4">
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="text-primary display-6 mb-2">
+                    <i class="fas fa-newspaper"></i>
+                </div>
+                <h5 class="card-title">{{ stats.total_summaries }}</h5>
+                <p class="card-text text-muted">전체 요약</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="text-success display-6 mb-2">
+                    <i class="fab fa-google"></i>
+                </div>
+                <h5 class="card-title">{{ stats.recent_week }}</h5>
+                <p class="card-text text-muted">최근 7일</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="text-info display-6 mb-2">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h5 class="card-title">{{ stats.total_videos }}</h5>
+                <p class="card-text text-muted">분석된 영상</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="text-warning display-6 mb-2">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <h5 class="card-title">$0</h5>
+                <p class="card-text text-muted">총 비용 (무료!)</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="text-purple display-6 mb-2">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <h5 class="card-title">{{ stats.total_script_chars }}</h5>
+                <p class="card-text text-muted">스크립트 문자</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="text-dark display-6 mb-2">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <h5 class="card-title">{{ stats.total_keywords }}</h5>
+                <p class="card-text text-muted">키워드</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 요약 목록 (개선사항 반영) -->
+{% if summaries %}
+<div class="row">
+    {% for summary in summaries %}
+    <div class="col-lg-6 mb-4">
+        <div class="card archive-card h-100" onclick="location.href='{{ url_for('archive_detail', summary_id=summary[0]) }}'">
+            <div class="card-header bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                        <i class="fas fa-calendar me-2"></i>
+                        {{ summary[1] }}
+                    </h6>
+                    <div class="d-flex flex-wrap gap-1">
+                        <!-- 기존 배지들 -->
+                        <span class="badge bg-success me-1">
+                            <i class="fab fa-google me-1"></i>
+                            Gemini 2.5 Pro
+                        </span>
+                        
+                        <!-- 개선사항 1: 수집 모드 배지 -->
+                        {% set collection_mode = summary[7] if summary|length > 7 else 'channel' %}
+                        {% if collection_mode == 'video' %}
+                            <span class="badge bg-purple me-1">
+                                <i class="fas fa-play me-1"></i>
+                                영상 모드
+                            </span>
+                        {% else %}
+                            <span class="badge bg-info me-1">
+                                <i class="fas fa-tv me-1"></i>
+                                채널 모드
+                            </span>
+                        {% endif %}
+                        
+                        <!-- 개선사항 2: 분석 방식 배지 -->
+                        {% set analysis_type = summary[6] if summary|length > 6 else 'detailed' %}
+                        {% if analysis_type == 'general' %}
+                            <span class="badge bg-orange me-1">
+                                <i class="fas fa-list me-1"></i>
+                                일반 분석
+                            </span>
+                        {% else %}
+                            <span class="badge bg-gradient me-1">
+                                <i class="fas fa-brain me-1"></i>
+                                다각화 분석
+                            </span>
+                        {% endif %}
+                        
+                        <span class="badge bg-primary me-1">{{ summary[4] or 0 }}개 영상</span>
+                        <span class="badge bg-secondary">{{ summary[11].strftime('%H:%M') if summary|length > 11 and summary[11] else 'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- 헤드라인 -->
+                <h5 class="card-title text-primary">
+                    <i class="fas fa-fire text-danger me-2"></i>
+                    {% if analysis_type == 'general' %}
+                        일반 요약 ({{ collection_mode|title }} 모드)
+                    {% else %}
+                        다각화 분석 ({{ collection_mode|title }} 모드)
+                    {% endif %}
+                </h5>
+
+                <!-- 요약 내용 미리보기 -->
+                <p class="card-text">
+                    {% set content_preview = summary[2][:200] if summary[2] else '내용 없음' %}
+                    {{ content_preview }}{% if summary[2] and summary[2]|length > 200 %}...{% endif %}
+                </p>
+
+                <!-- 키워드 -->
+                {% if summary[3] %}
+                <div class="archive-keywords">
+                    {% for keyword in summary[3].split(', ')[:5] %}
+                        <span class="badge bg-light text-dark">{{ keyword.strip() }}</span>
+                    {% endfor %}
+                    {% if summary[3].split(', ')|length > 5 %}
+                        <span class="badge bg-secondary">+{{ summary[3].split(', ')|length - 5 }}</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- 스크립트 품질 정보 -->
+                {% if summary|length > 9 and summary[9] %}
+                <div class="mt-2">
+                    <small class="text-muted">
+                        <i class="fas fa-file-text me-1"></i>
+                        스크립트: {{ summary[9] }}
+                        {% if summary|length > 10 and summary[10] %}
+                            ({{ summary[10]:,}자)
+                        {% endif %}
+                    </small>
+                </div>
+                {% endif %}
+
+                <!-- 액션 버튼 -->
+                <div class="d-flex gap-2 mt-3">
+                    <button class="btn btn-outline-primary btn-sm flex-fill" 
+                            onclick="event.stopPropagation(); location.href='{{ url_for('archive_detail', summary_id=summary[0]) }}'">
+                        <i class="fas fa-eye me-1"></i>
+                        자세히 보기
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" 
+                            onclick="event.stopPropagation(); copyToClipboard('summary-{{ summary[0] }}')"
+                            data-bs-toggle="tooltip"
+                            title="요약 내용 복사">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" 
+                            onclick="event.stopPropagation(); deleteSummary({{ summary[0] }})"
+                            data-bs-toggle="tooltip"
+                            title="삭제">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+
+                <!-- 숨겨진 전체 내용 (복사용) -->
+                <div id="summary-{{ summary[0] }}" style="display: none;">{{ summary[2] }}</div>
+            </div>
+            <div class="card-footer bg-transparent">
+                <div class="d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        <i class="fas fa-clock me-1"></i>
+                        {{ summary[11].strftime('%Y-%m-%d %H:%M') if summary|length > 11 and summary[11] else '시간 정보 없음' }}
+                    </small>
+                    <small class="text-success">
+                        <i class="fab fa-google me-1"></i>
+                        Gemini 2.5 Pro 분석
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- 페이지네이션 (향후 추가 가능) -->
+{% if summaries|length > 10 %}
+<nav aria-label="요약 목록 페이지네이션">
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">이전</a>
+        </li>
+        <li class="page-item active">
+            <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">2</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">다음</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+
+<!-- 일괄 관리 -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-tasks me-2"></i>
+                    일괄 관리
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex gap-2 flex-wrap">
+                    <button class="btn btn-outline-primary btn-sm" onclick="exportAllSummaries()">
+                        <i class="fas fa-download me-1"></i>
+                        전체 내보내기
+                    </button>
+                    <button class="btn btn-outline-info btn-sm" onclick="emailAllSummaries()">
+                        <i class="fas fa-envelope me-1"></i>
+                        이메일로 전송
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="showStats()">
+                        <i class="fas fa-chart-bar me-1"></i>
+                        통계 보기
+                    </button>
+                    <button class="btn btn-outline-success btn-sm" onclick="showModeStats()">
+                        <i class="fas fa-analytics me-1"></i>
+                        모드별 통계
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<!-- 요약 없음 -->
+<div class="text-center py-5">
+    <div class="card bg-light">
+        <div class="card-body py-5">
+            <i class="fas fa-archive fa-4x text-muted mb-4"></i>
+            <h3 class="text-muted mb-3">아직 생성된 요약이 없습니다</h3>
+            <p class="text-muted mb-4">
+                Gemini 2.5 Pro로 첫 번째 뉴스 요약을 생성해보세요!<br>
+                <strong>채널 모드</strong>와 <strong>영상 모드</strong>, <strong>일반 분석</strong>과 <strong>다각화 분석</strong> 중에서 선택하여<br>
+                완전 무료로 최고급 AI 분석을 경험하실 수 있습니다.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{{ url_for('home') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-home me-2"></i>홈으로 가기
+                </a>
+                <a href="{{ url_for('setup') }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="fas fa-cog me-2"></i>설정하기
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- 빠른 액션 버튼 (고정) -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1000;">
+    <div class="btn-group-vertical" role="group">
+        <a href="{{ url_for('home') }}" class="btn btn-primary btn-sm mb-2" data-bs-toggle="tooltip" title="새 요약 생성">
+            <i class="fas fa-plus"></i>
+        </a>
+        <button class="btn btn-secondary btn-sm" onclick="window.scrollTo(0, 0)" data-bs-toggle="tooltip" title="맨 위로">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // 요약 삭제 확인
+    function deleteSummary(summaryId) {
+        if (confirm('이 요약을 삭제하시겠습니까? 삭제된 내용은 복구할 수 없습니다.')) {
+            fetch(`/delete_summary/${summaryId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showTemporaryMessage('success', '요약이 삭제되었습니다.');
+                    // 페이지 새로고침
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    showTemporaryMessage('error', '삭제에 실패했습니다: ' + (data.error || '알 수 없는 오류'));
+                }
+            })
+            .catch(error => {
+                showTemporaryMessage('error', '삭제 중 오류가 발생했습니다.');
+                console.error('Error:', error);
+            });
+        }
+    }
+
+    // 전체 요약 내보내기
+    function exportAllSummaries() {
+        showTemporaryMessage('info', '내보내기 기능을 준비 중입니다...');
+
+        // 실제 구현에서는 서버에 요청을 보내서 CSV나 JSON 파일로 내보내기
+        fetch('/export_summaries', {
+            method: 'GET'
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.blob();
+            }
+            throw new Error('내보내기 실패');
+        })
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = `뉴스요약_${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showTemporaryMessage('success', '내보내기가 완료되었습니다.');
+        })
+        .catch(error => {
+            showTemporaryMessage('warning', '내보내기 기능은 곧 추가될 예정입니다.');
+        });
+    }
+
+    // 이메일로 전체 요약 전송
+    function emailAllSummaries() {
+        if (confirm('모든 요약을 이메일로 전송하시겠습니까?')) {
+            showTemporaryMessage('info', '이메일 전송을 준비 중입니다...');
+
+            fetch('/email_all_summaries', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showTemporaryMessage('success', '모든 요약이 이메일로 전송되었습니다.');
+                } else {
+                    showTemporaryMessage('error', '이메일 전송에 실패했습니다: ' + (data.error || '알 수 없는 오류'));
+                }
+            })
+            .catch(error => {
+                showTemporaryMessage('warning', '이메일 전송 기능은 곧 추가될 예정입니다.');
+            });
+        }
+    }
+
+    // 기본 통계 보기
+    function showStats() {
+        const totalSummaries = {{ summaries|length }};
+        const totalVideos = {{ stats.total_videos or 0 }};
+        const avgVideosPerSummary = totalSummaries > 0 ? (totalVideos / totalSummaries).toFixed(1) : 0;
+
+        const statsHtml = `
+            <div class="modal fade" id="statsModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fab fa-google me-2"></i>
+                                Gemini 2.5 Pro 분석 통계
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="text-primary display-6 mb-2">
+                                        <i class="fas fa-newspaper"></i>
+                                    </div>
+                                    <h4>${totalSummaries}</h4>
+                                    <p class="text-muted">총 요약 수</p>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-success display-6 mb-2">
+                                        <i class="fas fa-video"></i>
+                                    </div>
+                                    <h4>${totalVideos}</h4>
+                                    <p class="text-muted">분석된 영상</p>
+                                </div>
+                                <div class="col-4">
+                                    <div class="text-info display-6 mb-2">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <h4>${avgVideosPerSummary}</h4>
+                                    <p class="text-muted">평균 영상/요약</p>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="text-success fs-1 mb-2">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <h5>95%</h5>
+                                    <p class="text-muted">분석 정확도</p>
+                                </div>
+                                <div class="col-6">
+                                    <div class="text-primary fs-1 mb-2">
+                                        <i class="fas fa-language"></i>
+                                    </div>
+                                    <h5>98%</h5>
+                                    <p class="text-muted">한국어 품질</p>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="text-center">
+                                <h5 class="text-success">
+                                    <i class="fas fa-money-bill-wave me-2"></i>
+                                    총 비용: $0 (완전 무료!)
+                                </h5>
+                                <p class="text-muted">
+                                    Gemini 2.5 Pro의 무료 사용량으로 모든 분석을 완료했습니다.<br>
+                                    환각 현상 최소화와 최고급 추론력을 무료로 경험하세요!
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 기존 모달 제거
+        const existingModal = document.getElementById('statsModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        // 새 모달 추가 및 표시
+        document.body.insertAdjacentHTML('beforeend', statsHtml);
+        const modal = new bootstrap.Modal(document.getElementById('statsModal'));
+        modal.show();
+    }
+
+    // 모드별 통계 보기 (개선사항 반영)
+    function showModeStats() {
+        // JavaScript로 현재 페이지의 요약들을 분석
+        const summaries = [
+            {% for summary in summaries %}
+            {
+                collection_mode: '{{ summary[7] if summary|length > 7 else "channel" }}',
+                analysis_type: '{{ summary[6] if summary|length > 6 else "detailed" }}',
+                video_count: {{ summary[4] or 0 }},
+                date: '{{ summary[1] }}'
+            },
+            {% endfor %}
+        ];
+
+        // 통계 계산
+        const channelMode = summaries.filter(s => s.collection_mode === 'channel').length;
+        const videoMode = summaries.filter(s => s.collection_mode === 'video').length;
+        const generalAnalysis = summaries.filter(s => s.analysis_type === 'general').length;
+        const detailedAnalysis = summaries.filter(s => s.analysis_type === 'detailed').length;
+
+        const modeStatsHtml = `
+            <div class="modal fade" id="modeStatsModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-analytics me-2"></i>
+                                모드별 통계 (개선사항 반영)
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <h6 class="text-primary">수집 방식별 통계</h6>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <div class="text-info display-6 mb-2">
+                                        <i class="fas fa-tv"></i>
+                                    </div>
+                                    <h4>${channelMode}</h4>
+                                    <p class="text-muted">채널 모드</p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <div class="text-purple display-6 mb-2">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                    <h4>${videoMode}</h4>
+                                    <p class="text-muted">영상 모드</p>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="row">
+                                <div class="col-12">
+                                    <h6 class="text-success">분석 방식별 통계</h6>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <div class="text-orange display-6 mb-2">
+                                        <i class="fas fa-list"></i>
+                                    </div>
+                                    <h4>${generalAnalysis}</h4>
+                                    <p class="text-muted">일반 분석</p>
+                                </div>
+                                <div class="col-6 text-center">
+                                    <div class="text-gradient display-6 mb-2">
+                                        <i class="fas fa-brain"></i>
+                                    </div>
+                                    <h4>${detailedAnalysis}</h4>
+                                    <p class="text-muted">다각화 분석</p>
+                                </div>
+                            </div>
+                            
+                            <hr>
+                            
+                            <div class="alert alert-info">
+                                <h6 class="alert-heading">
+                                    <i class="fas fa-lightbulb me-2"></i>
+                                    개선사항 활용도
+                                </h6>
+                                <p class="mb-0">
+                                    • <strong>수집 방식:</strong> 채널 모드 ${Math.round(channelMode/(channelMode+videoMode)*100) || 0}%, 영상 모드 ${Math.round(videoMode/(channelMode+videoMode)*100) || 0}%<br>
+                                    • <strong>분석 방식:</strong> 일반 분석 ${Math.round(generalAnalysis/(generalAnalysis+detailedAnalysis)*100) || 0}%, 다각화 분석 ${Math.round(detailedAnalysis/(generalAnalysis+detailedAnalysis)*100) || 0}%<br>
+                                    • <strong>총 분석:</strong> ${summaries.length}개 요약, 4가지 조합 모두 활용 가능
+                                </p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 기존 모달 제거
+        const existingModal = document.getElementById('modeStatsModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        // 새 모달 추가 및 표시
+        document.body.insertAdjacentHTML('beforeend', modeStatsHtml);
+        const modal = new bootstrap.Modal(document.getElementById('modeStatsModal'));
+        modal.show();
+    }
+
+    // 카드 클릭 시 상세 페이지로 이동 (버튼 클릭 제외)
+    document.querySelectorAll('.archive-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.cursor = 'pointer';
+        });
+    });
+
+    // 검색 기능
+    function searchSummaries(query) {
+        const cards = document.querySelectorAll('.archive-card');
+        cards.forEach(function(card) {
+            const title = card.querySelector('.card-title').textContent.toLowerCase();
+            const content = card.querySelector('.card-text').textContent.toLowerCase();
+            const keywords = card.querySelector('.archive-keywords') ? 
+                           card.querySelector('.archive-keywords').textContent.toLowerCase() : '';
+
+            if (title.includes(query.toLowerCase()) || 
+                content.includes(query.toLowerCase()) || 
+                keywords.includes(query.toLowerCase())) {
+                card.closest('.col-lg-6').style.display = 'block';
+            } else {
+                card.closest('.col-lg-6').style.display = 'none';
+            }
+        });
+    }
+
+    // 통계 애니메이션
+    function animateCounters() {
+        const counters = document.querySelectorAll('.card-body h5');
+        counters.forEach(function(counter) {
+            const target = parseInt(counter.textContent);
+            let current = 0;
+            const increment = target / 20;
+
+            const timer = setInterval(function() {
+                current += increment;
+                if (current >= target) {
+                    counter.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    counter.textContent = Math.floor(current);
+                }
+            }, 50);
+        });
+    }
+
+    // 페이지 로드 시 애니메이션 실행
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(animateCounters, 500);
+        
+        // 개선사항 반영 환영 메시지
+        const summaryCount = {{ summaries|length }};
+        if (summaryCount > 0) {
+            showTemporaryMessage('info', `총 ${summaryCount}개의 Gemini 2.5 Pro 분석 결과를 확인하실 수 있습니다. 채널/영상 모드와 일반/다각화 분석이 모두 적용되었습니다!`);
+        }
+
+        // 필터 적용 상태 표시
+        const hasFilter = {{ 'true' if request.args.get('search') or request.args.get('collection_mode') or request.args.get('analysis_type') or request.args.get('date_from') or request.args.get('date_to') else 'false' }};
+        if (hasFilter) {
+            showTemporaryMessage('info', '필터가 적용되었습니다. 모든 요약을 보려면 "필터 초기화"를 클릭하세요.');
+        }
+    });
+
+    // 검색 및 필터 자동 완성
+    document.getElementById('search').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        if (searchTerm.length > 2) {
+            // 실시간 검색 힌트 (향후 구현)
+            console.log('검색어:', searchTerm);
+        }
+    });
+</script>
+
+<style>
+/* 개선사항 반영: 새로운 배지 색상 */
+.badge.bg-purple {
+    background-color: #6f42c1 !important;
+}
+
+.badge.bg-orange {
+    background-color: #fd7e14 !important;
+}
+
+.badge.bg-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.text-purple {
+    color: #6f42c1 !important;
+}
+
+.text-orange {
+    color: #fd7e14 !important;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 배지 간격 조정 */
+.archive-card .card-header .d-flex .badge {
+    font-size: 0.7rem;
+    margin-bottom: 2px;
+}
+
+/* 모바일에서 배지 줄바꿈 */
+@media (max-width: 768px) {
+    .archive-card .card-header .d-flex {
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .archive-card .card-header .d-flex > div {
+        margin-top: 5px;
+    }
+}
+</style>
+{% endblock %}

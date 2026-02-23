@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}YouTube 요약기 - 보관함{% endblock %}
+
+{% block extra_css %}
+<style>
+    .archive-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .archive-header h2 { font-size: 1.5rem; font-weight: 700; margin: 0; }
+    .archive-count { color: var(--text-secondary); font-size: 0.9rem; }
+    .archive-item { display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--border); transition: background 0.2s; text-decoration: none; color: inherit; }
+    .archive-item:hover { background: var(--bg); }
+    .archive-thumb { width: 120px; min-width: 120px; border-radius: 8px; overflow: hidden; }
+    .archive-thumb img { width: 100%; display: block; }
+    .archive-info { flex: 1; min-width: 0; }
+    .archive-title { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .archive-channel { color: var(--text-secondary); font-size: 0.8rem; margin-bottom: 0.35rem; }
+    .archive-meta { display: flex; gap: 0.75rem; font-size: 0.75rem; color: var(--text-secondary); }
+    .archive-meta .badge-sm { background: var(--primary-light); color: var(--primary); padding: 1px 6px; border-radius: 4px; font-weight: 500; }
+    .archive-actions { display: flex; align-items: center; }
+    .delete-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 0.5rem; border-radius: 6px; font-size: 0.85rem; }
+    .delete-btn:hover { color: var(--danger); background: #fef2f2; }
+    .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-secondary); }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+    @media (max-width: 640px) { .archive-thumb { width: 80px; min-width: 80px; } }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="archive-header">
+    <h2><i class="fas fa-archive me-2" style="color: var(--primary);"></i>보관함</h2>
+    <span class="archive-count">
+        {% if analyses %}{{ analyses|length }}개의 분석 기록{% endif %}
+    </span>
+</div>
+
+<div class="card-custom">
+    {% if analyses %}
+        {% for a in analyses %}
+        <div class="archive-item" id="archive-{{ a.id }}">
+            <a href="/archive/{{ a.id }}" style="display: flex; gap: 1rem; flex: 1; text-decoration: none; color: inherit;">
+                <div class="archive-thumb">
+                    {% if a.thumbnail_url %}
+                        <img src="{{ a.thumbnail_url }}" alt="thumb">
+                    {% else %}
+                        <div style="width: 100%; padding-top: 56%; background: var(--bg); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-play-circle" style="color: var(--text-secondary);"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="archive-info">
+                    <div class="archive-title">{{ a.title or '제목 없음' }}</div>
+                    {% if a.channel_name %}
+                        <div class="archive-channel"><i class="fas fa-user-circle me-1"></i>{{ a.channel_name }}</div>
+                    {% endif %}
+                    <div class="archive-meta">
+                        <span class="badge-sm">
+                            {{ '심화 분석' if a.analysis_type == 'advanced' else '단일 분석' }}
+                        </span>
+                        {% if a.char_count %}
+                            <span>{{ '{:,}'.format(a.char_count) }}자</span>
+                        {% endif %}
+                        <span>{{ a.created_at[:16] if a.created_at else '' }}</span>
+                    </div>
+                </div>
+            </a>
+            <div class="archive-actions">
+                <button class="delete-btn" onclick="deleteAnalysis({{ a.id }})" title="삭제">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-inbox d-block"></i>
+            <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem;">아직 분석 기록이 없습니다</p>
+            <p>홈에서 YouTube URL을 분석하면 여기에 저장됩니다.</p>
+            <a href="/" class="btn-primary-custom mt-2" style="display: inline-block; text-decoration: none;">
+                <i class="fas fa-home me-1"></i>홈으로 가기
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    async function deleteAnalysis(id) {
+        if (!confirm('이 분석 기록을 삭제하시겠습니까?')) return;
+        try {
+            const resp = await fetch(`/api/archive/delete/${id}`, { method: 'DELETE' });
+            const data = await resp.json();
+            if (data.success) {
+                const el = document.getElementById(`archive-${id}`);
+                el.style.transition = 'opacity 0.3s';
+                el.style.opacity = '0';
+                setTimeout(() => el.remove(), 300);
+            } else {
+                alert('삭제 실패: ' + data.message);
+            }
+        } catch (e) {
+            alert('서버 오류: ' + e.message);
+        }
+    }
+</script>
+{% endblock %}

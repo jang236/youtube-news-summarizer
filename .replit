@@ -1,0 +1,27 @@
+entrypoint = "main.py"
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_11"
+packages = ["c-ares", "cargo", "ffmpeg-full", "grpc", "killall", "libiconv", "libxcrypt", "lsof", "mailutils", "openssl", "pkg-config", "rustc", "sqlite-interactive", "xcodebuild", "zlib"]
+
+[unitTest]
+language = "python3"
+
+[gitHubImport]
+requiredFiles = [".replit", "replit.nix"]
+
+[deployment]
+run = ["python3", "main.py"]
+deploymentTarget = "gce"
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 8080
+externalPort = 8080
+
+[agent]
+expertMode = true

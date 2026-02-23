@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube 영상 분석기</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.4rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 4px;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .card-header {
+            background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            padding: 1rem 1.2rem;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-label {
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .form-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .form-check-input {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-check-input:checked {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: white;
+        }
+
+        .form-check-label {
+            color: white;
+            font-weight: 500;
+        }
+
+        .form-check-label strong {
+            font-weight: 700;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.5);
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .loading-spinner {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .spinner-border {
+            width: 4rem;
+            height: 4rem;
+            border-width: 0.3rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            color: #333;
+            animation: slideInUp 0.5s ease;
+        }
+
+        .result-card .card-header {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .analysis-result {
+            white-space: pre-wrap;
+            line-height: 1.7;
+            font-size: 1rem;
+            color: #444;
+        }
+
+        .btn-outline-secondary {
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            color: #667eea;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #667eea;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: white;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 반응형 */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+            
+            .glass-card {
+                margin: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fab fa-youtube me-2"></i>
+                YouTube 분석기
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/archive">
+                    <i class="fas fa-archive me-1"></i>보관함
+                </a>
+                <a class="nav-link" href="/setup">
+                    <i class="fas fa-cog me-1"></i>설정
+                </a>
+                <a class="nav-link" href="/help">
+                    <i class="fas fa-question-circle me-1"></i>도움말
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4 main-container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="hero-section">
+                    <h1 class="hero-title">
+                        <i class="fab fa-youtube text-danger me-3"></i>
+                        YouTube 분석기
+                    </h1>
+                    <p class="hero-subtitle">
+                        Gemini 2.5 Flash AI로 YouTube 영상을 빠르고 정확하게 분석합니다
+                    </p>
+                </div>
+
+                <div class="card glass-card">
+                    <div class="card-header">
+                        <h5 class="mb-0 text-white">
+                            <i class="fab fa-youtube text-danger me-2"></i>
+                            YouTube URL 입력
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="analysisForm">
+                            <div class="mb-4">
+                                <label for="videoUrl" class="form-label">YouTube 영상 URL</label>
+                                <input type="url" class="form-control form-control-lg" id="videoUrl" 
+                                       placeholder="https://www.youtube.com/watch?v=..." required>
+                                <div class="form-text">
+                                    지원 형식: youtube.com/watch, youtu.be, youtube.com/shorts
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">분석 방식 선택</label>
+                                <div class="row g-4">
+                                    <div class="col-md-6">
+                                        <div class="form-check p-3" style="background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                                            <input class="form-check-input" type="radio" name="analysisType" 
+                                                   id="general" value="general" checked>
+                                            <label class="form-check-label" for="general">
+                                                <strong>일반 분석</strong><br>
+                                                <small class="text-white-50">빠르고 간단한 요약 (800-1000자)</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check p-3" style="background: rgba(255,255,255,0.05); border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);">
+                                            <input class="form-check-input" type="radio" name="analysisType" 
+                                                   id="professional" value="professional">
+                                            <label class="form-check-label" for="professional">
+                                                <strong>전문 분석</strong><br>
+                                                <small class="text-white-50">심화된 인사이트 (1200-1500자)</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg" id="analyzeBtn">
+                                    <i class="fas fa-play me-2"></i>분석 시작
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 로딩 스피너 -->
+                <div class="text-center my-5 loading-spinner" id="loadingSpinner">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-4 text-white h5">영상을 분석하고 있습니다...</p>
+                    <p class="text-white-50">잠시만 기다려주세요</p>
+                </div>
+
+                <!-- 결과 표시 영역 -->
+                <div id="resultContainer" style="display: none;">
+                    <div class="card result-card mt-5">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-line me-2"></i>
+                                분석 결과
+                            </h5>
+                            <button class="btn btn-outline-secondary btn-sm" id="copyBtn">
+                                <i class="fas fa-copy me-1"></i>복사
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="analysisResult" class="analysis-result"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 에러 표시 영역 -->
+                <div id="errorContainer" style="display: none;">
+                    <div class="alert alert-danger mt-5">
+                        <h6><i class="fas fa-exclamation-triangle me-2"></i>분석 실패</h6>
+                        <p id="errorMessage" class="mb-0"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('analysisForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const videoUrl = document.getElementById('videoUrl').value.trim();
+            const analysisType = document.querySelector('input[name="analysisType"]:checked').value;
+            
+            if (!videoUrl) {
+                alert('YouTube URL을 입력해주세요.');
+                return;
+            }
+
+            // UI 업데이트 - 부드러운 전환
+            document.getElementById('loadingSpinner').style.display = 'block';
+            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('errorContainer').style.display = 'none';
+            document.getElementById('analyzeBtn').disabled = true;
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        video_url: videoUrl,
+                        analysis_type: analysisType
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('analysisResult').textContent = result.summary_content;
+                    document.getElementById('resultContainer').style.display = 'block';
+                    
+                    // 결과창으로 부드럽게 스크롤
+                    setTimeout(() => {
+                        document.getElementById('resultContainer').scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }, 100);
+                } else {
+                    document.getElementById('errorMessage').textContent = result.error;
+                    document.getElementById('errorContainer').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('errorMessage').textContent = '분석 중 오류가 발생했습니다.';
+                document.getElementById('errorContainer').style.display = 'block';
+            } finally {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('analyzeBtn').disabled = false;
+            }
+        });
+
+        // 복사 기능 - 피드백 개선
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const result = document.getElementById('analysisResult').textContent;
+            navigator.clipboard.writeText(result).then(function() {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = '<i class="fas fa-check me-1"></i>복사됨!';
+                btn.classList.remove('btn-outline-secondary');
+                btn.classList.add('btn-success');
+                
+                setTimeout(function() {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-secondary');
+                }, 2500);
+            });
+        });
+
+        // 페이지 로드 애니메이션
+        document.addEventListener('DOMContentLoaded', function() {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 50);
+        });
+    </script>
+</body>
+</html>

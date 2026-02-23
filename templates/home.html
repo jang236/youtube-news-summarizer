@@ -1,0 +1,702 @@
+{% extends "base.html" %}
+{% block title %}YouTube 요약기 - 홈{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 히어로 섹션 */
+    .hero-section {
+        text-align: center;
+        padding: 2rem 0 1rem;
+    }
+    .hero-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .hero-sub {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    /* 분석 모드 토글 */
+    .mode-toggle {
+        display: inline-flex;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 4px;
+        gap: 4px;
+    }
+    .mode-btn {
+        padding: 0.5rem 1.25rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: transparent;
+        color: var(--text-secondary);
+    }
+    .mode-btn.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+    }
+    .mode-btn:hover:not(.active) {
+        background: var(--primary-light);
+        color: var(--primary);
+    }
+
+    /* URL 입력 영역 */
+    .url-input-group {
+        position: relative;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    .url-input {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        padding-right: 120px;
+        border: 2px solid var(--border);
+        border-radius: 14px;
+        font-size: 1rem;
+        transition: all 0.2s;
+        background: var(--surface);
+    }
+    .url-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+        outline: none;
+    }
+    .url-input::placeholder { color: #a0aec0; }
+    .submit-btn {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.6rem 1.25rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .submit-btn:hover:not(:disabled) {
+        background: var(--primary-dark);
+    }
+    .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    /* 다중 URL 섹션 */
+    .multi-url-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    .url-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+        align-items: center;
+    }
+    .url-row input {
+        flex: 1;
+        padding: 0.65rem 1rem;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.95rem;
+    }
+    .url-row input:focus {
+        border-color: var(--primary);
+        outline: none;
+    }
+    .remove-url-btn {
+        background: none;
+        border: none;
+        color: var(--danger);
+        font-size: 1.1rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+    .remove-url-btn:hover { background: #fef2f2; }
+    .add-url-btn {
+        background: none;
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        padding: 0.6rem;
+        width: 100%;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .add-url-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    /* 로딩 */
+    .loading-overlay {
+        display: none;
+        text-align: center;
+        padding: 3rem 0;
+    }
+    .loading-overlay.active { display: block; }
+    .loading-icon {
+        width: 48px; height: 48px;
+        border: 3px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 1rem;
+    }
+    .loading-step {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+
+    /* 결과 영역 */
+    .result-section { display: none; }
+    .result-section.active { display: block; }
+
+    .result-header {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+        background: var(--bg);
+        border-radius: var(--radius);
+    }
+    .result-thumb {
+        width: 160px;
+        min-width: 160px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .result-thumb img { width: 100%; display: block; }
+    .result-meta h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        line-height: 1.4;
+    }
+    .result-meta .channel {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+    .result-meta .extraction-info {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+    .extraction-info .badge-custom {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    /* 탭 */
+    .result-tabs {
+        display: flex;
+        border-bottom: 2px solid var(--border);
+        margin-bottom: 1.25rem;
+        gap: 0;
+    }
+    .result-tab {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: none;
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        position: relative;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+    }
+    .result-tab.active {
+        color: var(--primary);
+    }
+    .result-tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0; right: 0;
+        height: 2px;
+        background: var(--primary);
+        border-radius: 1px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* 자막 패널 */
+    .transcript-panel {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 1.25rem;
+        background: #f1f5f9;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    /* 요약 패널 */
+    .summary-panel {
+        padding: 1.25rem;
+        line-height: 1.8;
+    }
+
+    /* 액션 버튼 */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+    .action-btn {
+        padding: 0.4rem 0.9rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .action-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    .action-btn.copied {
+        border-color: var(--success);
+        color: var(--success);
+    }
+
+    /* 분석 모드 선택 상세 */
+    .analysis-mode-detail {
+        max-width: 700px;
+        margin: 1rem auto;
+        display: flex;
+        gap: 1rem;
+    }
+    .mode-card {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    .mode-card:hover { border-color: var(--primary); }
+    .mode-card.selected {
+        border-color: var(--primary);
+        background: var(--primary-light);
+    }
+    .mode-card .mode-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .mode-card .mode-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+    .mode-card .mode-desc {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    @media (max-width: 640px) {
+        .result-header { flex-direction: column; }
+        .result-thumb { width: 100%; min-width: unset; }
+        .analysis-mode-detail { flex-direction: column; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 히어로 -->
+<div class="hero-section">
+    <h1 class="hero-title">YouTube 영상을 AI가 분석합니다</h1>
+    <p class="hero-sub">URL을 입력하면 자막 추출부터 핵심 요약까지 자동으로</p>
+</div>
+
+<!-- 입력 모드 선택 -->
+<div class="text-center mb-3">
+    <div class="mode-toggle" id="inputModeToggle">
+        <button class="mode-btn active" data-mode="single" onclick="switchInputMode('single')">
+            <i class="fas fa-play-circle me-1"></i>단일 영상
+        </button>
+        <button class="mode-btn" data-mode="multi" onclick="switchInputMode('multi')">
+            <i class="fas fa-layer-group me-1"></i>다중 비교
+        </button>
+    </div>
+</div>
+
+<!-- 단일 영상 입력 -->
+<div id="singleInput">
+    <!-- 분석 모드 선택 -->
+    <div class="analysis-mode-detail" id="analysisModeSelect">
+        <div class="mode-card selected" data-type="single" onclick="selectAnalysisType('single')">
+            <div class="mode-icon">📋</div>
+            <div class="mode-name">단일 분석</div>
+            <div class="mode-desc">주제 / 핵심 포인트 / 결론</div>
+        </div>
+        <div class="mode-card" data-type="advanced" onclick="selectAnalysisType('advanced')">
+            <div class="mode-icon">🔍</div>
+            <div class="mode-name">심화 분석</div>
+            <div class="mode-desc">논점 / 근거 / 다양한 시각 / 실행 인사이트</div>
+        </div>
+    </div>
+
+    <div class="url-input-group">
+        <input type="text" class="url-input" id="videoUrl"
+               placeholder="YouTube URL을 붙여넣으세요"
+               onkeypress="if(event.key==='Enter') analyzeSingle()">
+        <button class="submit-btn" id="analyzeBtn" onclick="analyzeSingle()">
+            <i class="fas fa-search me-1"></i>분석
+        </button>
+    </div>
+</div>
+
+<!-- 다중 영상 입력 -->
+<div id="multiInput" style="display: none;">
+    <div class="multi-url-container">
+        <div id="urlList">
+            <div class="url-row">
+                <input type="text" placeholder="YouTube URL 1" class="multi-url">
+                <button class="remove-url-btn" onclick="removeUrlRow(this)" title="삭제">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="url-row">
+                <input type="text" placeholder="YouTube URL 2" class="multi-url">
+                <button class="remove-url-btn" onclick="removeUrlRow(this)" title="삭제">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <button class="add-url-btn" onclick="addUrlRow()" id="addUrlBtn">
+            <i class="fas fa-plus me-1"></i>URL 추가 (최대 3개)
+        </button>
+        <div class="text-center mt-3">
+            <button class="btn-primary-custom" onclick="analyzeMultiple()">
+                <i class="fas fa-chart-bar me-1"></i>통합 분석 시작
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 로딩 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="card-custom p-4 mx-auto" style="max-width: 500px;">
+        <div class="loading-icon"></div>
+        <div class="loading-step" id="loadingStep">자막을 추출하고 있습니다...</div>
+        <div class="mt-2" style="font-size: 0.8rem; color: var(--text-secondary);" id="loadingDetail"></div>
+    </div>
+</div>
+
+<!-- 결과 -->
+<div class="result-section" id="resultSection">
+    <div class="card-custom p-0 mt-4 fade-in">
+        <!-- 영상 정보 헤더 -->
+        <div class="result-header" id="resultHeader"></div>
+
+        <!-- 탭 & 액션 -->
+        <div class="px-4">
+            <div class="result-tabs">
+                <button class="result-tab active" onclick="switchTab('summary')">
+                    <i class="fas fa-magic me-1"></i>AI 요약
+                </button>
+                <button class="result-tab" onclick="switchTab('transcript')">
+                    <i class="fas fa-file-alt me-1"></i>자막 전체
+                </button>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn" onclick="copyContent('summary')">
+                    <i class="fas fa-copy"></i> 요약 복사
+                </button>
+                <button class="action-btn" onclick="copyContent('transcript')">
+                    <i class="fas fa-copy"></i> 자막 복사
+                </button>
+                <button class="action-btn" onclick="downloadTranscript()">
+                    <i class="fas fa-download"></i> 자막 다운로드
+                </button>
+            </div>
+        </div>
+
+        <!-- 탭 콘텐츠 -->
+        <div class="px-4 pb-4">
+            <div class="tab-content active" id="tab-summary">
+                <div class="summary-panel markdown-body" id="summaryContent"></div>
+            </div>
+            <div class="tab-content" id="tab-transcript">
+                <div class="transcript-panel" id="transcriptContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let currentAnalysisType = 'single';
+    let currentData = null;
+
+    // ==========================================
+    // 입력 모드 전환
+    // ==========================================
+    function switchInputMode(mode) {
+        document.querySelectorAll('#inputModeToggle .mode-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+
+        document.getElementById('singleInput').style.display = mode === 'single' ? 'block' : 'none';
+        document.getElementById('multiInput').style.display = mode === 'multi' ? 'block' : 'none';
+    }
+
+    // ==========================================
+    // 분석 타입 선택
+    // ==========================================
+    function selectAnalysisType(type) {
+        currentAnalysisType = type;
+        document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+        document.querySelector(`.mode-card[data-type="${type}"]`).classList.add('selected');
+    }
+
+    // ==========================================
+    // 단일 영상 분석
+    // ==========================================
+    async function analyzeSingle() {
+        const url = document.getElementById('videoUrl').value.trim();
+        if (!url) { alert('YouTube URL을 입력해주세요.'); return; }
+
+        showLoading('자막을 추출하고 있습니다...');
+        const btn = document.getElementById('analyzeBtn');
+        btn.disabled = true;
+
+        try {
+            updateLoading('자막을 추출하고 있습니다...', '잠시만 기다려주세요');
+
+            const resp = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    video_url: url,
+                    analysis_type: currentAnalysisType
+                })
+            });
+
+            const data = await resp.json();
+
+            if (data.success) {
+                currentData = data;
+                showResult(data);
+            } else {
+                alert(data.message || '분석에 실패했습니다.');
+            }
+        } catch (e) {
+            alert('서버 연결 오류: ' + e.message);
+        } finally {
+            hideLoading();
+            btn.disabled = false;
+        }
+    }
+
+    // ==========================================
+    // 다중 영상 분석
+    // ==========================================
+    async function analyzeMultiple() {
+        const inputs = document.querySelectorAll('.multi-url');
+        const urls = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+
+        if (urls.length < 2) { alert('최소 2개의 URL을 입력해주세요.'); return; }
+
+        showLoading(`${urls.length}개 영상 자막을 추출하고 있습니다...`);
+
+        try {
+            const resp = await fetch('/api/analyze_multiple', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ video_urls: urls })
+            });
+
+            const data = await resp.json();
+
+            if (data.success) {
+                currentData = { summary: data.summary, transcript: '', video_info: { title: `${data.total_analyzed}개 영상 통합 분석` } };
+                showResult({
+                    video_info: { title: `${data.total_analyzed}개 영상 통합 분석`, channel_name: '', thumbnail_url: '' },
+                    summary: data.summary,
+                    transcript: data.results.map((r, i) => `=== 영상 ${i+1} ===\n${r.success ? '추출 성공' : '추출 실패: ' + r.error}`).join('\n\n'),
+                    analysis_type: 'multiple',
+                    extraction: { method: '다중 분석', language: '', char_count: 0 }
+                });
+            } else {
+                alert(data.message);
+            }
+        } catch (e) {
+            alert('서버 연결 오류: ' + e.message);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // ==========================================
+    // URL 행 관리
+    // ==========================================
+    function addUrlRow() {
+        const list = document.getElementById('urlList');
+        const count = list.querySelectorAll('.url-row').length;
+        if (count >= 3) { alert('최대 3개까지만 추가할 수 있습니다.'); return; }
+
+        const row = document.createElement('div');
+        row.className = 'url-row';
+        row.innerHTML = `
+            <input type="text" placeholder="YouTube URL ${count + 1}" class="multi-url">
+            <button class="remove-url-btn" onclick="removeUrlRow(this)" title="삭제">
+                <i class="fas fa-times"></i>
+            </button>`;
+        list.appendChild(row);
+
+        if (list.querySelectorAll('.url-row').length >= 3) {
+            document.getElementById('addUrlBtn').style.display = 'none';
+        }
+    }
+
+    function removeUrlRow(btn) {
+        const list = document.getElementById('urlList');
+        if (list.querySelectorAll('.url-row').length <= 2) return;
+        btn.closest('.url-row').remove();
+        document.getElementById('addUrlBtn').style.display = 'block';
+    }
+
+    // ==========================================
+    // 로딩 UI
+    // ==========================================
+    function showLoading(msg) {
+        document.getElementById('loadingOverlay').classList.add('active');
+        document.getElementById('resultSection').classList.remove('active');
+        updateLoading(msg);
+    }
+    function hideLoading() {
+        document.getElementById('loadingOverlay').classList.remove('active');
+    }
+    function updateLoading(msg, detail) {
+        document.getElementById('loadingStep').textContent = msg;
+        document.getElementById('loadingDetail').textContent = detail || '';
+    }
+
+    // ==========================================
+    // 결과 표시
+    // ==========================================
+    function showResult(data) {
+        const vi = data.video_info || {};
+        const ext = data.extraction || {};
+
+        // 헤더
+        let headerHtml = '';
+        if (vi.thumbnail_url) {
+            headerHtml += `<div class="result-thumb"><img src="${vi.thumbnail_url}" alt="thumbnail"></div>`;
+        }
+        headerHtml += `
+            <div class="result-meta">
+                <h3>${vi.title || '분석 결과'}</h3>
+                ${vi.channel_name ? `<div class="channel"><i class="fas fa-user-circle me-1"></i>${vi.channel_name}</div>` : ''}
+                <div class="extraction-info">
+                    ${ext.method ? `<span class="badge-custom">${ext.method}</span>` : ''}
+                    ${ext.language ? `<span>${ext.language}</span>` : ''}
+                    ${ext.char_count ? `<span>${ext.char_count.toLocaleString()}자</span>` : ''}
+                    <span class="badge-custom">${data.analysis_type === 'advanced' ? '심화 분석' : data.analysis_type === 'multiple' ? '통합 분석' : '단일 분석'}</span>
+                </div>
+            </div>`;
+
+        document.getElementById('resultHeader').innerHTML = headerHtml;
+
+        // 요약 (마크다운 렌더링)
+        document.getElementById('summaryContent').innerHTML = marked.parse(data.summary || '');
+
+        // 자막
+        document.getElementById('transcriptContent').textContent = data.transcript || '';
+
+        // 표시
+        document.getElementById('resultSection').classList.add('active');
+
+        // 결과로 스크롤
+        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ==========================================
+    // 탭 전환
+    // ==========================================
+    function switchTab(tab) {
+        document.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        event.target.closest('.result-tab').classList.add('active');
+        document.getElementById(`tab-${tab}`).classList.add('active');
+    }
+
+    // ==========================================
+    // 복사 & 다운로드
+    // ==========================================
+    function copyContent(type) {
+        let text = '';
+        if (type === 'summary') {
+            text = document.getElementById('summaryContent').innerText;
+        } else {
+            text = document.getElementById('transcriptContent').textContent;
+        }
+
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = event.target.closest('.action-btn');
+            btn.classList.add('copied');
+            btn.innerHTML = `<i class="fas fa-check"></i> 복사됨`;
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = `<i class="fas fa-copy"></i> ${type === 'summary' ? '요약' : '자막'} 복사`;
+            }, 2000);
+        });
+    }
+
+    function downloadTranscript() {
+        if (!currentData) return;
+        const text = currentData.transcript || document.getElementById('transcriptContent').textContent;
+        const title = (currentData.video_info && currentData.video_info.title) || 'transcript';
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${title.replace(/[^a-zA-Z0-9가-힣]/g, '_')}_자막.txt`;
+        a.click();
+    }
+
+    // ==========================================
+    // 페이지 로드 시 설정 확인
+    // ==========================================
+    window.addEventListener('load', async () => {
+        try {
+            const resp = await fetch('/api/check_settings');
+            const data = await resp.json();
+            if (!data.gemini_api_configured) {
+                document.getElementById('videoUrl').placeholder = '먼저 설정 페이지에서 API 키를 등록해주세요 →';
+            }
+        } catch (e) {}
+    });
+</script>
+{% endblock %}
