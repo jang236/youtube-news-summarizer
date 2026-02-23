@@ -483,7 +483,7 @@ def list_analyses():
         conn = get_db()
         analyses = conn.execute(
             'SELECT id, video_id, title, channel_name, thumbnail_url, '
-            'analysis_type, char_count, created_at '
+            'summary, analysis_type, char_count, created_at '
             'FROM analyses ORDER BY created_at DESC LIMIT 50'
         ).fetchall()
         conn.close()
@@ -491,6 +491,27 @@ def list_analyses():
         return jsonify({
             'success': True,
             'analyses': [dict(a) for a in analyses]
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+
+@app.route('/api/archive/<int:analysis_id>', methods=['GET'])
+def get_analysis_detail(analysis_id):
+    """분석 상세 조회"""
+    try:
+        conn = get_db()
+        analysis = conn.execute(
+            'SELECT * FROM analyses WHERE id = ?', (analysis_id,)
+        ).fetchone()
+        conn.close()
+
+        if not analysis:
+            return jsonify({'success': False, 'message': '분석을 찾을 수 없습니다.'})
+
+        return jsonify({
+            'success': True,
+            'analysis': dict(analysis)
         })
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)})
