@@ -1,964 +1,702 @@
-<!DOCTYPE html>
-<html lang="ko">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube 요약봇</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0
-        }
-
-        :root {
-            --bg: #0d1117;
-            --bg2: #161b22;
-            --card: #1c2333;
-            --card-h: #242d3d;
-            --border: #30363d;
-            --text: #e6edf3;
-            --text2: #8b949e;
-            --muted: #6e7681;
-            --blue: #3b82f6;
-            --blue-h: #2563eb;
-            --blue-g: rgba(59, 130, 246, .15);
-            --green: #2ea043;
-            --red: #f85149;
-            --orange: #d29922;
-            --r: 12px;
-            --rs: 8px;
-            --t: .2s ease;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            min-height: 100vh
-        }
-
-        /* Header */
-        .hd {
-            background: var(--bg2);
-            border-bottom: 1px solid var(--border);
-            padding: 0 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100
-        }
-
-        .hd-in {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 52px
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            font-size: 16px;
-            color: var(--text);
-            text-decoration: none
-        }
-
-        .logo-i {
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, #f85149, #ff6b6b);
-            border-radius: 7px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px
-        }
-
-        .hd-r {
-            display: flex;
-            align-items: center;
-            gap: 8px
-        }
-
-        /* Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 7px 14px;
-            font-size: 13px;
-            font-weight: 500;
-            border: none;
-            border-radius: var(--rs);
-            cursor: pointer;
-            transition: var(--t);
-            text-decoration: none;
-            font-family: inherit
-        }
-
-        .btn-p {
-            background: var(--blue);
-            color: #fff
-        }
-
-        .btn-p:hover {
-            background: var(--blue-h)
-        }
-
-        .btn-p:disabled {
-            opacity: .5;
-            cursor: not-allowed
-        }
-
-        .btn-g {
-            background: transparent;
-            color: var(--text2);
-            border: 1px solid var(--border)
-        }
-
-        .btn-g:hover {
-            background: var(--card);
-            color: var(--text)
-        }
-
-        .btn-d {
-            background: transparent;
-            color: var(--red);
-            border: 1px solid rgba(248, 81, 73, .3);
-            padding: 4px 10px;
-            font-size: 11px
-        }
-
-        .btn-d:hover {
-            background: rgba(248, 81, 73, .1)
-        }
-
-        .btn-sm {
-            padding: 5px 10px;
-            font-size: 12px
-        }
-
-        /* Main */
-        .main {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px
-        }
-
-        /* Highlight Card */
-        .highlight {
-            background: linear-gradient(135deg, #1a1f35, #1c2333);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
-            overflow: hidden
-        }
-
-        .highlight::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--blue), #8b5cf6, var(--blue))
-        }
-
-        .hl-label {
-            font-size: 11px;
-            color: var(--blue);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            margin-bottom: 8px
-        }
-
-        .hl-text {
-            font-size: 14px;
-            color: var(--text);
-            line-height: 1.7
-        }
-
-        .hl-empty {
-            font-size: 13px;
-            color: var(--muted);
-            font-style: italic
-        }
-
-        /* Section */
-        .sec {
-            margin-bottom: 24px
-        }
-
-        .sec-h {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px
-        }
-
-        .sec-t {
-            font-size: 16px;
-            font-weight: 600
-        }
-
-        .sec-sub {
-            font-size: 12px;
-            color: var(--muted);
-            margin-left: 8px;
-            font-weight: 400
-        }
-
-        /* Channel Group */
-        .ch-group {
-            margin-bottom: 20px
-        }
-
-        .ch-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--blue);
-            padding: 6px 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px
-        }
-
-        .ch-count {
-            font-size: 11px;
-            color: var(--muted);
-            font-weight: 400
-        }
-
-        /* Video Card */
-        .v-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 14px;
-            display: flex;
-            gap: 14px;
-            transition: var(--t);
-            cursor: pointer;
-            margin-bottom: 8px
-        }
-
-        .v-card:hover {
-            background: var(--card-h);
-            border-color: var(--blue);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, .3)
-        }
-
-        .v-thumb {
-            width: 140px;
-            min-width: 140px;
-            height: 79px;
-            border-radius: var(--rs);
-            object-fit: cover;
-            background: var(--bg)
-        }
-
-        .v-info {
-            flex: 1;
-            min-width: 0
-        }
-
-        .v-title {
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.4;
-            margin-bottom: 4px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden
-        }
-
-        .v-sum {
-            font-size: 12px;
-            color: var(--text2);
-            line-height: 1.5;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden
-        }
-
-        .v-meta {
-            font-size: 11px;
-            color: var(--muted);
-            margin-top: 4px
-        }
-
-        /* Channel Manage */
-        .ch-manage {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 16px
-        }
-
-        .ch-manage-h {
-            font-size: 13px;
-            color: var(--text2);
-            margin-bottom: 10px;
-            font-weight: 500
-        }
-
-        .ch-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border)
-        }
-
-        .ch-row:last-child {
-            border-bottom: none
-        }
-
-        .ch-name {
-            font-size: 13px;
-            font-weight: 500
-        }
-
-        .ch-id {
-            font-size: 11px;
-            color: var(--muted)
-        }
-
-        .input-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px
-        }
-
-        .inp {
-            flex: 1;
-            padding: 8px 12px;
-            font-size: 13px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: var(--rs);
-            color: var(--text);
-            outline: none;
-            transition: var(--t);
-            font-family: inherit
-        }
-
-        .inp:focus {
-            border-color: var(--blue);
-            box-shadow: 0 0 0 3px var(--blue-g)
-        }
-
-        .inp::placeholder {
-            color: var(--muted)
-        }
-
-        /* Analyze Modal */
-        .modal-bg {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(13, 17, 23, .88);
-            z-index: 800;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 60px 20px 20px;
-            overflow-y: auto
-        }
-
-        .modal-bg.show {
-            display: flex
-        }
-
-        .modal {
-            background: var(--bg2);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            max-width: 800px;
-            width: 100%;
-            padding: 24px;
-            box-shadow: 0 12px 48px rgba(0, 0, 0, .5)
-        }
-
-        .modal-h {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px
-        }
-
-        .modal-h h2 {
-            font-size: 18px;
-            font-weight: 600
-        }
-
-        .modal-x {
-            background: none;
-            border: none;
-            color: var(--muted);
-            font-size: 22px;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px
-        }
-
-        .modal-x:hover {
-            color: var(--text);
-            background: var(--card)
-        }
-
-        /* Analysis Result */
-        .result {
-            margin-top: 16px
-        }
-
-        .result-box {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--r);
-            padding: 20px;
-            margin-top: 12px
-        }
-
-        .result-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px
-        }
-
-        .result-ch {
-            font-size: 12px;
-            color: var(--blue);
-            margin-bottom: 12px
-        }
-
-        .result-body {
-            font-size: 14px;
-            line-height: 1.8;
-            color: var(--text2)
-        }
-
-        .result-body p {
-            margin-bottom: 12px
-        }
-
-        .result-body strong {
-            color: var(--text)
-        }
-
-        .result-body ul,
-        .result-body ol {
-            padding-left: 20px;
-            margin-bottom: 12px
-        }
-
-        .result-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            color: var(--blue);
-            margin-top: 12px;
-            text-decoration: none
-        }
-
-        .result-link:hover {
-            text-decoration: underline
-        }
-
-        /* History */
-        .hist-item {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: var(--t)
-        }
-
-        .hist-item:hover {
-            background: var(--card);
-            margin: 0 -12px;
-            padding: 10px 12px;
-            border-radius: var(--rs)
-        }
-
-        .hist-thumb {
-            width: 60px;
-            height: 34px;
-            border-radius: 4px;
-            object-fit: cover
-        }
-
-        .hist-title {
-            font-size: 12px;
-            font-weight: 500;
-            flex: 1
-        }
-
-        .hist-date {
-            font-size: 11px;
-            color: var(--muted);
-            white-space: nowrap
-        }
-
-        /* Detail Modal */
-        .detail-bg {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(13, 17, 23, .88);
-            z-index: 900;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 40px 20px;
-            overflow-y: auto
-        }
-
-        .detail-bg.show {
-            display: flex
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 10px 18px;
-            border-radius: var(--rs);
-            font-size: 13px;
-            font-weight: 500;
-            z-index: 1000;
-            transform: translateY(80px);
-            opacity: 0;
-            transition: .3s ease
-        }
-
-        .toast.show {
-            transform: translateY(0);
-            opacity: 1
-        }
-
-        .toast-ok {
-            background: var(--green);
-            color: #fff
-        }
-
-        .toast-err {
-            background: var(--red);
-            color: #fff
-        }
-
-        /* Loading */
-        .spin {
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border);
-            border-top-color: var(--blue);
-            border-radius: 50%;
-            animation: sp .7s linear infinite;
-            display: inline-block
-        }
-
-        @keyframes sp {
-            to {
-                transform: rotate(360deg)
-            }
-        }
-
-        .ld {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(13, 17, 23, .8);
-            z-index: 950;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 12px
-        }
-
-        .ld.show {
-            display: flex
-        }
-
-        .ld-t {
-            font-size: 13px;
-            color: var(--text2)
-        }
-
-        /* Empty */
-        .empty {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--muted)
-        }
-
-        .empty-i {
-            font-size: 40px;
-            margin-bottom: 12px
-        }
-
-        .empty-t {
-            font-size: 14px;
-            color: var(--text2)
-        }
-
-        /* Responsive */
-        @media(max-width:600px) {
-            .v-card {
-                flex-direction: column
-            }
-
-            .v-thumb {
-                width: 100%;
-                height: auto;
-                aspect-ratio: 16/9
-            }
-
-            .main {
-                padding: 12px
-            }
-
-            .input-row {
-                flex-direction: column
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <header class="hd">
-        <div class="hd-in">
-            <a href="/" class="logo">
-                <div class="logo-i">▶</div>YouTube 요약봇
-            </a>
-            <div class="hd-r">
-                <button class="btn btn-p btn-sm" onclick="openAnalyze()">🔍 영상 분석</button>
-                <button class="btn btn-g btn-sm" id="btnDigest" onclick="runDigest()">▶ 수집 실행</button>
-            </div>
+{% extends "base.html" %}
+{% block title %}YouTube 요약기 - 홈{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 히어로 섹션 */
+    .hero-section {
+        text-align: center;
+        padding: 2rem 0 1rem;
+    }
+    .hero-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+    .hero-sub {
+        color: var(--text-secondary);
+        font-size: 1rem;
+    }
+
+    /* 분석 모드 토글 */
+    .mode-toggle {
+        display: inline-flex;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 4px;
+        gap: 4px;
+    }
+    .mode-btn {
+        padding: 0.5rem 1.25rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: transparent;
+        color: var(--text-secondary);
+    }
+    .mode-btn.active {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 2px 8px rgba(37,99,235,0.25);
+    }
+    .mode-btn:hover:not(.active) {
+        background: var(--primary-light);
+        color: var(--primary);
+    }
+
+    /* URL 입력 영역 */
+    .url-input-group {
+        position: relative;
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    .url-input {
+        width: 100%;
+        padding: 1rem 1.25rem;
+        padding-right: 120px;
+        border: 2px solid var(--border);
+        border-radius: 14px;
+        font-size: 1rem;
+        transition: all 0.2s;
+        background: var(--surface);
+    }
+    .url-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+        outline: none;
+    }
+    .url-input::placeholder { color: #a0aec0; }
+    .submit-btn {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 0.6rem 1.25rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .submit-btn:hover:not(:disabled) {
+        background: var(--primary-dark);
+    }
+    .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    /* 다중 URL 섹션 */
+    .multi-url-container {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+    .url-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+        align-items: center;
+    }
+    .url-row input {
+        flex: 1;
+        padding: 0.65rem 1rem;
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        font-size: 0.95rem;
+    }
+    .url-row input:focus {
+        border-color: var(--primary);
+        outline: none;
+    }
+    .remove-url-btn {
+        background: none;
+        border: none;
+        color: var(--danger);
+        font-size: 1.1rem;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+    .remove-url-btn:hover { background: #fef2f2; }
+    .add-url-btn {
+        background: none;
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        padding: 0.6rem;
+        width: 100%;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .add-url-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    /* 로딩 */
+    .loading-overlay {
+        display: none;
+        text-align: center;
+        padding: 3rem 0;
+    }
+    .loading-overlay.active { display: block; }
+    .loading-icon {
+        width: 48px; height: 48px;
+        border: 3px solid var(--border);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 1rem;
+    }
+    .loading-step {
+        color: var(--text-secondary);
+        font-size: 0.95rem;
+    }
+
+    /* 결과 영역 */
+    .result-section { display: none; }
+    .result-section.active { display: block; }
+
+    .result-header {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+        background: var(--bg);
+        border-radius: var(--radius);
+    }
+    .result-thumb {
+        width: 160px;
+        min-width: 160px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .result-thumb img { width: 100%; display: block; }
+    .result-meta h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        line-height: 1.4;
+    }
+    .result-meta .channel {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+    }
+    .result-meta .extraction-info {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+    .extraction-info .badge-custom {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 2px 8px;
+        border-radius: 6px;
+        font-weight: 500;
+    }
+
+    /* 탭 */
+    .result-tabs {
+        display: flex;
+        border-bottom: 2px solid var(--border);
+        margin-bottom: 1.25rem;
+        gap: 0;
+    }
+    .result-tab {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        background: none;
+        font-weight: 500;
+        color: var(--text-secondary);
+        cursor: pointer;
+        position: relative;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+    }
+    .result-tab.active {
+        color: var(--primary);
+    }
+    .result-tab.active::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0; right: 0;
+        height: 2px;
+        background: var(--primary);
+        border-radius: 1px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* 자막 패널 */
+    .transcript-panel {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 1.25rem;
+        background: #f1f5f9;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    /* 요약 패널 */
+    .summary-panel {
+        padding: 1.25rem;
+        line-height: 1.8;
+    }
+
+    /* 액션 버튼 */
+    .action-buttons {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+    .action-btn {
+        padding: 0.4rem 0.9rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .action-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+    .action-btn.copied {
+        border-color: var(--success);
+        color: var(--success);
+    }
+
+    /* 분석 모드 선택 상세 */
+    .analysis-mode-detail {
+        max-width: 700px;
+        margin: 1rem auto;
+        display: flex;
+        gap: 1rem;
+    }
+    .mode-card {
+        flex: 1;
+        padding: 1rem;
+        border: 2px solid var(--border);
+        border-radius: var(--radius);
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    .mode-card:hover { border-color: var(--primary); }
+    .mode-card.selected {
+        border-color: var(--primary);
+        background: var(--primary-light);
+    }
+    .mode-card .mode-icon {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .mode-card .mode-name {
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+    .mode-card .mode-desc {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    @media (max-width: 640px) {
+        .result-header { flex-direction: column; }
+        .result-thumb { width: 100%; min-width: unset; }
+        .analysis-mode-detail { flex-direction: column; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- 히어로 -->
+<div class="hero-section">
+    <h1 class="hero-title">YouTube 영상을 AI가 분석합니다</h1>
+    <p class="hero-sub">URL을 입력하면 자막 추출부터 핵심 요약까지 자동으로</p>
+</div>
+
+<!-- 입력 모드 선택 -->
+<div class="text-center mb-3">
+    <div class="mode-toggle" id="inputModeToggle">
+        <button class="mode-btn active" data-mode="single" onclick="switchInputMode('single')">
+            <i class="fas fa-play-circle me-1"></i>단일 영상
+        </button>
+        <button class="mode-btn" data-mode="multi" onclick="switchInputMode('multi')">
+            <i class="fas fa-layer-group me-1"></i>다중 비교
+        </button>
+    </div>
+</div>
+
+<!-- 단일 영상 입력 -->
+<div id="singleInput">
+    <!-- 분석 모드 선택 -->
+    <div class="analysis-mode-detail" id="analysisModeSelect">
+        <div class="mode-card selected" data-type="single" onclick="selectAnalysisType('single')">
+            <div class="mode-icon">📋</div>
+            <div class="mode-name">단일 분석</div>
+            <div class="mode-desc">주제 / 핵심 포인트 / 결론</div>
         </div>
-    </header>
-
-    <main class="main">
-        <!-- 오늘의 핵심 -->
-        <div class="highlight" id="highlightCard">
-            <div class="hl-label">🔥 오늘의 핵심</div>
-            <div class="hl-text" id="highlightText">
-                <span class="hl-empty">아직 수집된 인사이트가 없습니다. '수집 실행'을 눌러주세요.</span>
-            </div>
-        </div>
-
-        <!-- 채널별 피드 -->
-        <div class="sec">
-            <div class="sec-h">
-                <h2 class="sec-t">📡 채널 인사이트</h2>
-                <button class="btn btn-g btn-sm" onclick="loadFeed()">🔄</button>
-            </div>
-            <div id="feedArea">
-                <div class="empty">
-                    <div class="empty-i">📡</div>
-                    <div class="empty-t">채널을 등록하고 수집을 실행하세요</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 채널 관리 (인라인) -->
-        <div class="ch-manage">
-            <div class="ch-manage-h">📋 등록 채널</div>
-            <div id="chList"></div>
-            <div class="input-row">
-                <input class="inp" id="chInput" placeholder="YouTube 채널 URL (예: https://www.youtube.com/@blueoak1004)">
-                <button class="btn btn-p" onclick="addCh()">+ 추가</button>
-            </div>
-        </div>
-    </main>
-
-    <!-- 영상 분석 모달 -->
-    <div id="analyzeModal" class="modal-bg" onclick="if(event.target===this)closeAnalyze()">
-        <div class="modal">
-            <div class="modal-h">
-                <h2>🔍 영상 분석</h2>
-                <button class="modal-x" onclick="closeAnalyze()">✕</button>
-            </div>
-            <div class="input-row" style="margin-top:0">
-                <input class="inp" id="videoUrl" placeholder="YouTube URL을 입력하세요"
-                    style="font-size:15px;padding:12px 14px">
-                <button class="btn btn-p" id="btnAnalyze" onclick="analyze()" style="padding:12px 20px">분석</button>
-            </div>
-
-            <!-- 분석 결과 -->
-            <div id="analyzeResult" class="result" style="display:none">
-                <div class="result-box">
-                    <div class="result-ch" id="resCh"></div>
-                    <div class="result-title" id="resTitle"></div>
-                    <div class="result-body" id="resBody"></div>
-                    <a class="result-link" id="resLink" href="#" target="_blank">🔗 원본 영상 보기</a>
-                </div>
-            </div>
-
-            <!-- 최근 분석 히스토리 -->
-            <div style="margin-top:20px">
-                <div style="font-size:12px;color:var(--muted);margin-bottom:8px">최근 분석 히스토리</div>
-                <div id="histList"></div>
-            </div>
+        <div class="mode-card" data-type="advanced" onclick="selectAnalysisType('advanced')">
+            <div class="mode-icon">🔍</div>
+            <div class="mode-name">심화 분석</div>
+            <div class="mode-desc">논점 / 근거 / 다양한 시각 / 실행 인사이트</div>
         </div>
     </div>
 
-    <!-- 상세 모달 -->
-    <div id="detailModal" class="detail-bg" onclick="if(event.target===this)closeDetail()">
-        <div class="modal">
-            <div class="modal-h">
-                <div>
-                    <div style="font-size:12px;color:var(--blue)" id="dCh"></div>
-                    <h2 id="dTitle" style="font-size:16px"></h2>
-                </div>
-                <button class="modal-x" onclick="closeDetail()">✕</button>
+    <div class="url-input-group">
+        <input type="text" class="url-input" id="videoUrl"
+               placeholder="YouTube URL을 붙여넣으세요"
+               onkeypress="if(event.key==='Enter') analyzeSingle()">
+        <button class="submit-btn" id="analyzeBtn" onclick="analyzeSingle()">
+            <i class="fas fa-search me-1"></i>분석
+        </button>
+    </div>
+</div>
+
+<!-- 다중 영상 입력 -->
+<div id="multiInput" style="display: none;">
+    <div class="multi-url-container">
+        <div id="urlList">
+            <div class="url-row">
+                <input type="text" placeholder="YouTube URL 1" class="multi-url">
+                <button class="remove-url-btn" onclick="removeUrlRow(this)" title="삭제">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <div class="result-body" id="dBody"></div>
-            <a class="result-link" id="dLink" href="#" target="_blank">🔗 원본 영상 보기</a>
+            <div class="url-row">
+                <input type="text" placeholder="YouTube URL 2" class="multi-url">
+                <button class="remove-url-btn" onclick="removeUrlRow(this)" title="삭제">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <button class="add-url-btn" onclick="addUrlRow()" id="addUrlBtn">
+            <i class="fas fa-plus me-1"></i>URL 추가 (최대 3개)
+        </button>
+        <div class="text-center mt-3">
+            <button class="btn-primary-custom" onclick="analyzeMultiple()">
+                <i class="fas fa-chart-bar me-1"></i>통합 분석 시작
+            </button>
         </div>
     </div>
+</div>
 
-    <!-- Loading / Toast -->
-    <div id="ld" class="ld">
-        <div class="spin" style="width:36px;height:36px;border-width:3px"></div>
-        <div class="ld-t" id="ldText">처리 중...</div>
+<!-- 로딩 -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="card-custom p-4 mx-auto" style="max-width: 500px;">
+        <div class="loading-icon"></div>
+        <div class="loading-step" id="loadingStep">자막을 추출하고 있습니다...</div>
+        <div class="mt-2" style="font-size: 0.8rem; color: var(--text-secondary);" id="loadingDetail"></div>
     </div>
-    <div id="toast" class="toast"></div>
+</div>
 
-    <script>
-        const A = '';
+<!-- 결과 -->
+<div class="result-section" id="resultSection">
+    <div class="card-custom p-0 mt-4 fade-in">
+        <!-- 영상 정보 헤더 -->
+        <div class="result-header" id="resultHeader"></div>
 
-        // Toast
-        function toast(m, ok = true) { const t = document.getElementById('toast'); t.textContent = m; t.className = 'toast ' + (ok ? 'toast-ok' : 'toast-err') + ' show'; setTimeout(() => t.classList.remove('show'), 3000) }
+        <!-- 탭 & 액션 -->
+        <div class="px-4">
+            <div class="result-tabs">
+                <button class="result-tab active" onclick="switchTab('summary')">
+                    <i class="fas fa-magic me-1"></i>AI 요약
+                </button>
+                <button class="result-tab" onclick="switchTab('transcript')">
+                    <i class="fas fa-file-alt me-1"></i>자막 전체
+                </button>
+            </div>
 
-        // Loading
-        function showLd(t) { document.getElementById('ldText').textContent = t || '처리 중...'; document.getElementById('ld').classList.add('show') }
-        function hideLd() { document.getElementById('ld').classList.remove('show') }
+            <div class="action-buttons">
+                <button class="action-btn" onclick="copyContent('summary')">
+                    <i class="fas fa-copy"></i> 요약 복사
+                </button>
+                <button class="action-btn" onclick="copyContent('transcript')">
+                    <i class="fas fa-copy"></i> 자막 복사
+                </button>
+                <button class="action-btn" onclick="downloadTranscript()">
+                    <i class="fas fa-download"></i> 자막 다운로드
+                </button>
+            </div>
+        </div>
 
-        // API
-        async function api(u, m = 'GET', b = null) { const o = { method: m, headers: { 'Content-Type': 'application/json' } }; if (b) o.body = JSON.stringify(b); const r = await fetch(A + u, o); return r.json() }
+        <!-- 탭 콘텐츠 -->
+        <div class="px-4 pb-4">
+            <div class="tab-content active" id="tab-summary">
+                <div class="summary-panel markdown-body" id="summaryContent"></div>
+            </div>
+            <div class="tab-content" id="tab-transcript">
+                <div class="transcript-panel" id="transcriptContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-        // === Feed ===
-        async function loadFeed() {
-            try {
-                const [archData, chData] = await Promise.all([api('/api/archive/list'), api('/api/channels')]);
-                const analyses = archData.analyses || [];
-                const channels = chData.channels || [];
-                const area = document.getElementById('feedArea');
+{% block extra_js %}
+<script>
+    let currentAnalysisType = 'single';
+    let currentData = null;
 
-                if (!analyses.length) {
-                    area.innerHTML = '<div class="empty"><div class="empty-i">📡</div><div class="empty-t">수집된 영상이 없습니다</div></div>';
-                    buildHighlight([]);
-                    return;
-                }
+    // ==========================================
+    // 입력 모드 전환
+    // ==========================================
+    function switchInputMode(mode) {
+        document.querySelectorAll('#inputModeToggle .mode-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
 
-                // 채널별 그룹핑
-                const groups = {};
-                analyses.forEach(a => {
-                    const ch = a.channel_name || '기타';
-                    if (!groups[ch]) groups[ch] = [];
-                    groups[ch].push(a);
+        document.getElementById('singleInput').style.display = mode === 'single' ? 'block' : 'none';
+        document.getElementById('multiInput').style.display = mode === 'multi' ? 'block' : 'none';
+    }
+
+    // ==========================================
+    // 분석 타입 선택
+    // ==========================================
+    function selectAnalysisType(type) {
+        currentAnalysisType = type;
+        document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+        document.querySelector(`.mode-card[data-type="${type}"]`).classList.add('selected');
+    }
+
+    // ==========================================
+    // 단일 영상 분석
+    // ==========================================
+    async function analyzeSingle() {
+        const url = document.getElementById('videoUrl').value.trim();
+        if (!url) { alert('YouTube URL을 입력해주세요.'); return; }
+
+        showLoading('자막을 추출하고 있습니다...');
+        const btn = document.getElementById('analyzeBtn');
+        btn.disabled = true;
+
+        try {
+            updateLoading('자막을 추출하고 있습니다...', '잠시만 기다려주세요');
+
+            const resp = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    video_url: url,
+                    analysis_type: currentAnalysisType
+                })
+            });
+
+            const data = await resp.json();
+
+            if (data.success) {
+                currentData = data;
+                showResult(data);
+            } else {
+                alert(data.message || '분석에 실패했습니다.');
+            }
+        } catch (e) {
+            alert('서버 연결 오류: ' + e.message);
+        } finally {
+            hideLoading();
+            btn.disabled = false;
+        }
+    }
+
+    // ==========================================
+    // 다중 영상 분석
+    // ==========================================
+    async function analyzeMultiple() {
+        const inputs = document.querySelectorAll('.multi-url');
+        const urls = Array.from(inputs).map(i => i.value.trim()).filter(Boolean);
+
+        if (urls.length < 2) { alert('최소 2개의 URL을 입력해주세요.'); return; }
+
+        showLoading(`${urls.length}개 영상 자막을 추출하고 있습니다...`);
+
+        try {
+            const resp = await fetch('/api/analyze_multiple', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ video_urls: urls })
+            });
+
+            const data = await resp.json();
+
+            if (data.success) {
+                currentData = { summary: data.summary, transcript: '', video_info: { title: `${data.total_analyzed}개 영상 통합 분석` } };
+                showResult({
+                    video_info: { title: `${data.total_analyzed}개 영상 통합 분석`, channel_name: '', thumbnail_url: '' },
+                    summary: data.summary,
+                    transcript: data.results.map((r, i) => `=== 영상 ${i+1} ===\n${r.success ? '추출 성공' : '추출 실패: ' + r.error}`).join('\n\n'),
+                    analysis_type: 'multiple',
+                    extraction: { method: '다중 분석', language: '', char_count: 0 }
                 });
-
-                let html = '';
-                for (const [ch, vids] of Object.entries(groups)) {
-                    html += `<div class="ch-group">
-                <div class="ch-label">${esc(ch)} <span class="ch-count">${vids.length}개</span></div>`;
-                    vids.slice(0, 5).forEach(v => {
-                        html += `<div class="v-card" onclick="showDetail(${v.id})">
-                    <img class="v-thumb" src="${v.thumbnail_url || 'https://img.youtube.com/vi/' + v.video_id + '/hqdefault.jpg'}" alt="" loading="lazy">
-                    <div class="v-info">
-                        <div class="v-title">${esc(v.title)}</div>
-                        <div class="v-sum">${esc((v.summary || '').substring(0, 120))}</div>
-                        <div class="v-meta">${fmtDate(v.created_at)}</div>
-                    </div>
-                </div>`;
-                    });
-                    html += `</div>`;
-                }
-                area.innerHTML = html;
-                buildHighlight(analyses);
-            } catch (e) { console.error(e) }
-        }
-
-        function buildHighlight(analyses) {
-            const el = document.getElementById('highlightText');
-            if (!analyses.length) {
-                el.innerHTML = '<span class="hl-empty">아직 수집된 인사이트가 없습니다. \'수집 실행\'을 눌러주세요.</span>';
-                return;
+            } else {
+                alert(data.message);
             }
-            // 최근 5개 요약에서 첫 문장 추출
-            const summaries = analyses.slice(0, 5).map(a => {
-                const s = (a.summary || '').split(/[.!?\n]/)[0];
-                return s ? s.trim() : '';
-            }).filter(Boolean);
-            if (summaries.length) {
-                el.innerHTML = summaries.map(s => '• ' + esc(s)).join('<br>');
-            }
+        } catch (e) {
+            alert('서버 연결 오류: ' + e.message);
+        } finally {
+            hideLoading();
+        }
+    }
+
+    // ==========================================
+    // URL 행 관리
+    // ==========================================
+    function addUrlRow() {
+        const list = document.getElementById('urlList');
+        const count = list.querySelectorAll('.url-row').length;
+        if (count >= 3) { alert('최대 3개까지만 추가할 수 있습니다.'); return; }
+
+        const row = document.createElement('div');
+        row.className = 'url-row';
+        row.innerHTML = `
+            <input type="text" placeholder="YouTube URL ${count + 1}" class="multi-url">
+            <button class="remove-url-btn" onclick="removeUrlRow(this)" title="삭제">
+                <i class="fas fa-times"></i>
+            </button>`;
+        list.appendChild(row);
+
+        if (list.querySelectorAll('.url-row').length >= 3) {
+            document.getElementById('addUrlBtn').style.display = 'none';
+        }
+    }
+
+    function removeUrlRow(btn) {
+        const list = document.getElementById('urlList');
+        if (list.querySelectorAll('.url-row').length <= 2) return;
+        btn.closest('.url-row').remove();
+        document.getElementById('addUrlBtn').style.display = 'block';
+    }
+
+    // ==========================================
+    // 로딩 UI
+    // ==========================================
+    function showLoading(msg) {
+        document.getElementById('loadingOverlay').classList.add('active');
+        document.getElementById('resultSection').classList.remove('active');
+        updateLoading(msg);
+    }
+    function hideLoading() {
+        document.getElementById('loadingOverlay').classList.remove('active');
+    }
+    function updateLoading(msg, detail) {
+        document.getElementById('loadingStep').textContent = msg;
+        document.getElementById('loadingDetail').textContent = detail || '';
+    }
+
+    // ==========================================
+    // 결과 표시
+    // ==========================================
+    function showResult(data) {
+        const vi = data.video_info || {};
+        const ext = data.extraction || {};
+
+        // 헤더
+        let headerHtml = '';
+        if (vi.thumbnail_url) {
+            headerHtml += `<div class="result-thumb"><img src="${vi.thumbnail_url}" alt="thumbnail"></div>`;
+        }
+        headerHtml += `
+            <div class="result-meta">
+                <h3>${vi.title || '분석 결과'}</h3>
+                ${vi.channel_name ? `<div class="channel"><i class="fas fa-user-circle me-1"></i>${vi.channel_name}</div>` : ''}
+                <div class="extraction-info">
+                    ${ext.method ? `<span class="badge-custom">${ext.method}</span>` : ''}
+                    ${ext.language ? `<span>${ext.language}</span>` : ''}
+                    ${ext.char_count ? `<span>${ext.char_count.toLocaleString()}자</span>` : ''}
+                    <span class="badge-custom">${data.analysis_type === 'advanced' ? '심화 분석' : data.analysis_type === 'multiple' ? '통합 분석' : '단일 분석'}</span>
+                </div>
+            </div>`;
+
+        document.getElementById('resultHeader').innerHTML = headerHtml;
+
+        // 요약 (마크다운 렌더링)
+        document.getElementById('summaryContent').innerHTML = marked.parse(data.summary || '');
+
+        // 자막
+        document.getElementById('transcriptContent').textContent = data.transcript || '';
+
+        // 표시
+        document.getElementById('resultSection').classList.add('active');
+
+        // 결과로 스크롤
+        document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ==========================================
+    // 탭 전환
+    // ==========================================
+    function switchTab(tab) {
+        document.querySelectorAll('.result-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        event.target.closest('.result-tab').classList.add('active');
+        document.getElementById(`tab-${tab}`).classList.add('active');
+    }
+
+    // ==========================================
+    // 복사 & 다운로드
+    // ==========================================
+    function copyContent(type) {
+        let text = '';
+        if (type === 'summary') {
+            text = document.getElementById('summaryContent').innerText;
+        } else {
+            text = document.getElementById('transcriptContent').textContent;
         }
 
-        // === Channels ===
-        async function loadCh() {
-            try {
-                const d = await api('/api/channels');
-                const el = document.getElementById('chList');
-                if (!d.channels || !d.channels.length) { el.innerHTML = '<div style="font-size:12px;color:var(--muted);padding:8px 0">등록된 채널이 없습니다</div>'; return }
-                el.innerHTML = d.channels.map(c => `
-            <div class="ch-row">
-                <div><div class="ch-name">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div>
-                <button class="btn btn-d" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button>
-            </div>`).join('');
-            } catch (e) { console.error(e) }
-        }
-
-        async function addCh() {
-            const url = document.getElementById('chInput').value.trim();
-            if (!url) { toast('채널 URL을 입력해주세요', false); return }
-            showLd('채널 등록 중...');
-            try {
-                const d = await api('/api/channels', 'POST', { channel_url: url });
-                hideLd();
-                if (d.success) { toast('✅ ' + d.channel.channel_name + ' 등록 완료'); document.getElementById('chInput').value = ''; loadCh() }
-                else toast('❌ ' + (d.message || '등록 실패'), false);
-            } catch (e) { hideLd(); toast('❌ 오류', false) }
-        }
-
-        async function delCh(id, name) {
-            if (!confirm('"' + name + '" 삭제할까요?')) return;
-            try { await api('/api/channels/' + id, 'DELETE'); toast('🗑️ 삭제됨'); loadCh() } catch (e) { toast('❌ 실패', false) }
-        }
-
-        // === Digest ===
-        async function runDigest() {
-            const btn = document.getElementById('btnDigest');
-            btn.disabled = true; btn.textContent = '⏳ 수집 중...';
-            showLd('채널 인사이트 수집 중... (2~3분 소요)');
-            try {
-                const d = await api('/api/daily_digest', 'POST', { hours: 48 });
-                hideLd();
-                if (d.success) { toast(`✅ ${d.total_videos}개 수집, ${d.total_summarized}개 요약`); loadFeed() }
-                else toast('❌ ' + (d.message || '실패'), false);
-            } catch (e) { hideLd(); toast('❌ 오류', false) }
-            finally { btn.disabled = false; btn.textContent = '▶ 수집 실행' }
-        }
-
-        // === Analyze Modal ===
-        function openAnalyze() { document.getElementById('analyzeModal').classList.add('show'); loadHist() }
-        function closeAnalyze() { document.getElementById('analyzeModal').classList.remove('show') }
-
-        async function analyze() {
-            const url = document.getElementById('videoUrl').value.trim();
-            if (!url) { toast('URL을 입력해주세요', false); return }
-            const btn = document.getElementById('btnAnalyze');
-            btn.disabled = true; showLd('영상 분석 중...');
-            try {
-                const d = await api('/api/analyze', 'POST', { video_url: url, analysis_type: 'single' });
-                hideLd();
-                if (d.success) {
-                    document.getElementById('resCh').textContent = d.video_info?.channel_name || '';
-                    document.getElementById('resTitle').textContent = d.video_info?.title || '';
-                    document.getElementById('resBody').innerHTML = fmt(d.summary || '');
-                    document.getElementById('resLink').href = url;
-                    document.getElementById('analyzeResult').style.display = 'block';
-                    document.getElementById('videoUrl').value = '';
-                    toast('✅ 분석 완료!');
-                    loadHist(); loadFeed();
-                } else toast('❌ ' + (d.message || '실패'), false);
-            } catch (e) { hideLd(); toast('❌ 오류', false) }
-            finally { btn.disabled = false }
-        }
-
-        async function loadHist() {
-            try {
-                const d = await api('/api/archive/list');
-                const el = document.getElementById('histList');
-                const singles = (d.analyses || []).filter(a => a.analysis_type === 'single').slice(0, 8);
-                if (!singles.length) { el.innerHTML = '<div style="font-size:12px;color:var(--muted)">아직 분석 히스토리가 없습니다</div>'; return }
-                el.innerHTML = singles.map(a => `
-            <div class="hist-item" onclick="showDetailInModal(${a.id})">
-                <img class="hist-thumb" src="${a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg'}" alt="" loading="lazy">
-                <div class="hist-title">${esc(a.title)}</div>
-                <div class="hist-date">${fmtDate(a.created_at)}</div>
-            </div>`).join('');
-            } catch (e) { console.error(e) }
-        }
-
-        // === Detail ===
-        async function showDetail(id) {
-            try {
-                const d = await api('/api/archive/' + id);
-                if (d.success && d.analysis) {
-                    const a = d.analysis;
-                    document.getElementById('dCh').textContent = a.channel_name || '';
-                    document.getElementById('dTitle').textContent = a.title || '';
-                    document.getElementById('dBody').innerHTML = fmt(a.summary || '요약 내용이 없습니다.');
-                    document.getElementById('dLink').href = 'https://www.youtube.com/watch?v=' + a.video_id;
-                    document.getElementById('detailModal').classList.add('show');
-                } else toast('불러올 수 없습니다', false);
-            } catch (e) { toast('오류', false) }
-        }
-
-        async function showDetailInModal(id) {
-            try {
-                const d = await api('/api/archive/' + id);
-                if (d.success && d.analysis) {
-                    const a = d.analysis;
-                    document.getElementById('resCh').textContent = a.channel_name || '';
-                    document.getElementById('resTitle').textContent = a.title || '';
-                    document.getElementById('resBody').innerHTML = fmt(a.summary || '');
-                    document.getElementById('resLink').href = 'https://www.youtube.com/watch?v=' + a.video_id;
-                    document.getElementById('analyzeResult').style.display = 'block';
-                }
-            } catch (e) { console.error(e) }
-        }
-
-        function closeDetail() { document.getElementById('detailModal').classList.remove('show') }
-
-        // === Util ===
-        function esc(s) { return s ? s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') : '' }
-        function fmtDate(s) { if (!s) return ''; const d = new Date(s); return d.toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) }
-        function fmt(t) { if (!t) return ''; return t.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/^/, '<p>') + '</p>' }
-
-        // Keyboard
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') { closeDetail(); closeAnalyze() }
-            if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyze();
-            if (e.key === 'Enter' && document.activeElement.id === 'chInput') addCh();
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = event.target.closest('.action-btn');
+            btn.classList.add('copied');
+            btn.innerHTML = `<i class="fas fa-check"></i> 복사됨`;
+            setTimeout(() => {
+                btn.classList.remove('copied');
+                btn.innerHTML = `<i class="fas fa-copy"></i> ${type === 'summary' ? '요약' : '자막'} 복사`;
+            }, 2000);
         });
+    }
 
-        // Init
-        loadFeed();
-        loadCh();
-    </script>
-</body>
+    function downloadTranscript() {
+        if (!currentData) return;
+        const text = currentData.transcript || document.getElementById('transcriptContent').textContent;
+        const title = (currentData.video_info && currentData.video_info.title) || 'transcript';
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${title.replace(/[^a-zA-Z0-9가-힣]/g, '_')}_자막.txt`;
+        a.click();
+    }
 
-</html>
+    // ==========================================
+    // 페이지 로드 시 설정 확인
+    // ==========================================
+    window.addEventListener('load', async () => {
+        try {
+            const resp = await fetch('/api/check_settings');
+            const data = await resp.json();
+            if (!data.gemini_api_configured) {
+                document.getElementById('videoUrl').placeholder = '먼저 설정 페이지에서 API 키를 등록해주세요 →';
+            }
+        } catch (e) {}
+    });
+</script>
+{% endblock %}
