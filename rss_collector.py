@@ -135,15 +135,18 @@ class RSSCollector:
         rss_url = f'https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}'
 
         try:
-            req = Request(rss_url, headers={'User-Agent': self.user_agent})
-            response = urlopen(req, timeout=15)
-            data = response.read()
+            import requests as req_lib
+            headers = {
+                'User-Agent': self.user_agent,
+                'Accept': 'application/xml, text/xml, */*',
+                'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
+            }
+            resp = req_lib.get(rss_url, headers=headers, timeout=15)
+            resp.raise_for_status()
+            data = resp.content
             root = ET.fromstring(data)
-        except URLError as e:
+        except Exception as e:
             logger.error(f"❌ RSS 피드 접근 실패 ({channel_id}): {e}")
-            return []
-        except ET.ParseError as e:
-            logger.error(f"❌ RSS XML 파싱 실패 ({channel_id}): {e}")
             return []
 
         # 채널 이름
