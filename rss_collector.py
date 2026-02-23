@@ -134,19 +134,33 @@ class RSSCollector:
         """
         rss_url = f'https://www.youtube.com/feeds/videos.xml?channel_id={channel_id}'
 
+        # 방법 1: subprocess curl (가장 안정적)
+        root = None
         try:
-            import requests as req_lib
-            headers = {
-                'User-Agent': self.user_agent,
-                'Accept': 'application/xml, text/xml, */*',
-                'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
-            }
-            resp = req_lib.get(rss_url, headers=headers, timeout=15)
-            resp.raise_for_status()
-            data = resp.content
-            root = ET.fromstring(data)
+            import subprocess
+            result = subprocess.run(
+                ['curl', '-s', '-L', '--max-time', '15', rss_url],
+                capture_output=True, text=True, timeout=20
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                root = ET.fromstring(result.stdout.encode('utf-8'))
+                logger.info(f"📡 RSS 수집 (curl): {channel_id}")
         except Exception as e:
-            logger.error(f"❌ RSS 피드 접근 실패 ({channel_id}): {e}")
+            logger.warning(f"curl 방식 실패 ({channel_id}): {e}")
+
+        # 방법 2: feedparser 폴백
+        if root is None:
+            try:
+                import feedparser
+                feed = feedparser.parse(rss_url)
+                if feed.entries:
+                    # feedparser로 직접 파싱
+                    return self._parse_feedparser(feed, channel_id)
+            except Exception as e:
+                logger.warning(f"feedparser 방식 실패 ({channel_id}): {e}")
+
+        if root is None:
+            logger.error(f"❌ RSS 피드 접근 실패 ({channel_id}): 모든 방법 실패")
             return []
 
         # 채널 이름
@@ -204,6 +218,55 @@ class RSSCollector:
                 continue
 
         logger.info(f"📡 RSS 수집: {channel_name} ({channel_id}) → {len(videos)}개 영상")
+        return videos
+
+    # =========================================================
+    # feedparser 결과 파싱
+    # =========================================================
+    def _parse_feedparser(self, feed, channel_id: str) -> List[Dict]:
+        """feedparser 결과를 비디오 리스트로 변환"""
+        videos = []
+        channel_name = feed.feed.get('author_detail', {}).get('name', '') or feed.feed.get('title', '')
+
+        for entry in feed.entries:
+            try:
+                video_id = entry.get('yt_videoid', '')
+                if not video_id:
+                    # link에서 추출
+                    link = entry.get('link', '')
+                    m = re.search(r'v=([0-9A-Za-z_-]{11})', link)
+                    if m:
+                        video_id = m.group(1)
+                    else:
+                        continue
+
+                title = entry.get('title', '')
+                published_str = entry.get('published', '')
+
+                published = None
+                if published_str:
+                    try:
+                        published = datetime.fromisoformat(
+                            published_str.replace('Z', '+00:00')
+                        )
+                    except ValueError:
+                        published = datetime.now(timezone.utc)
+
+                thumbnail_url = f'https://img.youtube.com/vi/{video_id}/hqdefault.jpg'
+
+                videos.append({
+                    'video_id': video_id,
+                    'title': title,
+                    'published': published,
+                    'url': f'https://www.youtube.com/watch?v={video_id}',
+                    'channel_name': channel_name,
+                    'thumbnail_url': thumbnail_url,
+                })
+            except Exception as e:
+                logger.warning(f"⚠️ feedparser 엔트리 파싱 실패: {e}")
+                continue
+
+        logger.info(f"📡 RSS 수집 (feedparser): {channel_name} ({channel_id}) → {len(videos)}개 영상")
         return videos
 
     # =========================================================
