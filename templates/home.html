@@ -612,6 +612,90 @@
             color: var(--text-secondary);
         }
 
+        /* ===== AI Tags ===== */
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-right: 4px;
+            margin-top: 4px
+        }
+
+        .tag-positive {
+            background: rgba(46, 160, 67, .15);
+            color: #3fb950
+        }
+
+        .tag-negative {
+            background: rgba(248, 81, 73, .15);
+            color: #f85149
+        }
+
+        .tag-neutral {
+            background: rgba(139, 148, 158, .15);
+            color: #8b949e
+        }
+
+        .tag-urgent {
+            background: rgba(248, 81, 73, .2);
+            color: #f85149;
+            border: 1px solid rgba(248, 81, 73, .3)
+        }
+
+        .tag-major {
+            background: rgba(210, 153, 34, .15);
+            color: #d29922
+        }
+
+        .tag-normal {
+            background: rgba(139, 148, 158, .1);
+            color: #6e7681
+        }
+
+        .tag-stock {
+            background: rgba(59, 130, 246, .12);
+            color: #58a6ff;
+            border: 1px solid rgba(59, 130, 246, .2)
+        }
+
+        .ai-section {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-top: 12px;
+            margin-bottom: 8px
+        }
+
+        .ai-section-title {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px
+        }
+
+        .ai-point {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 4px;
+            padding-left: 16px;
+            text-indent: -16px
+        }
+
+        .ai-insight {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-top: 8px
+        }
+
+        .ai-insight strong {
+            color: var(--text-primary)
+        }
+
         /* ===== Responsive ===== */
         @media (max-width: 768px) {
             .status-cards {
@@ -870,18 +954,32 @@
                     return;
                 }
 
-                container.innerHTML = data.analyses.slice(0, 20).map(a => `
+                container.innerHTML = data.analyses.slice(0, 20).map(a => {
+                    const sEmoji = a.sentiment === 'positive' ? '\ud83d\udfe2' : a.sentiment === 'negative' ? '\ud83d\udd34' : '\ud83d\udfe1';
+                    const sLabel = a.sentiment === 'positive' ? '\ud638\uc7ac' : a.sentiment === 'negative' ? '\uc545\uc7ac' : '\uc911\ub9bd';
+                    const iClass = a.importance === 'urgent' ? 'tag-urgent' : a.importance === 'major' ? 'tag-major' : 'tag-normal';
+                    const iLabel = a.importance === 'urgent' ? '\uae34\uae09' : a.importance === 'major' ? '\uc8fc\uc694' : '\uc77c\ubc18';
+                    let stocks = [];
+                    try { stocks = typeof a.key_stocks === 'string' ? JSON.parse(a.key_stocks) : (a.key_stocks || []); } catch (e) { }
+                    const stockTags = stocks.slice(0, 3).map(s => `<span class="tag tag-stock">${escHtml(s)}</span>`).join('');
+
+                    return `
             <div class="video-card" onclick="showDetail(${a.id})">
                 <img class="video-thumb" src="${a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg'}" 
                      alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'">
                 <div class="video-info">
-                    <div class="video-channel">${escHtml(a.channel_name || '알 수 없음')}</div>
+                    <div class="video-channel">${escHtml(a.channel_name || '\uc54c \uc218 \uc5c6\uc74c')}</div>
                     <div class="video-title">${escHtml(a.title)}</div>
                     <div class="video-summary">${escHtml((a.summary || '').substring(0, 150))}</div>
-                    <div class="video-meta">${a.analysis_type === 'daily' ? '🤖 자동' : '👤 수동'} · ${formatDate(a.created_at)} · ${(a.char_count || 0).toLocaleString()}자</div>
+                    <div style="margin-top:6px">
+                        <span class="tag tag-${a.sentiment || 'neutral'}">${sEmoji} ${sLabel}</span>
+                        <span class="tag ${iClass}">${iLabel}</span>
+                        ${stockTags}
+                    </div>
+                    <div class="video-meta">${a.analysis_type === 'daily' ? '\ud83e\udd16 \uc790\ub3d9' : '\ud83d\udc64 \uc218\ub3d9'} \xb7 ${formatDate(a.created_at)}</div>
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+                }).join('');
             } catch (e) {
                 console.error('Load summaries error:', e);
             }
@@ -1060,15 +1158,54 @@
                     const a = data.analysis;
                     document.getElementById('modalChannel').textContent = a.channel_name || '';
                     document.getElementById('modalTitle').textContent = a.title || '';
-                    document.getElementById('modalBody').innerHTML = formatSummary(a.summary || '요약 내용이 없습니다.');
+
+                    // Build structured AI commentary
+                    let html = '';
+
+                    // Sentiment + Importance + Stocks
+                    const sEmoji = a.sentiment === 'positive' ? '\ud83d\udfe2' : a.sentiment === 'negative' ? '\ud83d\udd34' : '\ud83d\udfe1';
+                    const sLabel = a.sentiment === 'positive' ? '\ud638\uc7ac' : a.sentiment === 'negative' ? '\uc545\uc7ac' : '\uc911\ub9bd';
+                    const iClass = a.importance === 'urgent' ? 'tag-urgent' : a.importance === 'major' ? 'tag-major' : 'tag-normal';
+                    const iLabel = a.importance === 'urgent' ? '\ud83d\udea8 \uae34\uae09' : a.importance === 'major' ? '\u2b50 \uc8fc\uc694' : '\u2139\ufe0f \uc77c\ubc18';
+
+                    let stocks = [];
+                    try { stocks = typeof a.key_stocks === 'string' ? JSON.parse(a.key_stocks) : (a.key_stocks || []); } catch (e) { }
+                    let points = [];
+                    try { points = typeof a.key_points === 'string' ? JSON.parse(a.key_points) : (a.key_points || []); } catch (e) { }
+
+                    html += '<div style="margin-bottom:16px">';
+                    html += '<span class="tag tag-' + (a.sentiment || 'neutral') + '">' + sEmoji + ' ' + sLabel + '</span>';
+                    html += '<span class="tag ' + iClass + '">' + iLabel + '</span>';
+                    html += stocks.map(s => '<span class="tag tag-stock">' + escHtml(s) + '</span>').join('');
+                    html += '</div>';
+
+                    // Key Points
+                    if (points.length) {
+                        html += '<div class="ai-section"><div class="ai-section-title">\ud83d\udccb \ud575\uc2ec \ud3ec\uc778\ud2b8</div>';
+                        points.forEach(p => { html += '<div class="ai-point">\u2022 ' + escHtml(p) + '</div>'; });
+                        html += '</div>';
+                    }
+
+                    // Market Impact + Investment Insight
+                    if (a.market_impact || a.investment_insight) {
+                        html += '<div class="ai-section">';
+                        if (a.market_impact) html += '<div class="ai-insight"><strong>\ud83d\udcca \uc2dc\uc7a5 \uc601\ud5a5:</strong> ' + escHtml(a.market_impact) + '</div>';
+                        if (a.investment_insight) html += '<div class="ai-insight"><strong>\ud83d\udca1 \ud22c\uc790 \uc2dc\uc0ac\uc810:</strong> ' + escHtml(a.investment_insight) + '</div>';
+                        html += '</div>';
+                    }
+
+                    // Full Summary
+                    html += '<div style="margin-top:16px">' + formatSummary(a.summary || '') + '</div>';
+
+                    document.getElementById('modalBody').innerHTML = html;
                     document.getElementById('modalVideoLink').href = 'https://www.youtube.com/watch?v=' + a.video_id;
                     document.getElementById('detailModal').classList.add('show');
                 } else {
-                    showToast('상세 내용을 불러올 수 없습니다', 'error');
+                    showToast('\uc0c1\uc138 \ub0b4\uc6a9\uc744 \ubd88\ub7ec\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4', 'error');
                 }
             } catch (e) {
                 console.error('Detail load error:', e);
-                showToast('상세 내용을 불러올 수 없습니다', 'error');
+                showToast('\uc0c1\uc138 \ub0b4\uc6a9\uc744 \ubd88\ub7ec\uc62c \uc218 \uc5c6\uc2b5\ub2c8\ub2e4', 'error');
             }
         }
 
