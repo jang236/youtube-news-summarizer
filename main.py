@@ -194,8 +194,8 @@ def get_video_info_from_api(video_id: str, api_key: str) -> dict:
 
 
 def get_gemini_key():
-    """Gemini API 키 가져오기 (환경변수 우선, 세션 폴백, 기본값)"""
-    return os.getenv('GEMINI_API_KEY', '') or session.get('gemini_api_key', '') or 'AIzaSyAP0YMo6CdUvnOuv6xKr0oa-c0hL2vgUf4'
+    """Gemini API 키 가져오기 (환경변수 우선, 세션 폴백)"""
+    return os.getenv('GEMINI_API_KEY', '') or session.get('gemini_api_key', '')
 
 
 # =========================================================
