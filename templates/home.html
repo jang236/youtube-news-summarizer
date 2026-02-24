@@ -16,23 +16,22 @@
             padding: 0
         }
 
-        /* ===== Toss 정확한 컬러 시스템 ===== */
         :root {
             --bg: #F2F4F6;
-            --white: #FFFFFF;
-            --gray50: #F9FAFB;
-            --gray100: #F2F4F6;
-            --gray200: #ECEEF0;
-            --gray300: #D5D8DC;
-            --gray400: #B0B8C1;
-            --gray500: #8B95A1;
-            --gray600: #6B7684;
-            --gray700: #4E5968;
-            --gray800: #333D4B;
-            --gray900: #191F28;
+            --white: #FFF;
+            --g50: #F9FAFB;
+            --g100: #F2F4F6;
+            --g200: #ECEEF0;
+            --g300: #D5D8DC;
+            --g400: #B0B8C1;
+            --g500: #8B95A1;
+            --g600: #6B7684;
+            --g700: #4E5968;
+            --g800: #333D4B;
+            --g900: #191F28;
             --blue: #3182F6;
             --blue-bg: rgba(49, 130, 246, .08);
-            --blue-light: #E8F3FF;
+            --blue-lt: #E8F3FF;
             --red: #F04452;
             --red-bg: rgba(240, 68, 82, .08);
             --green: #30A46C;
@@ -45,35 +44,34 @@
         }
 
         body {
-            font-family: 'Toss Product Sans', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Toss Product Sans', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg);
-            color: var(--gray900);
+            color: var(--g900);
             line-height: 1.6;
             min-height: 100vh;
-            padding-bottom: 48px;
-            /* ticker bar height */
+            padding-bottom: 44px
         }
 
-        /* ===== Header (토스증권 스타일) ===== */
-        .header {
+        /* ===== Header ===== */
+        .hd {
             background: var(--white);
-            border-bottom: 1px solid var(--gray200);
+            border-bottom: 1px solid var(--g200);
             padding: 0 24px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 100
         }
 
-        .header-in {
-            max-width: 1280px;
+        .hd-in {
+            max-width: 1360px;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 52px;
+            height: 52px
         }
 
-        .header-left {
+        .hd-left {
             display: flex;
             align-items: center;
             gap: 24px
@@ -84,7 +82,10 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
-            color: var(--gray900)
+            color: var(--g900);
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: -.3px
         }
 
         .logo svg {
@@ -92,225 +93,78 @@
             height: 24px
         }
 
-        .logo-text {
-            font-size: 17px;
-            font-weight: 700;
-            letter-spacing: -.3px
-        }
-
         .nav {
             display: flex;
-            gap: 4px
+            gap: 2px
         }
 
-        .nav-item {
+        .nav-i {
             padding: 8px 14px;
             font-size: 15px;
             font-weight: 500;
-            color: var(--gray500);
+            color: var(--g500);
             background: none;
             border: none;
             cursor: pointer;
             border-radius: 8px;
             transition: var(--tr);
-            font-family: inherit;
+            font-family: inherit
         }
 
-        .nav-item:hover {
-            background: var(--gray100);
-            color: var(--gray700)
+        .nav-i:hover {
+            background: var(--g100);
+            color: var(--g700)
         }
 
-        .nav-item.on {
-            color: var(--gray900);
+        .nav-i.on {
+            color: var(--g900);
             font-weight: 600
         }
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 7px 14px;
-            background: var(--gray100);
-            border-radius: 8px;
-            font-size: 13px;
-            color: var(--gray500);
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-login {
-            padding: 7px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
-            background: var(--blue);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        /* ===== Main Container ===== */
-        .container {
-            max-width: 1280px;
+        /* ===== Container ===== */
+        .ct {
+            max-width: 1360px;
             margin: 0 auto;
             padding: 20px 24px
         }
 
         .pane {
-            display: none;
-            animation: fadeIn .25s ease
+            display: none
         }
 
         .pane.on {
-            display: block
+            display: block;
+            animation: fi .2s ease
         }
 
-        @keyframes fadeIn {
+        @keyframes fi {
             from {
-                opacity: 0;
-                transform: translateY(6px)
+                opacity: 0
             }
 
             to {
-                opacity: 1;
-                transform: translateY(0)
+                opacity: 1
             }
         }
 
-        /* ===== Sub Tabs (차트·호가 | 종목정보 | ...) ===== */
-        .sub-tabs {
-            display: flex;
-            gap: 0;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--gray200);
-        }
-
-        .sub-tab {
-            padding: 12px 16px;
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--gray500);
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            transition: var(--tr);
-            font-family: inherit;
-        }
-
-        .sub-tab:hover {
-            color: var(--gray700)
-        }
-
-        .sub-tab.on {
-            color: var(--gray900);
-            font-weight: 600;
-            border-bottom-color: var(--gray900)
-        }
-
-        /* ===== Status Cards Row (상단 요약) ===== */
-        .stat-row {
+        /* ===== 2-Column Layout ===== */
+        .cols {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px
+            grid-template-columns: 1fr 380px;
+            gap: 16px;
+            align-items: start
         }
 
-        .stat-card {
-            background: var(--white);
-            border-radius: var(--r);
-            padding: 20px 24px;
-            cursor: pointer;
-            transition: var(--tr);
+        .col-left {
+            min-width: 0
         }
 
-        .stat-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, .06);
-            transform: translateY(-1px)
+        .col-right {
+            position: sticky;
+            top: 68px
         }
 
-        .stat-top {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px
-        }
-
-        .stat-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .stat-icon.ch {
-            background: var(--blue-bg);
-            color: var(--blue)
-        }
-
-        .stat-icon.sum {
-            background: var(--green-bg);
-            color: var(--green)
-        }
-
-        .stat-icon.run {
-            background: var(--orange-bg);
-            color: var(--orange)
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--gray500);
-            font-weight: 500
-        }
-
-        .stat-val {
-            font-size: 32px;
-            font-weight: 800;
-            color: var(--gray900);
-            letter-spacing: -.5px
-        }
-
-        .stat-unit {
-            font-size: 15px;
-            font-weight: 400;
-            color: var(--gray400)
-        }
-
-        .stat-sub {
-            font-size: 13px;
-            color: var(--blue);
-            font-weight: 500;
-            margin-top: 4px;
-            cursor: pointer
-        }
-
-        .stat-sub:hover {
-            text-decoration: underline
-        }
-
-        /* ===== 3-Column Layout ===== */
-        .grid3 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px
-        }
-
-        .grid3-full {
-            grid-column: 1/-1
-        }
-
-        /* ===== Cards (토스 카드 스타일) ===== */
+        /* ===== Card ===== */
         .card {
             background: var(--white);
             border-radius: var(--r);
@@ -318,20 +172,25 @@
             margin-bottom: 16px
         }
 
-        .card-header {
+        .card-h {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 16px
         }
 
-        .card-title {
+        .card-t {
             font-size: 18px;
-            font-weight: 700;
-            color: var(--gray900)
+            font-weight: 700
         }
 
-        .card-action {
+        .card-sub {
+            font-size: 13px;
+            color: var(--g500);
+            font-weight: 500
+        }
+
+        .card-act {
             font-size: 13px;
             color: var(--blue);
             font-weight: 500;
@@ -341,92 +200,175 @@
             font-family: inherit
         }
 
-        .card-action:hover {
+        .card-act:hover {
             text-decoration: underline
         }
 
-        .card-close {
+        /* ===== 오늘의 핵심 정보 박스 ===== */
+        .digest-box {
+            background: var(--g50);
+            border: 1px solid var(--g200);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 16px
+        }
+
+        .digest-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 14px;
+            color: var(--g700);
+            line-height: 1.6
+        }
+
+        .digest-label {
+            font-weight: 600;
+            color: var(--g900)
+        }
+
+        .digest-stocks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px
+        }
+
+        .digest-stock {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--blue-bg);
+            color: var(--blue)
+        }
+
+        .digest-empty {
+            font-size: 14px;
+            color: var(--g400);
+            padding: 12px 0;
+            text-align: center
+        }
+
+        .digest-share {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--g200)
+        }
+
+        .btn-share {
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--g600);
+            background: var(--g100);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .btn-share:hover {
+            background: var(--g200)
+        }
+
+        /* ===== Sub Tabs ===== */
+        .stabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--g200);
+            margin-bottom: 16px
+        }
+
+        .stab {
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--g500);
             background: none;
             border: none;
-            color: var(--gray400);
-            font-size: 18px;
+            border-bottom: 2px solid transparent;
             cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 4px
+            font-family: inherit;
+            transition: var(--tr)
         }
 
-        .card-close:hover {
-            background: var(--gray100)
+        .stab:hover {
+            color: var(--g700)
         }
 
-        /* ===== Video Cards (영상 목록) ===== */
-        .v-list {
+        .stab.on {
+            color: var(--g900);
+            font-weight: 600;
+            border-bottom-color: var(--g900)
+        }
+
+        /* ===== Video List ===== */
+        .vl {
             display: flex;
             flex-direction: column;
             gap: 0
         }
 
-        .v-item {
+        .vi {
             display: flex;
-            gap: 16px;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--gray200);
-            transition: var(--tr);
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--g200);
+            cursor: pointer;
+            transition: var(--tr)
         }
 
-        .v-item:last-child {
+        .vi:last-child {
             border-bottom: none
         }
 
-        .v-item:hover {
-            background: var(--gray50);
+        .vi:hover {
+            background: var(--g50);
             margin: 0 -24px;
-            padding: 16px 24px;
-            border-radius: 12px
+            padding: 14px 24px;
+            border-radius: 10px
         }
 
-        .v-thumb-wrap {
-            position: relative;
+        .vi.selected {
+            background: var(--blue-bg);
+            margin: 0 -24px;
+            padding: 14px 24px;
+            border-radius: 10px
+        }
+
+        .vi-thumb {
+            width: 140px;
+            height: 79px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: var(--g200);
             flex-shrink: 0
         }
 
-        .v-thumb {
-            width: 160px;
-            height: 90px;
-            border-radius: 10px;
-            object-fit: cover;
-            background: var(--gray200)
-        }
-
-        .v-dur {
-            position: absolute;
-            bottom: 6px;
-            right: 6px;
-            background: rgba(0, 0, 0, .75);
-            color: #fff;
-            font-size: 11px;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-weight: 500
-        }
-
-        .v-body {
+        .vi-body {
             flex: 1;
             min-width: 0;
             display: flex;
             flex-direction: column
         }
 
-        .v-ch {
-            font-size: 13px;
-            color: var(--gray500);
+        .vi-ch {
+            font-size: 12px;
+            color: var(--g500);
             font-weight: 500
         }
 
-        .v-title {
-            font-size: 15px;
+        .vi-title {
+            font-size: 14px;
             font-weight: 600;
-            color: var(--gray900);
+            color: var(--g900);
             line-height: 1.4;
             margin: 2px 0 4px;
             display: -webkit-box;
@@ -435,205 +377,292 @@
             overflow: hidden
         }
 
-        .v-desc {
-            font-size: 13px;
-            color: var(--gray600);
+        .vi-desc {
+            font-size: 12px;
+            color: var(--g600);
             line-height: 1.5;
             flex: 1;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden
         }
 
-        .v-foot {
+        .vi-foot {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-top: 8px
+            margin-top: 6px
         }
 
-        .v-time {
-            font-size: 12px;
-            color: var(--gray400)
+        .vi-time {
+            font-size: 11px;
+            color: var(--g400)
         }
 
-        .btn-view {
-            padding: 6px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--blue);
-            background: var(--blue-bg);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: var(--tr);
-            font-family: inherit;
-        }
-
-        .btn-view:hover {
-            background: var(--blue-light)
-        }
-
-        /* ===== Tags (토스 pill 스타일) ===== */
-        .tags {
+        .vi-actions {
             display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 8px
+            gap: 4px
         }
 
+        .btn-tiny {
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--g600);
+            background: var(--g100);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit
+        }
+
+        .btn-tiny:hover {
+            background: var(--g200)
+        }
+
+        /* ===== Tags ===== */
         .tag {
             display: inline-flex;
             align-items: center;
-            gap: 3px;
-            padding: 3px 10px;
+            gap: 2px;
+            padding: 2px 8px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600
         }
 
-        .tag-pos {
+        .t-pos {
             background: var(--red-bg);
             color: var(--red)
         }
 
-        .tag-neg {
+        .t-neg {
             background: var(--blue-bg);
             color: var(--blue)
         }
 
-        .tag-neu {
+        .t-neu {
             background: rgba(107, 118, 132, .08);
-            color: var(--gray600)
+            color: var(--g600)
         }
 
-        .tag-urg {
+        .t-urg {
             background: var(--red-bg);
             color: var(--red)
         }
 
-        .tag-maj {
+        .t-maj {
             background: var(--orange-bg);
             color: var(--orange)
         }
 
-        .tag-nor {
+        .t-nor {
             background: rgba(107, 118, 132, .06);
-            color: var(--gray400)
+            color: var(--g400)
         }
 
-        .tag-stk {
+        .t-stk {
             background: var(--blue-bg);
             color: var(--blue)
         }
 
-        /* ===== AI Panel (인라인 확장) ===== */
-        .ai-panel {
-            display: none;
-            background: var(--gray50);
-            border-top: 1px solid var(--gray200);
-            padding: 20px 24px;
-            animation: fadeIn .25s ease;
-        }
-
-        .ai-panel.open {
-            display: block
-        }
-
-        .ai-head {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px
-        }
-
-        .ai-badge {
-            font-size: 14px;
-            color: var(--gray900);
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 6px
-        }
-
-        .ai-sec {
+        /* ===== Right Panel: AI 상세 요약 ===== */
+        .ai-card {
             background: var(--white);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 10px
+            border-radius: var(--r);
+            overflow: hidden
+        }
+
+        .ai-top {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--g200)
+        }
+
+        .ai-top-t {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px
+        }
+
+        .ai-top-ch {
+            font-size: 13px;
+            color: var(--g500)
+        }
+
+        .ai-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--g200)
+        }
+
+        .ai-tab {
+            flex: 1;
+            padding: 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--g500);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: center
+        }
+
+        .ai-tab:hover {
+            color: var(--g700)
+        }
+
+        .ai-tab.on {
+            color: var(--g900);
+            font-weight: 600;
+            border-bottom-color: var(--g900)
+        }
+
+        .ai-body {
+            padding: 20px 24px
+        }
+
+        .ai-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--g400);
+            font-size: 14px
+        }
+
+        /* AI 감성 표시 */
+        .sent-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--g200)
+        }
+
+        .sent-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%
+        }
+
+        .sent-dot.pos {
+            background: var(--red)
+        }
+
+        .sent-dot.neg {
+            background: var(--blue)
+        }
+
+        .sent-dot.neu {
+            background: var(--g400)
+        }
+
+        .sent-label {
+            font-size: 15px;
+            font-weight: 600;
+            flex: 1
+        }
+
+        .sent-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 12px
+        }
+
+        /* AI 섹션 */
+        .ai-sec {
+            padding: 14px 0;
+            border-bottom: 1px solid var(--g200)
+        }
+
+        .ai-sec:last-child {
+            border-bottom: none
         }
 
         .ai-sec-t {
-            font-size: 13px;
-            color: var(--blue);
+            font-size: 12px;
             font-weight: 700;
+            color: var(--g500);
+            text-transform: uppercase;
+            letter-spacing: .3px;
             margin-bottom: 8px
         }
 
         .ai-pt {
-            font-size: 14px;
-            color: var(--gray700);
+            font-size: 13px;
+            color: var(--g700);
             line-height: 1.8;
-            margin-bottom: 2px;
-            padding-left: 16px;
-            text-indent: -16px
+            padding-left: 12px;
+            text-indent: -12px;
+            margin-bottom: 2px
         }
 
         .ai-ins {
-            font-size: 14px;
-            color: var(--gray700);
-            line-height: 1.8;
-            margin-top: 6px
+            font-size: 13px;
+            color: var(--g700);
+            line-height: 1.7;
+            margin-top: 4px
         }
 
-        .ai-ins strong {
-            color: var(--gray900)
+        .ai-ins b {
+            color: var(--g900);
+            font-weight: 600
         }
 
         .ai-txt {
             font-size: 14px;
-            color: var(--gray700);
-            line-height: 1.9;
-            margin-top: 12px
+            color: var(--g700);
+            line-height: 1.9
         }
 
+        .ai-txt p {
+            margin-bottom: 8px
+        }
+
+        .ai-txt b,
         .ai-txt strong {
-            color: var(--gray900)
+            color: var(--g900)
         }
 
         .ai-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
             font-size: 13px;
             color: var(--blue);
             font-weight: 500;
-            margin-top: 12px;
             text-decoration: none;
+            margin-top: 8px;
+            display: inline-block
         }
 
         .ai-link:hover {
             text-decoration: underline
         }
 
-        /* ===== Analyze Section (URL 입력) ===== */
-        .analyze-input {
+        .ai-share {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 14px;
+            border-top: 1px solid var(--g200)
+        }
+
+        /* ===== Input ===== */
+        .inp-row {
             display: flex;
             gap: 8px
         }
 
         .inp {
             flex: 1;
-            padding: 12px 16px;
+            padding: 11px 16px;
             font-size: 14px;
-            background: var(--gray50);
-            border: 1px solid var(--gray200);
+            background: var(--g50);
+            border: 1px solid var(--g200);
             border-radius: 10px;
-            color: var(--gray900);
+            color: var(--g900);
             outline: none;
             transition: var(--tr);
-            font-family: inherit;
+            font-family: inherit
         }
 
         .inp:focus {
@@ -643,11 +672,11 @@
         }
 
         .inp::placeholder {
-            color: var(--gray400)
+            color: var(--g400)
         }
 
-        .btn-analyze {
-            padding: 12px 24px;
+        .btn-p {
+            padding: 11px 20px;
             font-size: 14px;
             font-weight: 600;
             color: #fff;
@@ -655,66 +684,80 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
-            transition: var(--tr);
             font-family: inherit;
-            white-space: nowrap;
+            white-space: nowrap
         }
 
-        .btn-analyze:hover {
+        .btn-p:hover {
             background: #2272E6
         }
 
-        .btn-analyze:disabled {
+        .btn-p:disabled {
             opacity: .5;
             cursor: not-allowed
         }
 
-        /* ===== Channel Cards ===== */
-        .ch-item {
+        .btn-g {
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--g700);
+            background: var(--g100);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit
+        }
+
+        .btn-g:hover {
+            background: var(--g200)
+        }
+
+        /* ===== Channel ===== */
+        .ch-i {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 14px 0;
-            border-bottom: 1px solid var(--gray200);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--g200)
         }
 
-        .ch-item:last-child {
+        .ch-i:last-child {
             border-bottom: none
         }
 
-        .ch-left {
+        .ch-l {
             display: flex;
             align-items: center;
             gap: 12px
         }
 
         .ch-av {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--blue), #6366f1);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 700;
             color: #fff
         }
 
-        .ch-name {
+        .ch-n {
             font-size: 14px;
-            font-weight: 600;
-            color: var(--gray900)
+            font-weight: 600
         }
 
         .ch-id {
-            font-size: 12px;
-            color: var(--gray400)
+            font-size: 11px;
+            color: var(--g400)
         }
 
         .btn-del {
-            padding: 5px 12px;
-            font-size: 12px;
+            padding: 4px 10px;
+            font-size: 11px;
             font-weight: 500;
             color: var(--red);
             background: var(--red-bg);
@@ -730,43 +773,37 @@
         /* ===== Empty ===== */
         .empty {
             text-align: center;
-            padding: 48px 20px;
-            color: var(--gray400)
-        }
-
-        .empty-i {
-            font-size: 40px;
-            margin-bottom: 12px
+            padding: 40px 20px;
+            color: var(--g400)
         }
 
         .empty-t {
             font-size: 15px;
             font-weight: 500;
-            color: var(--gray600)
+            color: var(--g600)
         }
 
         .empty-d {
             font-size: 13px;
-            color: var(--gray400);
-            margin-top: 6px
+            margin-top: 4px
         }
 
         /* ===== Modal ===== */
-        .overlay {
+        .ov {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(25, 31, 40, .5);
+            background: rgba(25, 31, 40, .45);
             z-index: 800;
             align-items: center;
             justify-content: center;
             padding: 24px
         }
 
-        .overlay.show {
+        .ov.show {
             display: flex
         }
 
@@ -780,7 +817,7 @@
             padding: 28px
         }
 
-        .modal-head {
+        .modal-h {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -790,21 +827,21 @@
         .modal-x {
             background: none;
             border: none;
-            color: var(--gray400);
-            font-size: 22px;
+            color: var(--g400);
+            font-size: 20px;
             cursor: pointer;
             padding: 4px 8px;
             border-radius: 6px
         }
 
         .modal-x:hover {
-            background: var(--gray100)
+            background: var(--g100)
         }
 
         /* ===== Toast / Loading ===== */
         .toast {
             position: fixed;
-            bottom: 64px;
+            bottom: 60px;
             left: 50%;
             transform: translateX(-50%) translateY(80px);
             padding: 12px 24px;
@@ -814,7 +851,7 @@
             z-index: 1000;
             opacity: 0;
             transition: .3s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, .12)
+            box-shadow: 0 4px 16px rgba(0, 0, 0, .1)
         }
 
         .toast.show {
@@ -823,7 +860,7 @@
         }
 
         .toast-ok {
-            background: var(--gray800);
+            background: var(--g800);
             color: #fff
         }
 
@@ -839,7 +876,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(242, 244, 246, .9);
+            background: rgba(242, 244, 246, .92);
             z-index: 500;
             align-items: center;
             justify-content: center;
@@ -854,7 +891,7 @@
         .spin {
             width: 28px;
             height: 28px;
-            border: 3px solid var(--gray200);
+            border: 3px solid var(--g200);
             border-top-color: var(--blue);
             border-radius: 50%;
             animation: sp .8s linear infinite
@@ -868,11 +905,11 @@
 
         .ld-t {
             font-size: 15px;
-            color: var(--gray700);
+            color: var(--g700);
             font-weight: 500
         }
 
-        /* ===== Bottom Ticker Bar (토스 하단 시세바) ===== */
+        /* ===== Ticker ===== */
         .ticker {
             position: fixed;
             bottom: 0;
@@ -880,106 +917,70 @@
             right: 0;
             height: 40px;
             background: var(--white);
-            border-top: 1px solid var(--gray200);
+            border-top: 1px solid var(--g200);
             display: flex;
             align-items: center;
             padding: 0 24px;
             font-size: 12px;
-            color: var(--gray600);
+            color: var(--g600);
             z-index: 90;
             gap: 24px;
-            overflow: hidden;
+            overflow: hidden
         }
 
-        .ticker-label {
-            color: var(--gray400);
+        .tk-l {
+            color: var(--g400);
             font-weight: 500;
             white-space: nowrap
         }
 
-        .ticker-item {
+        .tk-i {
             display: flex;
             align-items: center;
             gap: 6px;
             white-space: nowrap
         }
 
-        .ticker-name {
-            color: var(--gray700);
+        .tk-n {
+            color: var(--g700);
             font-weight: 500
         }
 
-        .ticker-val {
+        .tk-v {
             font-weight: 600
         }
 
-        .ticker-up {
+        .tk-up {
             color: var(--red)
         }
 
-        .ticker-down {
+        .tk-dn {
             color: var(--blue)
         }
 
-        /* ===== Buttons ===== */
-        .btn-ghost {
-            padding: 7px 14px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--gray700);
-            background: var(--gray100);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .btn-ghost:hover {
-            background: var(--gray200)
-        }
-
-        .btn-primary {
-            padding: 7px 16px;
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
-            background: var(--blue);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .btn-primary:hover {
-            background: #2272E6
-        }
-
-        .btn-primary:disabled {
-            opacity: .5
-        }
-
         /* ===== Responsive ===== */
-        @media(max-width:768px) {
-            .stat-row {
+        @media(max-width:960px) {
+            .cols {
                 grid-template-columns: 1fr
             }
 
-            .grid3 {
-                grid-template-columns: 1fr
+            .col-right {
+                position: static
+            }
+        }
+
+        @media(max-width:640px) {
+            .ct {
+                padding: 12px
             }
 
-            .v-thumb {
-                width: 120px;
-                height: 68px
+            .vi-thumb {
+                width: 100px;
+                height: 56px
             }
 
-            .container {
+            .card {
                 padding: 16px
-            }
-
-            .nav-item {
-                font-size: 13px;
-                padding: 6px 10px
             }
         }
     </style>
@@ -987,92 +988,86 @@
 
 <body>
 
-    <!-- ===== Header (토스증권 상단) ===== -->
-    <header class="header">
-        <div class="header-in">
-            <div class="header-left">
+    <header class="hd">
+        <div class="hd-in">
+            <div class="hd-left">
                 <a href="/" class="logo">
                     <svg viewBox="0 0 24 24" fill="none">
                         <rect width="24" height="24" rx="6" fill="#F04452" />
                         <path d="M7 12l3 3 7-7" stroke="#fff" stroke-width="2.5" stroke-linecap="round"
                             stroke-linejoin="round" />
                     </svg>
-                    <span class="logo-text">YouTube 요약봇</span>
+                    YouTube 요약봇
                 </a>
                 <nav class="nav">
-                    <button class="nav-item on" data-t="dash">대시보드</button>
-                    <button class="nav-item" data-t="ch">채널관리</button>
-                    <button class="nav-item" data-t="arch">보관함</button>
+                    <button class="nav-i on" data-t="dash">대시보드</button>
+                    <button class="nav-i" data-t="ch">채널관리</button>
+                    <button class="nav-i" data-t="arch">보관함</button>
                 </nav>
-            </div>
-            <div class="header-right">
-                <button class="search-box" onclick="document.getElementById('videoUrl').focus();switchTab('dash')">
-                    🔍&nbsp; YouTube URL 분석
-                </button>
             </div>
         </div>
     </header>
 
-    <!-- ===== Main Content ===== -->
-    <main class="container">
+    <main class="ct">
 
         <!-- ===== 대시보드 ===== -->
         <div id="p-dash" class="pane on">
+            <div class="cols">
+                <!-- 왼쪽: 오늘의 요약 -->
+                <div class="col-left">
+                    <!-- URL 분석 -->
+                    <div class="card">
+                        <div class="inp-row">
+                            <input class="inp" id="videoUrl" placeholder="분석할 YouTube URL을 입력하세요">
+                            <button class="btn-p" id="btnAn" onclick="analyzeVideo()">분석</button>
+                        </div>
+                    </div>
 
-            <!-- 상태 카드 -->
-            <div class="stat-row">
-                <div class="stat-card" onclick="switchTab('ch')">
-                    <div class="stat-top">
-                        <div class="stat-icon ch">▶</div>
-                        <div class="stat-label">등록 채널</div>
+                    <!-- 오늘의 핵심 정보 -->
+                    <div class="card">
+                        <div class="card-h">
+                            <div class="card-t">오늘의 핵심 정보</div>
+                            <div style="display:flex;gap:6px">
+                                <button class="btn-g" onclick="loadDash()">새로고침</button>
+                                <button class="btn-p" style="padding:7px 14px;font-size:13px" id="btnDig"
+                                    onclick="triggerDigest()">다이제스트 실행</button>
+                            </div>
+                        </div>
+                        <div id="digestBox" class="digest-box">
+                            <div class="digest-empty">다이제스트를 실행하면 핵심 정보가 여기에 표시됩니다</div>
+                        </div>
                     </div>
-                    <div class="stat-val" id="sN1">-<span class="stat-unit">개</span></div>
-                    <div class="stat-sub">채널 추가하기 →</div>
-                </div>
-                <div class="stat-card" onclick="switchTab('arch')">
-                    <div class="stat-top">
-                        <div class="stat-icon sum">📄</div>
-                        <div class="stat-label">오늘 요약</div>
-                    </div>
-                    <div class="stat-val" id="sN2">-<span class="stat-unit">개</span></div>
-                    <div class="stat-sub">새로운 요약 확인 →</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-top">
-                        <div class="stat-icon run">✅</div>
-                        <div class="stat-label">마지막 실행</div>
-                    </div>
-                    <div class="stat-val" id="sN3" style="font-size:18px">-</div>
-                    <div class="stat-sub" onclick="triggerDigest()">다이제스트 실행하기 →</div>
-                </div>
-            </div>
 
-            <!-- URL 분석 -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🔍 영상 분석</div>
-                </div>
-                <div class="analyze-input">
-                    <input class="inp" id="videoUrl" placeholder="분석할 YouTube URL을 입력하세요 →">
-                    <button class="btn-analyze" id="btnAn" onclick="analyzeVideo()">🔍 분석</button>
-                </div>
-            </div>
-
-            <!-- 오늘의 요약 -->
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">오늘의 요약</div>
-                    <div style="display:flex;gap:8px;align-items:center">
-                        <button class="card-action" onclick="switchTab('arch')">전체보기</button>
-                        <button class="btn-ghost" onclick="loadDash()">🔄</button>
-                        <button class="btn-primary" id="btnDig" onclick="triggerDigest()">▶ 다이제스트</button>
+                    <!-- 영상 목록 -->
+                    <div class="card">
+                        <div class="card-h">
+                            <div class="card-t">오늘의 요약</div>
+                            <button class="card-act" onclick="switchTab('arch')">전체보기</button>
+                        </div>
+                        <div id="dashList" class="vl">
+                            <div class="empty">
+                                <div class="empty-t">요약된 영상이 없습니다</div>
+                                <div class="empty-d">채널을 등록하고 다이제스트를 실행하세요</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div id="dashList" class="v-list">
-                    <div class="empty">
-                        <div class="empty-i">📺</div>
-                        <div class="empty-t">요약된 영상이 없습니다</div>
-                        <div class="empty-d">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 분석하세요</div>
+
+                <!-- 오른쪽: AI 상세 요약 -->
+                <div class="col-right">
+                    <div class="ai-card" id="aiPanel">
+                        <div class="ai-top">
+                            <div class="ai-top-t" id="aiTitle">AI 상세 요약</div>
+                            <div class="ai-top-ch" id="aiCh">왼쪽 영상을 선택하면 상세 분석을 확인할 수 있습니다</div>
+                        </div>
+                        <div class="ai-tabs" id="aiTabs" style="display:none">
+                            <button class="ai-tab on" data-at="overview"
+                                onclick="switchAiTab('overview')">감성·쟁점</button>
+                            <button class="ai-tab" data-at="detail" onclick="switchAiTab('detail')">상세 요약</button>
+                        </div>
+                        <div class="ai-body" id="aiBody">
+                            <div class="ai-empty">왼쪽 목록에서 영상을 선택하세요</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1080,17 +1075,16 @@
 
         <!-- ===== 채널관리 ===== -->
         <div id="p-ch" class="pane">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📡 구독 채널 관리</div>
+            <div class="card" style="max-width:800px">
+                <div class="card-h">
+                    <div class="card-t">구독 채널 관리</div>
                 </div>
-                <div class="analyze-input" style="margin-bottom:20px">
+                <div class="inp-row" style="margin-bottom:20px">
                     <input class="inp" id="chUrl" placeholder="YouTube 채널 URL을 입력하세요">
-                    <button class="btn-analyze" onclick="addCh()">+ 추가</button>
+                    <button class="btn-p" onclick="addCh()">추가</button>
                 </div>
                 <div id="chList">
                     <div class="empty">
-                        <div class="empty-i">📡</div>
                         <div class="empty-t">등록된 채널이 없습니다</div>
                     </div>
                 </div>
@@ -1099,14 +1093,33 @@
 
         <!-- ===== 보관함 ===== -->
         <div id="p-arch" class="pane">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📁 분석 보관함</div>
+            <div class="cols">
+                <div class="col-left">
+                    <div class="card">
+                        <div class="card-h">
+                            <div class="card-t">분석 보관함</div>
+                        </div>
+                        <div id="archList" class="vl">
+                            <div class="empty">
+                                <div class="empty-t">보관된 분석이 없습니다</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="archList" class="v-list">
-                    <div class="empty">
-                        <div class="empty-i">📁</div>
-                        <div class="empty-t">보관된 분석이 없습니다</div>
+                <div class="col-right">
+                    <div class="ai-card" id="aiPanel2">
+                        <div class="ai-top">
+                            <div class="ai-top-t" id="aiTitle2">AI 상세 요약</div>
+                            <div class="ai-top-ch" id="aiCh2">영상을 선택하면 상세 분석을 확인할 수 있습니다</div>
+                        </div>
+                        <div class="ai-tabs" id="aiTabs2" style="display:none">
+                            <button class="ai-tab on" data-at2="overview"
+                                onclick="switchAiTab2('overview')">감성·쟁점</button>
+                            <button class="ai-tab" data-at2="detail" onclick="switchAiTab2('detail')">상세 요약</button>
+                        </div>
+                        <div class="ai-body" id="aiBody2">
+                            <div class="ai-empty">왼쪽 목록에서 영상을 선택하세요</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1114,35 +1127,31 @@
 
     </main>
 
-    <!-- Bottom Ticker Bar -->
-    <div class="ticker" id="ticker">
-        <span class="ticker-label">투자 유의사항</span>
-        <div class="ticker-item"><span class="ticker-name">나스닥</span> <span class="ticker-val">22,886.06</span> <span
-                class="ticker-up">+203.34 (0.89%)</span></div>
-        <div class="ticker-item"><span class="ticker-name">S&P 500</span> <span class="ticker-val">6,909.51</span> <span
-                class="ticker-up">+47.62 (0.69%)</span></div>
-        <div class="ticker-item"><span class="ticker-name">코스피</span> <span class="ticker-val">2,645.67</span> <span
-                class="ticker-up">+12.45 (0.47%)</span></div>
-        <div class="ticker-item"><span class="ticker-name">코스닥</span> <span class="ticker-val">773.12</span> <span
-                class="ticker-down">-2.01 (0.26%)</span></div>
-        <div class="ticker-item"><span class="ticker-name">달러 환율</span> <span class="ticker-val">1,446.6</span> <span
-                class="ticker-down">-2.1 (0.14%)</span></div>
+    <div class="ticker">
+        <span class="tk-l">투자 유의사항</span>
+        <div class="tk-i"><span class="tk-n">나스닥</span><span class="tk-v">22,886</span><span class="tk-up">+203
+                (0.89%)</span></div>
+        <div class="tk-i"><span class="tk-n">S&P 500</span><span class="tk-v">6,909</span><span class="tk-up">+47
+                (0.69%)</span></div>
+        <div class="tk-i"><span class="tk-n">코스피</span><span class="tk-v">2,645</span><span class="tk-up">+12
+                (0.47%)</span></div>
+        <div class="tk-i"><span class="tk-n">코스닥</span><span class="tk-v">773</span><span class="tk-dn">-2.0
+                (0.26%)</span></div>
+        <div class="tk-i"><span class="tk-n">원/달러</span><span class="tk-v">1,446</span><span class="tk-dn">-2.1
+                (0.14%)</span></div>
     </div>
 
-    <!-- Modal -->
-    <div id="resModal" class="overlay" onclick="if(event.target===this)closeRes()">
+    <div id="resModal" class="ov" onclick="if(event.target===this)closeRes()">
         <div class="modal">
-            <div class="modal-head">
+            <div class="modal-h">
                 <div>
                     <div style="font-size:13px;color:var(--blue);font-weight:500" id="resCh"></div>
                     <h2 style="font-size:18px;font-weight:700" id="resTitle"></h2>
-                </div>
-                <button class="modal-x" onclick="closeRes()">✕</button>
+                </div><button class="modal-x" onclick="closeRes()">✕</button>
             </div>
             <div id="resBody"></div>
         </div>
     </div>
-
     <div id="ld" class="ld">
         <div class="spin"></div>
         <div class="ld-t" id="ldT">처리 중...</div>
@@ -1150,91 +1159,228 @@
     <div id="toast" class="toast"></div>
 
     <script>
+        // ===== State =====
+        let currentData = null; // 현재 선택된 영상의 전체 데이터
+        let allAnalyses = []; // 전체 분석 목록
+
         // ===== Tab =====
         function switchTab(t) {
-            document.querySelectorAll('.nav-item').forEach(b => { b.classList.toggle('on', b.dataset.t === t) });
-            document.querySelectorAll('.pane').forEach(p => { p.classList.toggle('on', p.id === 'p-' + t) });
+            document.querySelectorAll('.nav-i').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+            document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + t));
             if (t === 'ch') loadCh(); if (t === 'arch') loadArch();
         }
-        document.querySelectorAll('.nav-item').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
+        document.querySelectorAll('.nav-i').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
 
         // ===== Utils =====
         function toast(m, ok = true) { const t = document.getElementById('toast'); t.textContent = m; t.className = 'toast ' + (ok ? 'toast-ok' : 'toast-err') + ' show'; setTimeout(() => t.classList.remove('show'), 3000) }
         function showLd(t) { document.getElementById('ldT').textContent = t || '처리 중...'; document.getElementById('ld').classList.add('show') }
         function hideLd() { document.getElementById('ld').classList.remove('show') }
         function esc(s) { return s ? s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '' }
-        function fmtD(s) { if (!s) return ''; const d = new Date(s); const now = new Date(); const diff = Math.round((now - d) / 60000); if (diff < 60) return diff + '분 전'; if (diff < 1440) return Math.round(diff / 60) + '시간 전'; return d.toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' }) }
-        function fmtS(t) { if (!t) return ''; return '<p>' + t.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') + '</p>' }
+        function fmtD(s) { if (!s) return ''; const d = new Date(s); const diff = Math.round((Date.now() - d) / 60000); if (diff < 60) return diff + '분 전'; if (diff < 1440) return Math.round(diff / 60) + '시간 전'; return d.toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' }) }
+        function fmtS(t) { if (!t) return ''; return t.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') }
         async function api(u, m = 'GET', b = null) { const o = { method: m, headers: { 'Content-Type': 'application/json' } }; if (b) o.body = JSON.stringify(b); const r = await fetch(u, o); return r.json() }
+        function parseArr(raw) { try { return typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { return [] } }
 
-        // ===== Tags =====
-        function sTag(s) { if (s === 'positive') return '<span class="tag tag-pos">🟢 호재</span>'; if (s === 'negative') return '<span class="tag tag-neg">🔴 악재</span>'; return '<span class="tag tag-neu">🟡 중립</span>' }
-        function iTag(i) { if (i === 'urgent') return '<span class="tag tag-urg">🚨 긴급</span>'; if (i === 'major') return '<span class="tag tag-maj">⭐ 주요</span>'; return '<span class="tag tag-nor">일반</span>' }
-        function sTags(raw) { let a = []; try { a = typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { } return a.slice(0, 5).map(s => '<span class="tag tag-stk">' + esc(s) + '</span>').join('') }
-        function pArr(raw) { try { return typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { return [] } }
-
-        // ===== AI Panel =====
-        function buildAi(a, id) {
-            let h = '<div class="ai-panel" id="ai-' + id + '">';
-            h += '<div class="ai-head"><div class="ai-badge">🤖 AI 코멘트</div><button class="card-close" onclick="closeAi(' + id + ')">✕</button></div>';
-            h += '<div class="tags" style="margin-bottom:14px">' + sTag(a.sentiment) + iTag(a.importance) + sTags(a.key_stocks) + '</div>';
-            const pts = pArr(a.key_points);
-            if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">📋 핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-pt">• ' + esc(p) + '</div>' }); h += '</div>' }
-            if (a.market_impact || a.investment_insight) { h += '<div class="ai-sec">'; if (a.market_impact) h += '<div class="ai-ins"><strong>📊 시장 영향:</strong> ' + esc(a.market_impact) + '</div>'; if (a.investment_insight) h += '<div class="ai-ins"><strong>💡 투자 시사점:</strong> ' + esc(a.investment_insight) + '</div>'; h += '</div>' }
-            h += '<div class="ai-txt">' + fmtS(a.summary || '') + '</div>';
-            h += '<a class="ai-link" href="https://www.youtube.com/watch?v=' + a.video_id + '" target="_blank">전체 보기 ›</a>';
-            h += '</div>'; return h;
+        // ===== Clipboard =====
+        async function copyText(text, label) {
+            try { await navigator.clipboard.writeText(text); toast(label + ' 복사됨') } catch (e) { toast('복사 실패', false) }
         }
 
-        // ===== Video Card =====
-        function buildV(a) {
+        // ===== Tags HTML =====
+        function sTag(s) { if (s === 'positive') return '<span class="tag t-pos">🔴 호재</span>'; if (s === 'negative') return '<span class="tag t-neg">🔵 악재</span>'; return '<span class="tag t-neu">중립</span>' }
+        function iTag(i) { if (i === 'urgent') return '<span class="tag t-urg">긴급</span>'; if (i === 'major') return '<span class="tag t-maj">주요</span>'; return '' }
+        function sTags(raw) { return parseArr(raw).slice(0, 5).map(s => '<span class="tag t-stk">' + esc(s) + '</span>').join('') }
+
+        // ===== Build Digest Box =====
+        function buildDigestBox(analyses) {
+            const box = document.getElementById('digestBox');
+            if (!analyses.length) { box.innerHTML = '<div class="digest-empty">다이제스트를 실행하면 핵심 정보가 여기에 표시됩니다</div>'; return }
+
+            let pos = 0, neg = 0, neu = 0;
+            const stockMap = {};
+            analyses.forEach(a => {
+                if (a.sentiment === 'positive') pos++;
+                else if (a.sentiment === 'negative') neg++;
+                else neu++;
+                parseArr(a.key_stocks).forEach(s => { stockMap[s] = (stockMap[s] || 0) + 1 });
+            });
+            const topStocks = Object.entries(stockMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+            const channels = [...new Set(analyses.map(a => a.channel_name).filter(Boolean))];
+
+            let h = '';
+            h += '<div class="digest-row"><span class="digest-label">분석 현황</span> ' + channels.length + '개 채널, ' + analyses.length + '개 영상 분석 완료</div>';
+            if (pos > 0) h += '<div class="digest-row">🔴 호재 전망 <b>' + pos + '건</b></div>';
+            if (neg > 0) h += '<div class="digest-row">🔵 악재 전망 <b>' + neg + '건</b></div>';
+            if (neu > 0) h += '<div class="digest-row">중립 <b>' + neu + '건</b></div>';
+            if (topStocks.length) {
+                h += '<div style="margin-top:8px"><div class="digest-row" style="margin-bottom:4px"><span class="digest-label">주요 언급 종목</span></div>';
+                h += '<div class="digest-stocks">' + topStocks.map(([s, c]) => '<span class="digest-stock">' + esc(s) + ' (' + c + ')</span>').join('') + '</div></div>';
+            }
+            h += '<div class="digest-share"><button class="btn-share" onclick="shareDigest()">공유</button></div>';
+            box.innerHTML = h;
+        }
+
+        function shareDigest() {
+            const analyses = allAnalyses;
+            if (!analyses.length) { toast('공유할 데이터가 없습니다', false); return }
+            const stocks = {}; const channels = [...new Set(analyses.map(a => a.channel_name).filter(Boolean))];
+            let pos = 0, neg = 0;
+            analyses.forEach(a => {
+                if (a.sentiment === 'positive') pos++; if (a.sentiment === 'negative') neg++;
+                parseArr(a.key_stocks).forEach(s => { stocks[s] = (stocks[s] || 0) + 1 });
+            });
+            const topS = Object.entries(stocks).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([s]) => s);
+            let txt = '[YouTube 요약봇 오늘의 핵심]\n';
+            txt += channels.length + '개 채널, ' + analyses.length + '개 영상 분석\n';
+            if (pos) txt += '호재 전망 ' + pos + '건\n'; if (neg) txt += '악재 전망 ' + neg + '건\n';
+            if (topS.length) txt + '주요 종목: ' + topS.join(', ') + '\n';
+            copyText(txt, '오늘의 핵심 정보');
+        }
+
+        // ===== Build Video Item =====
+        function buildVI(a, panelTarget) {
             const th = a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg';
-            return `<div style="border-radius:var(--r);overflow:hidden;background:var(--white);margin-bottom:12px" id="w-${a.id}">
-        <div class="v-item" style="border-bottom:none;padding:16px 24px;margin:0">
-            <div class="v-thumb-wrap"><img class="v-thumb" src="${th}" alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'"></div>
-            <div class="v-body">
-                <div class="v-ch">${esc(a.channel_name || '')} · ${fmtD(a.created_at)}</div>
-                <div class="v-title">${esc(a.title)}</div>
-                <div class="v-desc">${esc((a.summary || '').substring(0, 100))}</div>
-                <div class="v-foot">
-                    <div class="v-time">${a.analysis_type === 'daily' ? '🤖 자동' : '👤 수동'}</div>
-                    <button class="btn-view" onclick="event.stopPropagation();toggleAi(${a.id})">요약 보기</button>
+            const pt = panelTarget || 'main';
+            return `<div class="vi" id="vi-${a.id}" onclick="selectVideo(${a.id},'${pt}')">
+        <img class="vi-thumb" src="${th}" alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'">
+        <div class="vi-body">
+            <div class="vi-ch">${esc(a.channel_name || '')} · ${fmtD(a.created_at)}</div>
+            <div class="vi-title">${esc(a.title)}</div>
+            <div class="vi-desc">${esc((a.summary || '').substring(0, 80))}</div>
+            <div class="vi-foot">
+                <div class="vi-time">${sTag(a.sentiment)} ${iTag(a.importance)}</div>
+                <div class="vi-actions">
+                    <button class="btn-tiny" onclick="event.stopPropagation();copyTranscript(${a.id})">자막 복사</button>
+                    <button class="btn-tiny" onclick="event.stopPropagation();shareVideo(${a.id})">공유</button>
                 </div>
             </div>
         </div>
-        ${buildAi(a, a.id)}
     </div>`;
         }
 
-        // ===== Toggle =====
-        function toggleAi(id) {
-            const p = document.getElementById('ai-' + id); if (!p) return;
-            document.querySelectorAll('.ai-panel.open').forEach(q => { if (q.id !== 'ai-' + id) q.classList.remove('open') });
-            p.classList.toggle('open'); if (p.classList.contains('open') && !p.dataset.ld) { fetchAi(id) }
-        }
-        async function fetchAi(id) {
-            const p = document.getElementById('ai-' + id); if (!p || p.dataset.ld) return;
+        // ===== Select Video → Right Panel =====
+        async function selectVideo(id, panelTarget) {
+            // Highlight
+            document.querySelectorAll('.vi').forEach(v => v.classList.remove('selected'));
+            const el = document.getElementById('vi-' + id); if (el) el.classList.add('selected');
+
+            const suffix = panelTarget === 'arch' ? '2' : '';
+            const titleEl = document.getElementById('aiTitle' + suffix);
+            const chEl = document.getElementById('aiCh' + suffix);
+            const tabsEl = document.getElementById('aiTabs' + suffix);
+            const bodyEl = document.getElementById('aiBody' + suffix);
+
+            titleEl.textContent = '불러오는 중...'; chEl.textContent = '';
+            bodyEl.innerHTML = '<div style="text-align:center;padding:40px"><div class="spin"></div></div>';
+
             try {
-                const d = await api('/api/archive/' + id); if (d.success && d.analysis) {
-                    const a = d.analysis;
-                    p.outerHTML = buildAi(a, id).replace('class="ai-panel"', 'class="ai-panel open"');
-                    const np = document.getElementById('ai-' + id); if (np) np.dataset.ld = '1'
-                }
-            } catch (e) { console.error(e) }
+                const d = await api('/api/archive/' + id);
+                if (!d.success || !d.analysis) { bodyEl.innerHTML = '<div class="ai-empty">데이터를 불러올 수 없습니다</div>'; return }
+                currentData = d.analysis;
+                titleEl.textContent = currentData.title || 'AI 분석';
+                chEl.textContent = currentData.channel_name || '';
+                tabsEl.style.display = 'flex';
+                renderAiPanel(suffix);
+            } catch (e) { bodyEl.innerHTML = '<div class="ai-empty">오류가 발생했습니다</div>' }
         }
-        function closeAi(id) { const p = document.getElementById('ai-' + id); if (p) p.classList.remove('open') }
+
+        function renderAiPanel(suffix) {
+            const a = currentData; if (!a) return;
+            const bodyEl = document.getElementById('aiBody' + suffix);
+            const activeTab = document.querySelector('[data-at' + suffix + '].on');
+            const tab = activeTab ? activeTab.getAttribute('data-at' + suffix) : 'overview';
+
+            if (tab === 'overview') {
+                let h = '';
+                // 감성
+                const sentClass = a.sentiment === 'positive' ? 'pos' : a.sentiment === 'negative' ? 'neg' : 'neu';
+                const sentText = a.sentiment === 'positive' ? '호재 (긍정적)' : a.sentiment === 'negative' ? '악재 (부정적)' : '중립';
+                const sentBadge = a.importance === 'urgent' ? '<span class="sent-badge t-urg">긴급</span>' : a.importance === 'major' ? '<span class="sent-badge t-maj">주요</span>' : '';
+                h += '<div class="sent-bar"><div class="sent-dot ' + sentClass + '"></div><div class="sent-label">' + sentText + '</div>' + sentBadge + '</div>';
+
+                // 종목
+                const stocks = parseArr(a.key_stocks);
+                if (stocks.length) {
+                    h += '<div class="ai-sec"><div class="ai-sec-t">관련 종목</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+                    stocks.forEach(s => { h += '<span class="tag t-stk">' + esc(s) + '</span>' });
+                    h += '</div></div>';
+                }
+
+                // 핵심 포인트
+                const pts = parseArr(a.key_points);
+                if (pts.length) {
+                    h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>';
+                    pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' });
+                    h += '</div>';
+                }
+
+                // 시장 영향 + 투자 시사점
+                if (a.market_impact || a.investment_insight) {
+                    h += '<div class="ai-sec">';
+                    if (a.market_impact) h += '<div class="ai-ins"><b>시장 영향</b><br>' + esc(a.market_impact) + '</div>';
+                    if (a.investment_insight) h += '<div class="ai-ins" style="margin-top:10px"><b>투자 시사점</b><br>' + esc(a.investment_insight) + '</div>';
+                    h += '</div>';
+                }
+
+                // 공유
+                h += '<div class="ai-share"><button class="btn-share" onclick="shareVideo(' + a.id + ')">공유</button>';
+                h += '<a class="ai-link" href="https://www.youtube.com/watch?v=' + a.video_id + '" target="_blank">원본 영상 ›</a></div>';
+                bodyEl.innerHTML = h;
+
+            } else {
+                // 상세 요약
+                let h = '<div class="ai-txt"><p>' + fmtS(a.summary || '요약 없음') + '</p></div>';
+                h += '<div class="ai-share"><button class="btn-share" onclick="shareVideo(' + a.id + ')">공유</button>';
+                h += '<button class="btn-share" onclick="copyTranscript(' + a.id + ')">자막 복사</button></div>';
+                bodyEl.innerHTML = h;
+            }
+        }
+
+        function switchAiTab(tab) {
+            document.querySelectorAll('[data-at]').forEach(b => { b.classList.toggle('on', b.getAttribute('data-at') === tab) });
+            renderAiPanel('');
+        }
+        function switchAiTab2(tab) {
+            document.querySelectorAll('[data-at2]').forEach(b => { b.classList.toggle('on', b.getAttribute('data-at2') === tab) });
+            renderAiPanel('2');
+        }
+
+        // ===== Copy Transcript =====
+        async function copyTranscript(id) {
+            try {
+                const d = await api('/api/archive/' + id);
+                if (d.success && d.analysis && d.analysis.transcript) {
+                    copyText(d.analysis.transcript, '자막');
+                } else { toast('자막 데이터가 없습니다', false) }
+            } catch (e) { toast('자막 복사 실패', false) }
+        }
+
+        // ===== Share Video =====
+        async function shareVideo(id) {
+            try {
+                const d = await api('/api/archive/' + id);
+                if (!d.success || !d.analysis) { toast('데이터 없음', false); return }
+                const a = d.analysis;
+                const sent = a.sentiment === 'positive' ? '호재' : a.sentiment === 'negative' ? '악재' : '중립';
+                let txt = '[' + sent + '] ' + (a.title || '') + '\n';
+                const pts = parseArr(a.key_points);
+                if (pts.length) pts.forEach(p => { txt += '· ' + p + '\n' });
+                if (a.market_impact) txt += '\n시장 영향: ' + a.market_impact;
+                if (a.investment_insight) txt += '\n투자 시사점: ' + a.investment_insight;
+                txt += '\n\nhttps://www.youtube.com/watch?v=' + a.video_id;
+                copyText(txt, '분석 결과');
+            } catch (e) { toast('공유 실패', false) }
+        }
 
         // ===== Dashboard =====
         async function loadDash() {
             try {
                 const [aD, cD, dD] = await Promise.all([api('/api/archive/list'), api('/api/channels'), api('/api/daily_digest/latest')]);
-                const chs = cD.channels || []; const ans = aD.analyses || [];
-                document.getElementById('sN1').innerHTML = chs.length + '<span class="stat-unit">개</span>';
-                document.getElementById('sN2').innerHTML = ans.length + '<span class="stat-unit">개</span>';
-                if (dD.success && dD.digest) { const d = new Date(dD.digest.completed_at || dD.digest.created_at); const ago = Math.round((Date.now() - d) / 60000); document.getElementById('sN3').textContent = ago < 60 ? ago + '분 전' : Math.round(ago / 60) + '시간 전' } else { document.getElementById('sN3').textContent = '미실행' }
+                allAnalyses = aD.analyses || [];
+                buildDigestBox(allAnalyses);
                 const ct = document.getElementById('dashList');
-                if (!ans.length) { ct.innerHTML = '<div class="empty"><div class="empty-i">📺</div><div class="empty-t">요약된 영상이 없습니다</div><div class="empty-d">채널을 등록하고 다이제스트를 실행하거나, URL을 직접 분석하세요</div></div>'; return }
-                ct.innerHTML = ans.slice(0, 15).map(a => buildV(a)).join('');
+                if (!allAnalyses.length) { ct.innerHTML = '<div class="empty"><div class="empty-t">요약된 영상이 없습니다</div><div class="empty-d">채널을 등록하고 다이제스트를 실행하세요</div></div>'; return }
+                ct.innerHTML = allAnalyses.slice(0, 20).map(a => buildVI(a, 'main')).join('');
             } catch (e) { console.error(e) }
         }
 
@@ -1242,15 +1388,15 @@
         async function loadCh() {
             try {
                 const d = await api('/api/channels'); const el = document.getElementById('chList');
-                if (!d.channels || !d.channels.length) { el.innerHTML = '<div class="empty"><div class="empty-i">📡</div><div class="empty-t">등록된 채널이 없습니다</div></div>'; return }
-                el.innerHTML = d.channels.map(c => `<div class="ch-item"><div class="ch-left"><div class="ch-av">${(c.channel_name || '?')[0]}</div><div><div class="ch-name">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div></div><button class="btn-del" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button></div>`).join('')
-            } catch (e) { console.error(e) }
+                if (!d.channels || !d.channels.length) { el.innerHTML = '<div class="empty"><div class="empty-t">등록된 채널이 없습니다</div></div>'; return }
+                el.innerHTML = d.channels.map(c => `<div class="ch-i"><div class="ch-l"><div class="ch-av">${(c.channel_name || '?')[0]}</div><div><div class="ch-n">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div></div><button class="btn-del" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button></div>`).join('')
+            } catch (e) { }
         }
         async function addCh() {
-            const u = document.getElementById('chUrl').value.trim(); if (!u) { toast('채널 URL을 입력해주세요', false); return }
+            const u = document.getElementById('chUrl').value.trim(); if (!u) { toast('URL을 입력해주세요', false); return }
             showLd('채널 등록 중...'); try {
                 const d = await api('/api/channels', 'POST', { channel_url: u }); hideLd();
-                if (d.success) { toast('✅ ' + d.channel.channel_name + ' 등록'); document.getElementById('chUrl').value = ''; loadCh(); loadDash() } else toast(d.message || '실패', false)
+                if (d.success) { toast(d.channel.channel_name + ' 등록됨'); document.getElementById('chUrl').value = ''; loadCh(); loadDash() } else toast(d.message || '실패', false)
             } catch (e) { hideLd(); toast('오류', false) }
         }
         async function delCh(id, n) { if (!confirm('"' + n + '" 삭제?')) return; try { await api('/api/channels/' + id, 'DELETE'); toast('삭제됨'); loadCh(); loadDash() } catch (e) { toast('오류', false) } }
@@ -1259,15 +1405,18 @@
         async function loadArch() {
             try {
                 const d = await api('/api/archive/list'); const ct = document.getElementById('archList');
-                if (!d.analyses || !d.analyses.length) { ct.innerHTML = '<div class="empty"><div class="empty-i">📁</div><div class="empty-t">보관된 분석이 없습니다</div></div>'; return }
-                ct.innerHTML = d.analyses.map(a => buildV(a)).join('')
-            } catch (e) { console.error(e) }
+                if (!d.analyses || !d.analyses.length) { ct.innerHTML = '<div class="empty"><div class="empty-t">보관된 분석이 없습니다</div></div>'; return }
+                ct.innerHTML = d.analyses.map(a => buildVI(a, 'arch')).join('')
+            } catch (e) { }
         }
 
         // ===== Digest =====
         async function triggerDigest() {
-            const b = document.getElementById('btnDig'); b.disabled = true; b.textContent = '⏳ 실행 중...'; showLd('데일리 다이제스트 실행 중...');
-            try { const d = await api('/api/daily_digest', 'POST', { hours: 48 }); hideLd(); if (d.success) { toast('✅ ' + d.total_videos + '개 수집, ' + d.total_summarized + '개 요약'); loadDash() } else toast(d.message || '실패', false) } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false; b.textContent = '▶ 다이제스트' }
+            const b = document.getElementById('btnDig'); b.disabled = true; b.textContent = '실행 중...'; showLd('다이제스트 실행 중...');
+            try {
+                const d = await api('/api/daily_digest', 'POST', { hours: 48 }); hideLd();
+                if (d.success) { toast(d.total_videos + '개 수집, ' + d.total_summarized + '개 요약'); loadDash() } else toast(d.message || '실패', false)
+            } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false; b.textContent = '다이제스트 실행' }
         }
 
         // ===== Analyze =====
@@ -1279,14 +1428,15 @@
                 if (d.success) {
                     document.getElementById('resCh').textContent = d.video_info?.channel_name || '';
                     document.getElementById('resTitle').textContent = d.video_info?.title || '';
-                    let h = '<div class="tags" style="margin-bottom:14px">' + sTag(d.sentiment) + iTag(d.importance) + sTags(d.key_stocks) + '</div>';
-                    const pts = d.key_points || []; if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">📋 핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-pt">• ' + esc(p) + '</div>' }); h += '</div>' }
-                    if (d.market_impact || d.investment_insight) { h += '<div class="ai-sec">'; if (d.market_impact) h += '<div class="ai-ins"><strong>📊 시장 영향:</strong> ' + esc(d.market_impact) + '</div>'; if (d.investment_insight) h += '<div class="ai-ins"><strong>💡 투자 시사점:</strong> ' + esc(d.investment_insight) + '</div>'; h += '</div>' }
-                    h += '<div class="ai-txt">' + fmtS(d.summary || '') + '</div>';
-                    document.getElementById('resBody').innerHTML = h; document.getElementById('resModal').classList.add('show');
-                    document.getElementById('videoUrl').value = ''; toast('✅ 분석 완료!'); loadDash()
-                }
-                else toast(d.message || '실패', false)
+                    let h = '<div style="margin-bottom:14px">' + sTag(d.sentiment) + iTag(d.importance) + sTags(d.key_stocks) + '</div>';
+                    const pts = d.key_points || [];
+                    if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' }); h += '</div>' }
+                    if (d.market_impact || d.investment_insight) { h += '<div class="ai-sec">'; if (d.market_impact) h += '<div class="ai-ins"><b>시장 영향</b><br>' + esc(d.market_impact) + '</div>'; if (d.investment_insight) h += '<div class="ai-ins"><b>투자 시사점</b><br>' + esc(d.investment_insight) + '</div>'; h += '</div>' }
+                    h += '<div class="ai-txt"><p>' + fmtS(d.summary || '') + '</p></div>';
+                    document.getElementById('resBody').innerHTML = h;
+                    document.getElementById('resModal').classList.add('show');
+                    document.getElementById('videoUrl').value = ''; toast('분석 완료'); loadDash()
+                } else toast(d.message || '실패', false)
             } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false }
         }
         function closeRes() { document.getElementById('resModal').classList.remove('show') }
@@ -1294,7 +1444,6 @@
         // Keys
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRes(); if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyzeVideo(); if (e.key === 'Enter' && document.activeElement.id === 'chUrl') addCh() });
 
-        // Init
         loadDash();
     </script>
 </body>
