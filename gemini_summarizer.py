@@ -34,47 +34,48 @@ class GeminiSummarizer:
     def analyze_single(self, transcript: str, video_info: dict = None) -> str:
         """
         단일 영상 분석 - 구조화된 JSON 반환
-        
-        Returns: JSON 문자열 (감성, 종목, 중요도, AI코멘트 포함)
+
+        Returns: JSON 문자열
         """
         title = video_info.get('title', '') if video_info else ''
 
-        prompt = f"""당신은 증권/경제 전문 애널리스트입니다. YouTube 영상 자막을 분석하여 구조화된 JSON으로 응답하세요.
+        prompt = f"""당신은 시니어 증권 애널리스트다. 바쁜 투자자가 30초 안에 판단할 수 있도록 핵심만 정확히 추출하라.
 
-{'📺 영상 제목: ' + title if title else ''}
+영상 제목: {title if title else '(제목 없음)'}
 
-=== 자막 ===
+--- 자막 시작 ---
 {transcript[:80000]}
-=== 끝 ===
+--- 자막 끝 ---
 
-반드시 아래 JSON 형식으로만 응답하세요. JSON 외에 다른 텍스트는 절대 포함하지 마세요.
+아래 JSON 형식으로만 응답하라. 다른 텍스트 없이 순수 JSON만 출력.
 
-```json
 {{
-    "sentiment": "positive 또는 negative 또는 neutral 중 하나",
-    "importance": "urgent 또는 major 또는 normal 중 하나",
-    "key_stocks": ["영상에서 언급된 핵심 종목/섹터명 최대 5개"],
+    "sentiment": "positive / negative / neutral 중 택1",
+    "importance": "urgent / major / normal 중 택1",
+    "one_line_summary": "이 영상의 핵심을 한 문장으로 (30자 이내, 구체적 수치 포함)",
+    "key_stocks": ["언급된 핵심 종목/섹터 최대 5개"],
     "key_points": [
-        "핵심 포인트 1 (한 문장)",
-        "핵심 포인트 2 (한 문장)",
-        "핵심 포인트 3 (한 문장)"
+        "핵심 팩트 1 (수치, 날짜, 근거 포함)",
+        "핵심 팩트 2",
+        "핵심 팩트 3"
     ],
-    "market_impact": "시장에 미치는 영향 한 줄 요약",
-    "investment_insight": "투자자를 위한 시사점 한 줄",
-    "summary": "영상 전체 핵심 요약 (3~5문장, 구체적 수치와 팩트 포함)"
+    "market_impact": "시장 영향 한 줄 (구체적으로)",
+    "investment_insight": "투자 시사점 한 줄 (실행 가능한 수준으로)",
+    "risk_assessment": "리스크 요인 한 줄 (반대 시나리오 포함)",
+    "summary": "핵심 요약 3~5문장. 팩트와 수치 중심. 불필요한 수식어 제거. 투자 판단에 필요한 정보만 포함."
 }}
-```
 
-판단 기준:
-- sentiment: 시장/투자 관점에서 호재=positive, 악재=negative, 중립=neutral
-- importance: 속보/시장 즉시 영향=urgent, 전략적 분석/전망=major, 일반 정보/교육=normal
-- key_stocks: 구체적 종목명(삼성전자, SK하이닉스 등)이나 섹터명(반도체, 방산, 조선 등)
-- 영상이 경제/투자가 아닌 경우에도 위 형식에 맞춰 적절히 분석
-
-반드시 유효한 JSON만 출력하세요. ```json``` 마커 없이 순수 JSON만 출력하세요."""
+작성 원칙:
+- 이모지 사용 금지
+- 모호한 표현 금지 (예: '상당한', '다소', '어느 정도')
+- 구체적 수치, 날짜, 종목명을 반드시 포함
+- sentiment: 시장/투자 관점 호재=positive, 악재=negative, 판단 불가=neutral
+- importance: 속보/즉시 대응=urgent, 전략적=major, 참고=normal
+- one_line_summary: 핵심 결론 한 문장 (예: "삼성전자 HBM4 양산 2026년 하반기 확정, SK하이닉스 독점 구도 붕괴")
+- summary에 영상 서론, 인사말, 홍보 내용은 제외"""
 
         raw = self._generate(prompt)
-        
+
         # JSON 파싱 시도 및 검증
         parsed = self._parse_structured_response(raw, title)
         return json.dumps(parsed, ensure_ascii=False)
@@ -84,10 +85,12 @@ class GeminiSummarizer:
         default = {
             "sentiment": "neutral",
             "importance": "normal",
+            "one_line_summary": "",
             "key_stocks": [],
             "key_points": [],
             "market_impact": "",
             "investment_insight": "",
+            "risk_assessment": "",
             "summary": raw  # 파싱 실패 시 원본 텍스트를 summary로
         }
         
@@ -109,10 +112,12 @@ class GeminiSummarizer:
             result = {
                 "sentiment": parsed.get("sentiment", "neutral"),
                 "importance": parsed.get("importance", "normal"),
+                "one_line_summary": parsed.get("one_line_summary", ""),
                 "key_stocks": parsed.get("key_stocks", []),
                 "key_points": parsed.get("key_points", []),
                 "market_impact": parsed.get("market_impact", ""),
                 "investment_insight": parsed.get("investment_insight", ""),
+                "risk_assessment": parsed.get("risk_assessment", ""),
                 "summary": parsed.get("summary", "")
             }
             
