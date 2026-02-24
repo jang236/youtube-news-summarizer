@@ -73,10 +73,12 @@ def init_db():
             summary TEXT DEFAULT '',
             sentiment TEXT DEFAULT 'neutral',
             importance TEXT DEFAULT 'normal',
+            one_line_summary TEXT DEFAULT '',
             key_stocks TEXT DEFAULT '[]',
             key_points TEXT DEFAULT '[]',
             market_impact TEXT DEFAULT '',
             investment_insight TEXT DEFAULT '',
+            risk_assessment TEXT DEFAULT '',
             analysis_type TEXT DEFAULT 'single',
             language TEXT DEFAULT '',
             method TEXT DEFAULT '',
@@ -89,10 +91,12 @@ def init_db():
     for col, default in [
         ('sentiment', "'neutral'"),
         ('importance', "'normal'"),
+        ('one_line_summary', "''"),
         ('key_stocks', "'[]'"),
         ('key_points', "'[]'"),
         ('market_impact', "''"),
         ('investment_insight', "''"),
+        ('risk_assessment', "''"),
     ]:
         try:
             c.execute(f'ALTER TABLE analyses ADD COLUMN {col} TEXT DEFAULT {default}')
@@ -726,6 +730,41 @@ def get_digest_history():
             'digests': [dict(d) for d in digests],
         })
     except Exception as e:
+        return jsonify({'success': False, 'message': str(e)})
+
+
+# =========================================================
+# API: 일일 종합 인사이트 (AI 교차 분석)
+# =========================================================
+@app.route('/api/daily_insight', methods=['POST'])
+def generate_insight():
+    """오늘의 전체 분석 결과를 종합한 AI 인사이트 생성"""
+    try:
+        gemini_key = get_gemini_key()
+        if not gemini_key:
+            return jsonify({'success': False, 'message': 'Gemini API 키가 설정되지 않았습니다'})
+
+        conn = get_db()
+        analyses = conn.execute(
+            "SELECT * FROM analyses ORDER BY created_at DESC LIMIT 30"
+        ).fetchall()
+        conn.close()
+
+        if not analyses:
+            return jsonify({'success': True, 'insight': None, 'message': '분석된 영상이 없습니다'})
+
+        analyses_list = [dict(a) for a in analyses]
+
+        summarizer = GeminiSummarizer(gemini_key)
+        insight = summarizer.generate_daily_insight(analyses_list)
+
+        return jsonify({
+            'success': True,
+            'insight': insight,
+            'total_analyses': len(analyses_list)
+        })
+    except Exception as e:
+        logger.error(f"일일 인사이트 생성 실패: {e}")
         return jsonify({'success': False, 'message': str(e)})
 
 
