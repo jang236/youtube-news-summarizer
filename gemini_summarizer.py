@@ -25,8 +25,8 @@ class GeminiSummarizer:
             raise ValueError("Gemini API 키가 필요합니다")
 
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-flash')
-        logger.info("✅ Gemini 2.5 Flash 초기화 완료")
+        self.model = genai.GenerativeModel('gemini-3-flash-preview')
+        logger.info("Gemini 3 Flash Preview 초기화 완료")
 
     # =========================================================
     # 단일 분석 (구조화된 JSON 출력)
@@ -371,7 +371,7 @@ def test_gemini_connection(api_key: str) -> dict:
     """Gemini 연결 테스트"""
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        model = genai.GenerativeModel('gemini-3-flash-preview')
         response = model.generate_content("테스트입니다. '연결 성공'이라고만 답해주세요.")
         if response and response.text:
             return {'success': True, 'message': '✅ Gemini API 연결 성공!'}
