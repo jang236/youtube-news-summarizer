@@ -205,6 +205,100 @@ class GeminiSummarizer:
         return self._generate(prompt)
 
     # =========================================================
+    # 일일 종합 인사이트 (오늘의 핵심 정보용)
+    # =========================================================
+    def generate_daily_insight(self, analyses: List[Dict]) -> dict:
+        """
+        당일 전체 분석 결과를 종합하여 핵심 인사이트 생성
+        
+        Args:
+            analyses: 개별 분석 결과 리스트 (sentiment, key_stocks, key_points, summary 등)
+        
+        Returns: dict (headline, key_insights, risk_factors, action_items)
+        """
+        if not analyses:
+            return {"headline": "", "key_insights": [], "risk_factors": [], "action_items": []}
+
+        # 개별 분석 요약본 구성
+        summary_text = ""
+        for i, a in enumerate(analyses, 1):
+            title = a.get('title', '')
+            sentiment = a.get('sentiment', 'neutral')
+            one_line = a.get('one_line_summary', '')
+            summary = a.get('summary', '')
+            stocks = a.get('key_stocks', [])
+            if isinstance(stocks, str):
+                try:
+                    stocks = json.loads(stocks)
+                except:
+                    stocks = []
+            points = a.get('key_points', [])
+            if isinstance(points, str):
+                try:
+                    points = json.loads(points)
+                except:
+                    points = []
+            
+            summary_text += f"\n[영상 {i}] {title}\n"
+            summary_text += f"감성: {sentiment} | 종목: {', '.join(stocks) if stocks else '없음'}\n"
+            if one_line:
+                summary_text += f"핵심: {one_line}\n"
+            if points:
+                for p in points[:3]:
+                    summary_text += f"  - {p}\n"
+            if summary:
+                summary_text += f"요약: {summary[:200]}\n"
+
+        prompt = f"""당신은 시니어 투자 전략가다. 오늘 수집된 {len(analyses)}개 영상의 분석 결과를 종합하여 핵심 인사이트를 추출하라.
+
+--- 오늘의 분석 결과 ---
+{summary_text}
+--- 끝 ---
+
+아래 JSON 형식으로만 응답하라. 순수 JSON만 출력.
+
+{{
+    "headline": "오늘 시장의 핵심을 한 문장으로 (40자 이내, 구체적)",
+    "key_insights": [
+        "종합 인사이트 1 (채널 간 공통 의견이나 핵심 트렌드, 구체적 수치 포함)",
+        "종합 인사이트 2",
+        "종합 인사이트 3"
+    ],
+    "risk_factors": [
+        "리스크 요인 1 (반대 의견이나 주의사항)",
+        "리스크 요인 2"
+    ],
+    "action_items": [
+        "실행 아이템 1 (구체적으로 무엇을 해야 하는지)",
+        "실행 아이템 2"
+    ]
+}}
+
+작성 원칙:
+- 이모지 사용 금지
+- 개별 영상 요약 반복 금지 — 영상 간 교차 분석 결과만 작성
+- 여러 채널이 같은 종목/이슈를 언급했다면 어떤 공통 결론이 있는지 추출
+- 채널 간 의견이 갈리는 부분이 있다면 명확히 지적
+- headline은 투자자가 오늘 가장 먼저 봐야 할 한 문장"""
+
+        raw = self._generate(prompt)
+        
+        try:
+            json_match = re.search(r'\{.*\}', raw, re.DOTALL)
+            if json_match:
+                raw = json_match.group(0)
+            parsed = json.loads(raw)
+            return {
+                "headline": parsed.get("headline", ""),
+                "key_insights": parsed.get("key_insights", []),
+                "risk_factors": parsed.get("risk_factors", []),
+                "action_items": parsed.get("action_items", [])
+            }
+        except Exception as e:
+            logger.warning(f"일일 인사이트 JSON 파싱 실패: {e}")
+            return {"headline": raw[:100], "key_insights": [], "risk_factors": [], "action_items": []}
+
+    # =========================================================
     # 다중 영상 통합 분석
     # =========================================================
     def analyze_multiple(self, transcripts: List[str]) -> str:
@@ -214,33 +308,30 @@ class GeminiSummarizer:
             trimmed = t[:50000] if len(t) > 50000 else t
             transcript_sections += f"\n=== 영상 {i} 자막 ===\n{trimmed}\n"
 
-        prompt = f"""당신은 전문 애널리스트입니다. 다음 {len(transcripts)}개의 YouTube 영상을 통합 분석해주세요.
+        prompt = f"""당신은 시니어 애널리스트다. 다음 {len(transcripts)}개 영상을 통합 분석하라.
 
 {transcript_sections}
 
-다음 형식으로 **통합 브리핑**을 작성해주세요:
+아래 구조로 통합 브리핑을 작성하라:
 
-## 📊 통합 브리핑 ({len(transcripts)}개 영상 분석)
+[공통 핵심 메시지]
+모든 영상의 공통 주제와 결론
 
-### 🔑 공통 핵심 메시지
-• (모든 영상에서 공통으로 다루는 핵심 주제와 메시지)
+[영상별 핵심]
+{chr(10).join([f'영상 {i+1}: 핵심 내용 2문장' for i in range(len(transcripts))])}
 
-### 📋 영상별 요약
-{chr(10).join([f'**영상 {i+1}**: (해당 영상의 핵심 내용 2-3문장)' for i in range(len(transcripts))])}
+[교차 분석]
+- 공통점: 영상들이 공유하는 관점
+- 차이점: 영상마다 다른 견해
+- 상충: 서로 반대되는 주장 (있을 경우)
 
-### 🔄 비교 분석
-• **공통점**: (영상들이 공유하는 관점이나 정보)
-• **차이점**: (영상마다 다른 의견이나 관점)
-• **상충되는 내용**: (있을 경우)
+[종합 인사이트]
+모든 영상을 종합한 핵심 결론 3~4문장
 
-### 💡 종합 인사이트
-(모든 영상을 종합했을 때 얻을 수 있는 핵심 인사이트 3-4문장)
+[실행 아이템]
+구체적 액션 아이템
 
-### ✅ 실행 아이템
-• (종합 분석을 바탕으로 한 구체적 액션 아이템들)
-
-전문적이면서도 이해하기 쉬운 톤으로 작성해주세요.
-"""
+이모지 사용 금지. 팩트와 수치 중심으로 작성."""
         return self._generate(prompt)
 
     # =========================================================
