@@ -185,20 +185,6 @@
             color: var(--g500)
         }
 
-        .crd-a {
-            font-size: 13px;
-            color: var(--blue);
-            font-weight: 500;
-            cursor: pointer;
-            background: none;
-            border: none;
-            font-family: inherit
-        }
-
-        .crd-a:hover {
-            text-decoration: underline
-        }
-
         /* Buttons */
         .btn {
             padding: 7px 14px;
@@ -270,6 +256,20 @@
             background: var(--g200)
         }
 
+        .crd-a {
+            font-size: 13px;
+            color: var(--blue);
+            font-weight: 500;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: inherit
+        }
+
+        .crd-a:hover {
+            text-decoration: underline
+        }
+
         /* Input */
         .inp {
             flex: 1;
@@ -299,27 +299,41 @@
             gap: 8px
         }
 
-        /* ===== 보라색: 오늘의 핵심 정보 ===== */
-        .digest-box {
+        /* 보라: 핵심 정보 */
+        .dg-box {
             background: var(--g50);
             border: 1px solid var(--g200);
             border-radius: 12px;
             padding: 16px 20px
         }
 
-        .dg-row {
-            padding: 5px 0;
-            font-size: 14px;
-            color: var(--g700);
-            line-height: 1.7;
-            display: flex;
-            gap: 8px
+        .dg-hl {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--g900);
+            margin-bottom: 12px;
+            line-height: 1.5
         }
 
-        .dg-label {
-            font-weight: 600;
-            color: var(--g900);
-            white-space: nowrap
+        .dg-sec {
+            margin-bottom: 12px
+        }
+
+        .dg-sec-t {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--g500);
+            letter-spacing: .3px;
+            margin-bottom: 6px
+        }
+
+        .dg-pt {
+            font-size: 13px;
+            color: var(--g700);
+            line-height: 1.7;
+            padding-left: 12px;
+            text-indent: -12px;
+            margin-bottom: 3px
         }
 
         .dg-stocks {
@@ -335,7 +349,18 @@
             font-size: 12px;
             font-weight: 600;
             background: var(--blue-bg);
-            color: var(--blue)
+            color: var(--blue);
+            cursor: pointer;
+            transition: var(--tr)
+        }
+
+        .dg-stk:hover {
+            background: var(--blue-lt)
+        }
+
+        .dg-stk.active {
+            background: var(--blue);
+            color: #fff
         }
 
         .dg-empty {
@@ -347,13 +372,26 @@
 
         .dg-foot {
             display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
             padding-top: 10px;
             border-top: 1px solid var(--g200)
         }
 
-        /* ===== 파란색: 오늘의 요약 (1줄 목록) ===== */
+        .dg-stat {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--g500)
+        }
+
+        .dg-stat b {
+            font-weight: 600;
+            color: var(--g700)
+        }
+
+        /* 파란: 영상 목록 */
         .vl {
             display: flex;
             flex-direction: column;
@@ -385,6 +423,10 @@
             margin: 0 -24px;
             padding: 14px 24px;
             border-radius: 10px
+        }
+
+        .vi.hide {
+            display: none
         }
 
         .vi-thumb {
@@ -448,7 +490,6 @@
         .tag {
             display: inline-flex;
             align-items: center;
-            gap: 2px;
             padding: 2px 8px;
             border-radius: 20px;
             font-size: 11px;
@@ -485,7 +526,7 @@
             color: var(--blue)
         }
 
-        /* ===== 빨간색: AI 상세 요약 (오른쪽 패널) ===== */
+        /* 빨간: AI 상세 */
         .ai-crd {
             background: var(--wh);
             border-radius: var(--r);
@@ -521,7 +562,6 @@
             font-size: 14px
         }
 
-        /* AI 감성 */
         .sent-bar {
             display: flex;
             align-items: center;
@@ -562,7 +602,6 @@
             border-radius: 12px
         }
 
-        /* AI 섹션 */
         .ai-sec {
             padding: 14px 0;
             border-bottom: 1px solid var(--g200)
@@ -592,8 +631,7 @@
         .ai-ins {
             font-size: 13px;
             color: var(--g700);
-            line-height: 1.7;
-            margin-top: 6px
+            line-height: 1.7
         }
 
         .ai-ins b {
@@ -636,7 +674,6 @@
             flex-wrap: wrap
         }
 
-        /* 자막 뷰어 */
         .script-box {
             background: var(--g50);
             border: 1px solid var(--g200);
@@ -730,56 +767,7 @@
             margin-top: 4px
         }
 
-        /* Modal */
-        .ov {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(25, 31, 40, .45);
-            z-index: 800;
-            align-items: center;
-            justify-content: center;
-            padding: 24px
-        }
-
-        .ov.show {
-            display: flex
-        }
-
-        .modal {
-            background: var(--wh);
-            border-radius: 20px;
-            max-width: 640px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            padding: 28px
-        }
-
-        .modal-h {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px
-        }
-
-        .modal-x {
-            background: none;
-            border: none;
-            color: var(--g400);
-            font-size: 20px;
-            cursor: pointer;
-            padding: 4px 8px;
-            border-radius: 6px
-        }
-
-        .modal-x:hover {
-            background: var(--g100)
-        }
-
+        /* Toast / Loading */
         .toast {
             position: fixed;
             bottom: 60px;
@@ -850,6 +838,7 @@
             font-weight: 500
         }
 
+        /* Dynamic Ticker */
         .ticker {
             position: fixed;
             bottom: 0;
@@ -864,38 +853,58 @@
             font-size: 12px;
             color: var(--g600);
             z-index: 90;
-            gap: 24px;
+            gap: 16px;
             overflow: hidden
         }
 
         .tk-l {
             color: var(--g400);
             font-weight: 500;
-            white-space: nowrap
+            white-space: nowrap;
+            flex-shrink: 0
+        }
+
+        .tk-scroll {
+            display: flex;
+            gap: 16px;
+            overflow: hidden;
+            flex: 1
         }
 
         .tk-i {
             display: flex;
             align-items: center;
-            gap: 6px;
-            white-space: nowrap
+            gap: 4px;
+            white-space: nowrap;
+            padding: 2px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--tr)
+        }
+
+        .tk-i:hover {
+            background: var(--g100)
         }
 
         .tk-n {
             color: var(--g700);
-            font-weight: 500
-        }
-
-        .tk-v {
             font-weight: 600
         }
 
-        .tk-up {
+        .tk-c {
+            font-size: 11px
+        }
+
+        .tk-pos {
             color: var(--red)
         }
 
-        .tk-dn {
+        .tk-neg {
             color: var(--blue)
+        }
+
+        .tk-ntl {
+            color: var(--g400)
         }
 
         @media(max-width:960px) {
@@ -950,11 +959,11 @@
 
     <main class="ct">
 
-        <!-- ===== 대시보드 ===== -->
+        <!-- 대시보드 -->
         <div id="p-dash" class="pane on">
             <div class="cols">
                 <div>
-                    <!-- 보라색: 오늘의 핵심 정보 -->
+                    <!-- 보라: 오늘의 핵심 정보 (AI 종합 인사이트) -->
                     <div class="crd">
                         <div class="crd-h">
                             <div class="crd-t">오늘의 핵심 정보</div>
@@ -963,16 +972,24 @@
                                 <button class="btn btn-b" id="btnRun" onclick="runCollect()">자동 수집</button>
                             </div>
                         </div>
-                        <div id="digestBox" class="digest-box">
-                            <div class="dg-empty">자동 수집을 실행하면 핵심 정보가 여기에 표시됩니다</div>
+                        <div id="digestBox" class="dg-box">
+                            <div class="dg-empty">자동 수집을 실행하면 AI가 종합 인사이트를 생성합니다</div>
                         </div>
                     </div>
 
-                    <!-- 파란색: 오늘의 요약 -->
+                    <!-- 파란: 오늘의 요약 (1줄 + 클릭 상세) -->
                     <div class="crd">
                         <div class="crd-h">
-                            <div class="crd-t">오늘의 요약</div>
-                            <button class="crd-a" onclick="switchTab('arch')">전체보기</button>
+                            <div>
+                                <span class="crd-t">오늘의 요약</span>
+                                <span id="filterLabel"
+                                    style="font-size:13px;color:var(--blue);font-weight:500;margin-left:8px;display:none"></span>
+                            </div>
+                            <div style="display:flex;gap:4px">
+                                <button class="btn-t" id="btnClearFilter" style="display:none"
+                                    onclick="clearFilter()">필터 해제</button>
+                                <button class="crd-a" onclick="switchTab('arch')">전체보기</button>
+                            </div>
                         </div>
                         <div id="dashList" class="vl">
                             <div class="empty">
@@ -983,7 +1000,7 @@
                     </div>
                 </div>
 
-                <!-- 빨간색: AI 상세 요약 -->
+                <!-- 빨간: AI 상세 요약 -->
                 <div class="col-r">
                     <div class="ai-crd" id="aiPanel">
                         <div class="ai-top">
@@ -998,7 +1015,7 @@
             </div>
         </div>
 
-        <!-- ===== URL 분석 (별도 탭) ===== -->
+        <!-- URL 분석 (별도 탭) -->
         <div id="p-analyze" class="pane">
             <div style="max-width:800px;margin:0 auto">
                 <div class="crd">
@@ -1017,7 +1034,7 @@
             </div>
         </div>
 
-        <!-- ===== 채널관리 ===== -->
+        <!-- 채널관리 -->
         <div id="p-ch" class="pane">
             <div class="crd" style="max-width:800px">
                 <div class="crd-h">
@@ -1035,7 +1052,7 @@
             </div>
         </div>
 
-        <!-- ===== 보관함 ===== -->
+        <!-- 보관함 -->
         <div id="p-arch" class="pane">
             <div class="cols">
                 <div>
@@ -1066,18 +1083,10 @@
 
     </main>
 
+    <!-- 동적 티커: 오늘 언급 종목 -->
     <div class="ticker">
-        <span class="tk-l">투자 유의사항</span>
-        <div class="tk-i"><span class="tk-n">나스닥</span><span class="tk-v">22,886</span><span class="tk-up">+203
-                (0.89%)</span></div>
-        <div class="tk-i"><span class="tk-n">S&P 500</span><span class="tk-v">6,909</span><span class="tk-up">+47
-                (0.69%)</span></div>
-        <div class="tk-i"><span class="tk-n">코스피</span><span class="tk-v">2,645</span><span class="tk-up">+12
-                (0.47%)</span></div>
-        <div class="tk-i"><span class="tk-n">코스닥</span><span class="tk-v">773</span><span class="tk-dn">-2.0
-                (0.26%)</span></div>
-        <div class="tk-i"><span class="tk-n">원/달러</span><span class="tk-v">1,446</span><span class="tk-dn">-2.1
-                (0.14%)</span></div>
+        <span class="tk-l" id="tkLabel">오늘 언급 종목</span>
+        <div class="tk-scroll" id="tkScroll"></div>
     </div>
 
     <div id="ld" class="ld">
@@ -1088,6 +1097,7 @@
 
     <script>
         let allAn = [];
+        let activeFilter = null;
 
         // Tab
         function switchTab(t) {
@@ -1112,45 +1122,109 @@
         function sTag(s) { if (s === 'positive') return '<span class="tag t-pos">호재</span>'; if (s === 'negative') return '<span class="tag t-neg">악재</span>'; return '<span class="tag t-neu">중립</span>' }
         function iTag(i) { if (i === 'urgent') return ' <span class="tag t-urg">긴급</span>'; if (i === 'major') return ' <span class="tag t-maj">주요</span>'; return '' }
 
-        // --- 보라색: 오늘의 핵심 정보 ---
+        // ====== 개선1: 핵심 정보 (AI 종합 인사이트) ======
         function buildDigest(analyses) {
             const box = document.getElementById('digestBox');
-            if (!analyses.length) { box.innerHTML = '<div class="dg-empty">자동 수집을 실행하면 핵심 정보가 여기에 표시됩니다</div>'; return }
+            if (!analyses.length) { box.innerHTML = '<div class="dg-empty">자동 수집을 실행하면 AI가 종합 인사이트를 생성합니다</div>'; return }
+
+            // 기본 통계 먼저 표시
             let pos = 0, neg = 0, neu = 0; const stkMap = {};
             analyses.forEach(a => {
                 if (a.sentiment === 'positive') pos++; else if (a.sentiment === 'negative') neg++; else neu++;
                 pArr(a.key_stocks).forEach(s => { stkMap[s] = (stkMap[s] || 0) + 1 });
             });
-            const topS = Object.entries(stkMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+            const topS = Object.entries(stkMap).sort((a, b) => b[1] - a[1]).slice(0, 10);
             const chs = [...new Set(analyses.map(a => a.channel_name).filter(Boolean))];
-            let h = '';
-            h += '<div class="dg-row"><span class="dg-label">분석 현황</span> ' + chs.length + '개 채널, ' + analyses.length + '개 영상 분석</div>';
-            if (pos) h += '<div class="dg-row">🔴 호재 전망 ' + pos + '건</div>';
-            if (neg) h += '<div class="dg-row">🔵 악재 전망 ' + neg + '건</div>';
-            if (neu) h += '<div class="dg-row">중립 ' + neu + '건</div>';
+
+            let h = '<div id="dgInsight" style="margin-bottom:12px"><div style="font-size:13px;color:var(--g400);cursor:pointer" onclick="genInsight()">AI 종합 인사이트 생성하기 →</div></div>';
+            h += '<div class="dg-foot" style="border-top:none;padding-top:0;margin-top:0"><div class="dg-stat">';
+            h += '<span>' + chs.length + '개 채널</span>';
+            h += '<span><b>' + analyses.length + '</b>개 영상</span>';
+            if (pos) h += '<span style="color:var(--red)">호재 ' + pos + '</span>';
+            if (neg) h += '<span style="color:var(--blue)">악재 ' + neg + '</span>';
+            if (neu) h += '<span>중립 ' + neu + '</span>';
+            h += '</div><button class="btn-share" onclick="shareDigest()">공유</button></div>';
+
             if (topS.length) {
-                h += '<div style="margin-top:8px"><div class="dg-row"><span class="dg-label">주요 언급 종목</span></div>';
-                h += '<div class="dg-stocks">' + topS.map(([s, c]) => '<span class="dg-stk">' + esc(s) + ' (' + c + ')</span>').join('') + '</div></div>';
+                h += '<div class="dg-stocks" style="margin-top:8px">' + topS.map(([s, c]) => '<span class="dg-stk" onclick="filterByStock(\'' + esc(s) + '\')">' + esc(s) + ' (' + c + ')</span>').join('') + '</div>';
             }
-            h += '<div class="dg-foot"><button class="btn-share" onclick="shareDigest()">공유</button></div>';
             box.innerHTML = h;
+
+            // 자동으로 AI 인사이트 로드 시도
+            genInsight();
         }
+
+        async function genInsight() {
+            const el = document.getElementById('dgInsight');
+            if (!el || !allAn.length) return;
+            el.innerHTML = '<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--g400)"><div class="spin" style="width:16px;height:16px;border-width:2px"></div>AI 종합 분석 중...</div>';
+            try {
+                const d = await api('/api/daily_insight', 'POST');
+                if (d.success && d.insight) {
+                    const ins = d.insight;
+                    let h = '';
+                    if (ins.headline) h += '<div class="dg-hl">' + esc(ins.headline) + '</div>';
+                    if (ins.key_insights && ins.key_insights.length) {
+                        h += '<div class="dg-sec"><div class="dg-sec-t">핵심 인사이트</div>';
+                        ins.key_insights.forEach(p => { h += '<div class="dg-pt">· ' + esc(p) + '</div>' });
+                        h += '</div>';
+                    }
+                    if (ins.risk_factors && ins.risk_factors.length) {
+                        h += '<div class="dg-sec"><div class="dg-sec-t">리스크 요인</div>';
+                        ins.risk_factors.forEach(p => { h += '<div class="dg-pt">· ' + esc(p) + '</div>' });
+                        h += '</div>';
+                    }
+                    if (ins.action_items && ins.action_items.length) {
+                        h += '<div class="dg-sec"><div class="dg-sec-t">실행 아이템</div>';
+                        ins.action_items.forEach(p => { h += '<div class="dg-pt">· ' + esc(p) + '</div>' });
+                        h += '</div>';
+                    }
+                    el.innerHTML = h || '<div style="font-size:13px;color:var(--g400)">인사이트를 생성할 수 없습니다</div>';
+                } else { el.innerHTML = '<div style="font-size:13px;color:var(--g400)">인사이트 생성 실패</div>' }
+            } catch (e) { el.innerHTML = '<div style="font-size:13px;color:var(--g400);cursor:pointer" onclick="genInsight()">AI 종합 인사이트 생성하기 →</div>' }
+        }
+
         function shareDigest() {
             if (!allAn.length) { toast('공유할 데이터 없음', false); return }
-            const stkMap = {}; let pos = 0, neg = 0; const chs = [...new Set(allAn.map(a => a.channel_name).filter(Boolean))];
+            const stkMap = {}; let pos = 0, neg = 0;
             allAn.forEach(a => { if (a.sentiment === 'positive') pos++; if (a.sentiment === 'negative') neg++; pArr(a.key_stocks).forEach(s => { stkMap[s] = (stkMap[s] || 0) + 1 }) });
             const topS = Object.entries(stkMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([s]) => s);
-            let t = '[오늘의 핵심]\n' + chs.length + '개 채널, ' + allAn.length + '개 영상 분석\n';
-            if (pos) t += '호재 전망 ' + pos + '건\n'; if (neg) t += '악재 전망 ' + neg + '건\n';
+            let t = '[오늘의 핵심 정보]\n' + allAn.length + '개 영상 분석\n';
+            if (pos) t += '호재 ' + pos + '건 / '; if (neg) t += '악재 ' + neg + '건\n';
             if (topS.length) t += '주요 종목: ' + topS.join(', ') + '\n';
+            // AI 인사이트 headline도 포함
+            const hl = document.querySelector('.dg-hl');
+            if (hl) t += '\n' + hl.textContent + '\n';
             clip(t, '오늘의 핵심 정보');
         }
 
-        // --- 파란색: 영상 카드 (1줄 요약 + 클릭 시 상세) ---
+        // ====== 개선3: 종목 필터 ======
+        function filterByStock(stock) {
+            activeFilter = activeFilter === stock ? null : stock;
+            // 종목 pill 활성화
+            document.querySelectorAll('.dg-stk').forEach(el => { el.classList.toggle('active', el.textContent.startsWith(stock)) });
+            // 영상 필터링
+            document.querySelectorAll('#dashList .vi').forEach(el => {
+                if (!activeFilter) { el.classList.remove('hide'); return }
+                const id = parseInt(el.id.replace('vi-', ''));
+                const a = allAn.find(x => x.id === id);
+                if (!a) { el.classList.add('hide'); return }
+                const stocks = pArr(a.key_stocks);
+                el.classList.toggle('hide', !stocks.includes(activeFilter));
+            });
+            // 라벨
+            const lbl = document.getElementById('filterLabel');
+            const btn = document.getElementById('btnClearFilter');
+            if (activeFilter) { lbl.textContent = '· ' + activeFilter; lbl.style.display = 'inline'; btn.style.display = 'inline' }
+            else { lbl.style.display = 'none'; btn.style.display = 'none' }
+        }
+        function clearFilter() { activeFilter = null; filterByStock('') }
+
+        // ====== 영상 카드 ======
         function buildVI(a, panel) {
             const th = a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg';
-            const oneLine = a.one_line_summary || a.summary?.substring(0, 60) || '요약 없음';
-            return `<div class="vi" id="vi-${a.id}" onclick="selectVideo(${a.id},'${panel}')">
+            const oneLine = a.one_line_summary || (a.summary ? a.summary.substring(0, 60) + '...' : '') || '';
+            return `<div class="vi" id="vi-${a.id}" data-stocks='${JSON.stringify(pArr(a.key_stocks))}' onclick="selectVideo(${a.id},'${panel}')">
         <img class="vi-thumb" src="${th}" alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'">
         <div class="vi-body">
             <div class="vi-ch">${esc(a.channel_name || '')} · ${fmtD(a.created_at)}</div>
@@ -1167,7 +1241,7 @@
     </div>`;
         }
 
-        // --- 빨간색: AI 상세 요약 (탭 없이 통합) ---
+        // ====== AI 상세 요약 (통합, 탭 없음) ======
         async function selectVideo(id, panel) {
             document.querySelectorAll('.vi').forEach(v => v.classList.remove('sel'));
             const el = document.getElementById('vi-' + id); if (el) el.classList.add('sel');
@@ -1180,108 +1254,73 @@
             try {
                 const d = await api('/api/archive/' + id);
                 if (!d.success || !d.analysis) { bEl.innerHTML = '<div class="ai-empty">데이터를 불러올 수 없습니다</div>'; return }
-                const a = d.analysis;
-                tEl.textContent = a.title || ''; cEl.textContent = a.channel_name || '';
+                const a = d.analysis; tEl.textContent = a.title || ''; cEl.textContent = a.channel_name || '';
                 renderAI(a, bEl);
             } catch (e) { bEl.innerHTML = '<div class="ai-empty">오류가 발생했습니다</div>' }
         }
 
         function renderAI(a, el) {
             let h = '';
-            // 감성 + 중요도
             const sc = a.sentiment === 'positive' ? 'pos' : a.sentiment === 'negative' ? 'neg' : 'neu';
             const st = a.sentiment === 'positive' ? '호재 (긍정)' : a.sentiment === 'negative' ? '악재 (부정)' : '중립';
             const ib = a.importance === 'urgent' ? '<span class="sent-badge t-urg">긴급</span>' : a.importance === 'major' ? '<span class="sent-badge t-maj" style="background:var(--orange-bg);color:var(--orange)">주요</span>' : '';
             h += '<div class="sent-bar"><div class="sent-dot ' + sc + '"></div><div class="sent-label">' + st + '</div>' + ib + '</div>';
 
-            // 관련 종목
             const stocks = pArr(a.key_stocks);
-            if (stocks.length) {
-                h += '<div class="ai-sec"><div class="ai-sec-t">관련 종목</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
-                stocks.forEach(s => { h += '<span class="tag t-stk">' + esc(s) + '</span>' });
-                h += '</div></div>';
-            }
+            if (stocks.length) { h += '<div class="ai-sec"><div class="ai-sec-t">관련 종목</div><div style="display:flex;flex-wrap:wrap;gap:6px">'; stocks.forEach(s => { h += '<span class="tag t-stk" style="cursor:pointer" onclick="filterByStock(\'' + esc(s) + '\');switchTab(\'dash\')">' + esc(s) + '</span>' }); h += '</div></div>' }
 
-            // 핵심 포인트
             const pts = pArr(a.key_points);
-            if (pts.length) {
-                h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>';
-                pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' });
-                h += '</div>';
-            }
-
-            // 시장 영향
+            if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' }); h += '</div>' }
             if (a.market_impact) { h += '<div class="ai-sec"><div class="ai-sec-t">시장 영향</div><div class="ai-ins">' + esc(a.market_impact) + '</div></div>' }
-
-            // 투자 시사점
             if (a.investment_insight) { h += '<div class="ai-sec"><div class="ai-sec-t">투자 시사점</div><div class="ai-ins">' + esc(a.investment_insight) + '</div></div>' }
-
-            // 리스크 평가
             if (a.risk_assessment) { h += '<div class="ai-sec"><div class="ai-sec-t">리스크 평가</div><div class="ai-ins">' + esc(a.risk_assessment) + '</div></div>' }
-
-            // 상세 요약
             if (a.summary) { h += '<div class="ai-sec"><div class="ai-sec-t">상세 요약</div><div class="ai-txt"><p>' + fmtS(a.summary) + '</p></div></div>' }
-
-            // 자막 보기
-            h += '<div class="ai-sec" style="border-bottom:none"><button class="btn btn-g" style="width:100%" onclick="toggleScript(this,' + a.id + ')">자막 보기</button>';
-            h += '<div class="script-box" id="script-' + a.id + '"></div></div>';
-
-            // 하단 액션
-            h += '<div class="ai-foot">';
-            h += '<button class="btn-share" onclick="shareV(' + a.id + ')">공유</button>';
-            h += '<button class="btn-share" onclick="copyScript(' + a.id + ')">자막 복사</button>';
-            h += '<a class="ai-link" href="https://www.youtube.com/watch?v=' + a.video_id + '" target="_blank">원본 영상</a>';
-            h += '</div>';
-
+            h += '<div class="ai-sec" style="border-bottom:none"><button class="btn btn-g" style="width:100%" onclick="toggleScript(this,' + a.id + ')">자막 보기</button><div class="script-box" id="script-' + a.id + '"></div></div>';
+            h += '<div class="ai-foot"><button class="btn-share" onclick="shareV(' + a.id + ')">공유</button><button class="btn-share" onclick="copyScript(' + a.id + ')">자막 복사</button><a class="ai-link" href="https://www.youtube.com/watch?v=' + a.video_id + '" target="_blank">원본 영상</a></div>';
             el.innerHTML = h;
         }
 
-        // 자막 토글
         async function toggleScript(btn, id) {
-            const box = document.getElementById('script-' + id);
-            if (!box) return;
+            const box = document.getElementById('script-' + id); if (!box) return;
             if (box.classList.contains('open')) { box.classList.remove('open'); btn.textContent = '자막 보기'; return }
-            if (!box.dataset.loaded) {
-                try {
-                    const d = await api('/api/archive/' + id);
-                    if (d.success && d.analysis?.transcript) { box.textContent = d.analysis.transcript; box.dataset.loaded = '1' }
-                    else { box.textContent = '자막 데이터가 없습니다' }
-                } catch (e) { box.textContent = '자막을 불러올 수 없습니다' }
-            }
-            box.classList.add('open'); btn.textContent = '자막 닫기';
+            if (!box.dataset.loaded) { try { const d = await api('/api/archive/' + id); if (d.success && d.analysis?.transcript) { box.textContent = d.analysis.transcript; box.dataset.loaded = '1' } else box.textContent = '자막 데이터가 없습니다' } catch (e) { box.textContent = '자막을 불러올 수 없습니다' } }
+            box.classList.add('open'); btn.textContent = '자막 닫기'
         }
+        async function copyScript(id) { try { const d = await api('/api/archive/' + id); if (d.success && d.analysis?.transcript) clip(d.analysis.transcript, '자막'); else toast('자막 데이터 없음', false) } catch (e) { toast('복사 실패', false) } }
+        async function shareV(id) { try { const d = await api('/api/archive/' + id); if (!d.success || !d.analysis) { toast('데이터 없음', false); return } const a = d.analysis; const sent = a.sentiment === 'positive' ? '호재' : a.sentiment === 'negative' ? '악재' : '중립'; let t = '[' + sent + '] ' + (a.title || '') + '\n'; if (a.one_line_summary) t += a.one_line_summary + '\n\n'; const pts = pArr(a.key_points); if (pts.length) pts.forEach(p => { t += '· ' + p + '\n' }); if (a.market_impact) t += '\n시장 영향: ' + a.market_impact; if (a.investment_insight) t += '\n투자 시사점: ' + a.investment_insight; if (a.risk_assessment) t += '\n리스크: ' + a.risk_assessment; t += '\n\nhttps://www.youtube.com/watch?v=' + a.video_id; clip(t, '분석 결과') } catch (e) { toast('공유 실패', false) } }
 
-        // 자막 복사
-        async function copyScript(id) {
-            try {
-                const d = await api('/api/archive/' + id);
-                if (d.success && d.analysis?.transcript) clip(d.analysis.transcript, '자막');
-                else toast('자막 데이터 없음', false)
-            } catch (e) { toast('복사 실패', false) }
-        }
-
-        // 공유
-        async function shareV(id) {
-            try {
-                const d = await api('/api/archive/' + id); if (!d.success || !d.analysis) { toast('데이터 없음', false); return }
-                const a = d.analysis; const sent = a.sentiment === 'positive' ? '호재' : a.sentiment === 'negative' ? '악재' : '중립';
-                let t = '[' + sent + '] ' + (a.title || '') + '\n';
-                if (a.one_line_summary) t += a.one_line_summary + '\n\n';
-                const pts = pArr(a.key_points); if (pts.length) pts.forEach(p => { t += '· ' + p + '\n' });
-                if (a.market_impact) t += '\n시장 영향: ' + a.market_impact;
-                if (a.investment_insight) t += '\n투자 시사점: ' + a.investment_insight;
-                if (a.risk_assessment) t += '\n리스크: ' + a.risk_assessment;
-                t += '\n\nhttps://www.youtube.com/watch?v=' + a.video_id;
-                clip(t, '분석 결과');
-            } catch (e) { toast('공유 실패', false) }
+        // ====== 개선2: 동적 티커 (오늘 언급 종목) ======
+        function buildTicker(analyses) {
+            const tk = document.getElementById('tkScroll');
+            if (!analyses.length) { tk.innerHTML = '<span style="color:var(--g400)">분석된 영상이 없습니다</span>'; return }
+            const stkSent = {};
+            analyses.forEach(a => {
+                pArr(a.key_stocks).forEach(s => {
+                    if (!stkSent[s]) stkSent[s] = { pos: 0, neg: 0, neu: 0, total: 0 };
+                    stkSent[s].total++;
+                    if (a.sentiment === 'positive') stkSent[s].pos++;
+                    else if (a.sentiment === 'negative') stkSent[s].neg++;
+                    else stkSent[s].neu++;
+                });
+            });
+            const sorted = Object.entries(stkSent).sort((a, b) => b[1].total - a[1].total);
+            if (!sorted.length) { tk.innerHTML = '<span style="color:var(--g400)">언급된 종목이 없습니다</span>'; return }
+            tk.innerHTML = sorted.map(([s, d]) => {
+                let cls = 'tk-ntl', sign = '';
+                if (d.pos > d.neg) { cls = 'tk-pos'; sign = '호재 ' + d.pos }
+                else if (d.neg > d.pos) { cls = 'tk-neg'; sign = '악재 ' + d.neg }
+                else { sign = '중립' }
+                return `<div class="tk-i" onclick="filterByStock('${esc(s)}');switchTab('dash')"><span class="tk-n">${esc(s)}</span><span class="tk-c ${cls}">${sign} (${d.total}건)</span></div>`;
+            }).join('');
         }
 
         // Dashboard
         async function loadDash() {
             try {
-                const [aD, cD] = await Promise.all([api('/api/archive/list'), api('/api/channels')]);
+                const aD = await api('/api/archive/list');
                 allAn = aD.analyses || [];
                 buildDigest(allAn);
+                buildTicker(allAn);
                 const ct = document.getElementById('dashList');
                 if (!allAn.length) { ct.innerHTML = '<div class="empty"><div class="empty-t">요약된 영상이 없습니다</div><div class="empty-d">채널을 등록하고 자동 수집을 실행하세요</div></div>'; return }
                 ct.innerHTML = allAn.slice(0, 20).map(a => buildVI(a, 'main')).join('');
@@ -1289,67 +1328,18 @@
         }
 
         // Channels
-        async function loadCh() {
-            try {
-                const d = await api('/api/channels'); const el = document.getElementById('chList');
-                if (!d.channels || !d.channels.length) { el.innerHTML = '<div class="empty"><div class="empty-t">등록된 채널이 없습니다</div></div>'; return }
-                el.innerHTML = d.channels.map(c => `<div class="ch-i"><div class="ch-l"><div class="ch-av">${(c.channel_name || '?')[0]}</div><div><div class="ch-n">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div></div><button class="btn-del" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button></div>`).join('')
-            } catch (e) { }
-        }
-        async function addCh() {
-            const u = document.getElementById('chUrl').value.trim(); if (!u) { toast('URL을 입력해주세요', false); return }
-            showLd('채널 등록 중...'); try {
-                const d = await api('/api/channels', 'POST', { channel_url: u }); hideLd();
-                if (d.success) { toast(d.channel.channel_name + ' 등록됨'); document.getElementById('chUrl').value = ''; loadCh(); loadDash() } else toast(d.message || '실패', false)
-            } catch (e) { hideLd(); toast('오류', false) }
-        }
+        async function loadCh() { try { const d = await api('/api/channels'); const el = document.getElementById('chList'); if (!d.channels || !d.channels.length) { el.innerHTML = '<div class="empty"><div class="empty-t">등록된 채널이 없습니다</div></div>'; return } el.innerHTML = d.channels.map(c => `<div class="ch-i"><div class="ch-l"><div class="ch-av">${(c.channel_name || '?')[0]}</div><div><div class="ch-n">${esc(c.channel_name || c.channel_url)}</div><div class="ch-id">${esc(c.channel_id || '')}</div></div></div><button class="btn-del" onclick="delCh(${c.id},'${esc(c.channel_name)}')">삭제</button></div>`).join('') } catch (e) { } }
+        async function addCh() { const u = document.getElementById('chUrl').value.trim(); if (!u) { toast('URL을 입력해주세요', false); return } showLd('채널 등록 중...'); try { const d = await api('/api/channels', 'POST', { channel_url: u }); hideLd(); if (d.success) { toast(d.channel.channel_name + ' 등록됨'); document.getElementById('chUrl').value = ''; loadCh(); loadDash() } else toast(d.message || '실패', false) } catch (e) { hideLd(); toast('오류', false) } }
         async function delCh(id, n) { if (!confirm('"' + n + '" 삭제?')) return; try { await api('/api/channels/' + id, 'DELETE'); toast('삭제됨'); loadCh(); loadDash() } catch (e) { toast('오류', false) } }
 
         // Archive
-        async function loadArch() {
-            try {
-                const d = await api('/api/archive/list'); const ct = document.getElementById('archList');
-                if (!d.analyses || !d.analyses.length) { ct.innerHTML = '<div class="empty"><div class="empty-t">보관된 분석이 없습니다</div></div>'; return }
-                ct.innerHTML = d.analyses.map(a => buildVI(a, 'arch')).join('')
-            } catch (e) { }
-        }
+        async function loadArch() { try { const d = await api('/api/archive/list'); const ct = document.getElementById('archList'); if (!d.analyses || !d.analyses.length) { ct.innerHTML = '<div class="empty"><div class="empty-t">보관된 분석이 없습니다</div></div>'; return } ct.innerHTML = d.analyses.map(a => buildVI(a, 'arch')).join('') } catch (e) { } }
 
-        // 자동 수집 (구 다이제스트)
-        async function runCollect() {
-            const b = document.getElementById('btnRun'); b.disabled = true; b.textContent = '수집 중...'; showLd('자동 수집 실행 중...');
-            try {
-                const d = await api('/api/daily_digest', 'POST', { hours: 48 }); hideLd();
-                if (d.success) { toast(d.total_videos + '개 수집, ' + d.total_summarized + '개 요약 완료'); loadDash() } else toast(d.message || '실패', false)
-            } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false; b.textContent = '자동 수집' }
-        }
+        // 자동 수집
+        async function runCollect() { const b = document.getElementById('btnRun'); b.disabled = true; b.textContent = '수집 중...'; showLd('자동 수집 실행 중...'); try { const d = await api('/api/daily_digest', 'POST', { hours: 48 }); hideLd(); if (d.success) { toast(d.total_videos + '개 수집, ' + d.total_summarized + '개 요약 완료'); loadDash() } else toast(d.message || '실패', false) } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false; b.textContent = '자동 수집' } }
 
         // URL 분석
-        async function analyzeVideo() {
-            const u = document.getElementById('videoUrl').value.trim(); if (!u) { toast('URL을 입력해주세요', false); return }
-            const b = document.getElementById('btnAn'); b.disabled = true; showLd('영상 분석 중...');
-            try {
-                const d = await api('/api/analyze', 'POST', { video_url: u, analysis_type: 'single' }); hideLd();
-                if (d.success) {
-                    let h = '<div class="crd"><div class="crd-h"><div class="crd-t">' + (d.video_info?.title || '분석 결과') + '</div></div>';
-                    h += '<div style="font-size:13px;color:var(--g500);margin-bottom:12px">' + (d.video_info?.channel_name || '') + '</div>';
-                    // 감성 + 종목
-                    const sc = d.sentiment === 'positive' ? 'pos' : d.sentiment === 'negative' ? 'neg' : 'neu';
-                    const st = d.sentiment === 'positive' ? '호재' : d.sentiment === 'negative' ? '악재' : '중립';
-                    h += '<div class="sent-bar" style="margin-bottom:12px"><div class="sent-dot ' + sc + '"></div><div class="sent-label">' + st + '</div></div>';
-                    const stks = pArr(d.key_stocks);
-                    if (stks.length) { h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">'; stks.forEach(s => { h += '<span class="tag t-stk">' + esc(s) + '</span>' }); h += '</div>' }
-                    const pts = d.key_points || [];
-                    if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' }); h += '</div>' }
-                    if (d.market_impact) h += '<div class="ai-sec"><div class="ai-sec-t">시장 영향</div><div class="ai-ins">' + esc(d.market_impact) + '</div></div>';
-                    if (d.investment_insight) h += '<div class="ai-sec"><div class="ai-sec-t">투자 시사점</div><div class="ai-ins">' + esc(d.investment_insight) + '</div></div>';
-                    if (d.risk_assessment) h += '<div class="ai-sec"><div class="ai-sec-t">리스크 평가</div><div class="ai-ins">' + esc(d.risk_assessment) + '</div></div>';
-                    if (d.summary) h += '<div class="ai-sec"><div class="ai-sec-t">상세 요약</div><div class="ai-txt"><p>' + fmtS(d.summary) + '</p></div></div>';
-                    h += '</div>';
-                    document.getElementById('urlResult').innerHTML = h;
-                    document.getElementById('videoUrl').value = ''; toast('분석 완료'); loadDash();
-                } else toast(d.message || '실패', false)
-            } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false }
-        }
+        async function analyzeVideo() { const u = document.getElementById('videoUrl').value.trim(); if (!u) { toast('URL을 입력해주세요', false); return } const b = document.getElementById('btnAn'); b.disabled = true; showLd('영상 분석 중...'); try { const d = await api('/api/analyze', 'POST', { video_url: u, analysis_type: 'single' }); hideLd(); if (d.success) { let h = '<div class="crd"><div class="crd-h"><div class="crd-t">' + (d.video_info?.title || '분석 결과') + '</div></div><div style="font-size:13px;color:var(--g500);margin-bottom:12px">' + (d.video_info?.channel_name || '') + '</div>'; const sc = d.sentiment === 'positive' ? 'pos' : d.sentiment === 'negative' ? 'neg' : 'neu'; const st = d.sentiment === 'positive' ? '호재' : d.sentiment === 'negative' ? '악재' : '중립'; h += '<div class="sent-bar" style="margin-bottom:12px"><div class="sent-dot ' + sc + '"></div><div class="sent-label">' + st + '</div></div>'; const stks = pArr(d.key_stocks); if (stks.length) { h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">'; stks.forEach(s => { h += '<span class="tag t-stk">' + esc(s) + '</span>' }); h += '</div>' } const pts = d.key_points || []; if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' }); h += '</div>' } if (d.market_impact) h += '<div class="ai-sec"><div class="ai-sec-t">시장 영향</div><div class="ai-ins">' + esc(d.market_impact) + '</div></div>'; if (d.investment_insight) h += '<div class="ai-sec"><div class="ai-sec-t">투자 시사점</div><div class="ai-ins">' + esc(d.investment_insight) + '</div></div>'; if (d.risk_assessment) h += '<div class="ai-sec"><div class="ai-sec-t">리스크 평가</div><div class="ai-ins">' + esc(d.risk_assessment) + '</div></div>'; if (d.summary) h += '<div class="ai-sec"><div class="ai-sec-t">상세 요약</div><div class="ai-txt"><p>' + fmtS(d.summary) + '</p></div></div>'; h += '</div>'; document.getElementById('urlResult').innerHTML = h; document.getElementById('videoUrl').value = ''; toast('분석 완료'); loadDash() } else toast(d.message || '실패', false) } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false } }
 
         document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyzeVideo(); if (e.key === 'Enter' && document.activeElement.id === 'chUrl') addCh() });
         loadDash();
