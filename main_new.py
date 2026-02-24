@@ -734,6 +734,41 @@ def get_digest_history():
 
 
 # =========================================================
+# API: 일일 종합 인사이트 (AI 교차 분석)
+# =========================================================
+@app.route('/api/daily_insight', methods=['POST'])
+def generate_insight():
+    """오늘의 전체 분석 결과를 종합한 AI 인사이트 생성"""
+    try:
+        gemini_key = get_gemini_key()
+        if not gemini_key:
+            return jsonify({'success': False, 'message': 'Gemini API 키가 설정되지 않았습니다'})
+
+        conn = get_db()
+        analyses = conn.execute(
+            "SELECT * FROM analyses ORDER BY created_at DESC LIMIT 30"
+        ).fetchall()
+        conn.close()
+
+        if not analyses:
+            return jsonify({'success': True, 'insight': None, 'message': '분석된 영상이 없습니다'})
+
+        analyses_list = [dict(a) for a in analyses]
+
+        summarizer = GeminiSummarizer(gemini_key)
+        insight = summarizer.generate_daily_insight(analyses_list)
+
+        return jsonify({
+            'success': True,
+            'insight': insight,
+            'total_analyses': len(analyses_list)
+        })
+    except Exception as e:
+        logger.error(f"일일 인사이트 생성 실패: {e}")
+        return jsonify({'success': False, 'message': str(e)})
+
+
+# =========================================================
 # 데일리 다이제스트 실행 함수 (핵심 파이프라인)
 # =========================================================
 def run_daily_digest(hours: int = 24) -> dict:
