@@ -18,7 +18,7 @@
 
         :root {
             --bg: #F2F4F6;
-            --white: #FFF;
+            --wh: #FFF;
             --g50: #F9FAFB;
             --g100: #F2F4F6;
             --g200: #ECEEF0;
@@ -52,9 +52,9 @@
             padding-bottom: 44px
         }
 
-        /* ===== Header ===== */
+        /* Header */
         .hd {
-            background: var(--white);
+            background: var(--wh);
             border-bottom: 1px solid var(--g200);
             padding: 0 24px;
             position: sticky;
@@ -71,7 +71,7 @@
             height: 52px
         }
 
-        .hd-left {
+        .hd-l {
             display: flex;
             align-items: center;
             gap: 24px
@@ -98,7 +98,7 @@
             gap: 2px
         }
 
-        .nav-i {
+        .nv {
             padding: 8px 14px;
             font-size: 15px;
             font-weight: 500;
@@ -111,17 +111,17 @@
             font-family: inherit
         }
 
-        .nav-i:hover {
+        .nv:hover {
             background: var(--g100);
             color: var(--g700)
         }
 
-        .nav-i.on {
+        .nv.on {
             color: var(--g900);
             font-weight: 600
         }
 
-        /* ===== Container ===== */
+        /* Container */
         .ct {
             max-width: 1360px;
             margin: 0 auto;
@@ -147,50 +147,45 @@
             }
         }
 
-        /* ===== 2-Column Layout ===== */
+        /* 2-Column */
         .cols {
             display: grid;
-            grid-template-columns: 1fr 380px;
+            grid-template-columns: 1fr 400px;
             gap: 16px;
             align-items: start
         }
 
-        .col-left {
-            min-width: 0
-        }
-
-        .col-right {
+        .col-r {
             position: sticky;
             top: 68px
         }
 
-        /* ===== Card ===== */
-        .card {
-            background: var(--white);
+        /* Card */
+        .crd {
+            background: var(--wh);
             border-radius: var(--r);
             padding: 24px;
             margin-bottom: 16px
         }
 
-        .card-h {
+        .crd-h {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 16px
         }
 
-        .card-t {
-            font-size: 18px;
+        .crd-t {
+            font-size: 17px;
             font-weight: 700
         }
 
-        .card-sub {
+        .crd-sub {
             font-size: 13px;
-            color: var(--g500);
-            font-weight: 500
+            color: var(--g500)
         }
 
-        .card-act {
+        .crd-a {
             font-size: 13px;
             color: var(--blue);
             font-weight: 500;
@@ -200,63 +195,60 @@
             font-family: inherit
         }
 
-        .card-act:hover {
+        .crd-a:hover {
             text-decoration: underline
         }
 
-        /* ===== 오늘의 핵심 정보 박스 ===== */
-        .digest-box {
-            background: var(--g50);
-            border: 1px solid var(--g200);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 16px
+        /* Buttons */
+        .btn {
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: var(--tr)
         }
 
-        .digest-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 0;
-            font-size: 14px;
+        .btn-b {
+            color: #fff;
+            background: var(--blue)
+        }
+
+        .btn-b:hover {
+            background: #2272E6
+        }
+
+        .btn-b:disabled {
+            opacity: .5;
+            cursor: not-allowed
+        }
+
+        .btn-g {
             color: var(--g700);
-            line-height: 1.6
+            background: var(--g100)
         }
 
-        .digest-label {
-            font-weight: 600;
-            color: var(--g900)
+        .btn-g:hover {
+            background: var(--g200)
         }
 
-        .digest-stocks {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 6px
+        .btn-t {
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--g600);
+            background: var(--g100);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit
         }
 
-        .digest-stock {
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            background: var(--blue-bg);
-            color: var(--blue)
-        }
-
-        .digest-empty {
-            font-size: 14px;
-            color: var(--g400);
-            padding: 12px 0;
-            text-align: center
-        }
-
-        .digest-share {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--g200)
+        .btn-t:hover {
+            background: var(--g200);
+            color: var(--g800)
         }
 
         .btn-share {
@@ -278,38 +270,90 @@
             background: var(--g200)
         }
 
-        /* ===== Sub Tabs ===== */
-        .stabs {
-            display: flex;
-            gap: 0;
-            border-bottom: 1px solid var(--g200);
-            margin-bottom: 16px
-        }
-
-        .stab {
-            padding: 10px 16px;
+        /* Input */
+        .inp {
+            flex: 1;
+            padding: 11px 16px;
             font-size: 14px;
-            font-weight: 500;
-            color: var(--g500);
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            font-family: inherit;
-            transition: var(--tr)
-        }
-
-        .stab:hover {
-            color: var(--g700)
-        }
-
-        .stab.on {
+            background: var(--g50);
+            border: 1px solid var(--g200);
+            border-radius: 10px;
             color: var(--g900);
-            font-weight: 600;
-            border-bottom-color: var(--g900)
+            outline: none;
+            transition: var(--tr);
+            font-family: inherit
         }
 
-        /* ===== Video List ===== */
+        .inp:focus {
+            border-color: var(--blue);
+            background: var(--wh);
+            box-shadow: 0 0 0 3px rgba(49, 130, 246, .1)
+        }
+
+        .inp::placeholder {
+            color: var(--g400)
+        }
+
+        .inp-row {
+            display: flex;
+            gap: 8px
+        }
+
+        /* ===== 보라색: 오늘의 핵심 정보 ===== */
+        .digest-box {
+            background: var(--g50);
+            border: 1px solid var(--g200);
+            border-radius: 12px;
+            padding: 16px 20px
+        }
+
+        .dg-row {
+            padding: 5px 0;
+            font-size: 14px;
+            color: var(--g700);
+            line-height: 1.7;
+            display: flex;
+            gap: 8px
+        }
+
+        .dg-label {
+            font-weight: 600;
+            color: var(--g900);
+            white-space: nowrap
+        }
+
+        .dg-stocks {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 6px
+        }
+
+        .dg-stk {
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--blue-bg);
+            color: var(--blue)
+        }
+
+        .dg-empty {
+            font-size: 14px;
+            color: var(--g400);
+            padding: 12px 0;
+            text-align: center
+        }
+
+        .dg-foot {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--g200)
+        }
+
+        /* ===== 파란색: 오늘의 요약 (1줄 목록) ===== */
         .vl {
             display: flex;
             flex-direction: column;
@@ -336,7 +380,7 @@
             border-radius: 10px
         }
 
-        .vi.selected {
+        .vi.sel {
             background: var(--blue-bg);
             margin: 0 -24px;
             padding: 14px 24px;
@@ -344,9 +388,9 @@
         }
 
         .vi-thumb {
-            width: 140px;
-            height: 79px;
-            border-radius: 10px;
+            width: 120px;
+            height: 68px;
+            border-radius: 8px;
             object-fit: cover;
             background: var(--g200);
             flex-shrink: 0
@@ -370,22 +414,17 @@
             font-weight: 600;
             color: var(--g900);
             line-height: 1.4;
-            margin: 2px 0 4px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden
-        }
-
-        .vi-desc {
-            font-size: 12px;
-            color: var(--g600);
-            line-height: 1.5;
-            flex: 1;
+            margin: 2px 0;
             display: -webkit-box;
             -webkit-line-clamp: 1;
             -webkit-box-orient: vertical;
             overflow: hidden
+        }
+
+        .vi-one {
+            font-size: 13px;
+            color: var(--g600);
+            line-height: 1.5
         }
 
         .vi-foot {
@@ -395,33 +434,17 @@
             margin-top: 6px
         }
 
-        .vi-time {
+        .vi-meta {
             font-size: 11px;
             color: var(--g400)
         }
 
-        .vi-actions {
+        .vi-acts {
             display: flex;
             gap: 4px
         }
 
-        .btn-tiny {
-            padding: 3px 8px;
-            font-size: 11px;
-            font-weight: 500;
-            color: var(--g600);
-            background: var(--g100);
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: inherit
-        }
-
-        .btn-tiny:hover {
-            background: var(--g200)
-        }
-
-        /* ===== Tags ===== */
+        /* Tags */
         .tag {
             display: inline-flex;
             align-items: center;
@@ -457,19 +480,14 @@
             color: var(--orange)
         }
 
-        .t-nor {
-            background: rgba(107, 118, 132, .06);
-            color: var(--g400)
-        }
-
         .t-stk {
             background: var(--blue-bg);
             color: var(--blue)
         }
 
-        /* ===== Right Panel: AI 상세 요약 ===== */
-        .ai-card {
-            background: var(--white);
+        /* ===== 빨간색: AI 상세 요약 (오른쪽 패널) ===== */
+        .ai-crd {
+            background: var(--wh);
             border-radius: var(--r);
             overflow: hidden
         }
@@ -482,7 +500,7 @@
         .ai-top-t {
             font-size: 16px;
             font-weight: 700;
-            margin-bottom: 4px
+            margin-bottom: 2px
         }
 
         .ai-top-ch {
@@ -490,37 +508,10 @@
             color: var(--g500)
         }
 
-        .ai-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--g200)
-        }
-
-        .ai-tab {
-            flex: 1;
-            padding: 12px;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--g500);
-            background: none;
-            border: none;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            font-family: inherit;
-            text-align: center
-        }
-
-        .ai-tab:hover {
-            color: var(--g700)
-        }
-
-        .ai-tab.on {
-            color: var(--g900);
-            font-weight: 600;
-            border-bottom-color: var(--g900)
-        }
-
         .ai-body {
-            padding: 20px 24px
+            padding: 20px 24px;
+            max-height: calc(100vh - 180px);
+            overflow-y: auto
         }
 
         .ai-empty {
@@ -530,7 +521,7 @@
             font-size: 14px
         }
 
-        /* AI 감성 표시 */
+        /* AI 감성 */
         .sent-bar {
             display: flex;
             align-items: center;
@@ -542,7 +533,8 @@
         .sent-dot {
             width: 10px;
             height: 10px;
-            border-radius: 50%
+            border-radius: 50%;
+            flex-shrink: 0
         }
 
         .sent-dot.pos {
@@ -584,7 +576,6 @@
             font-size: 12px;
             font-weight: 700;
             color: var(--g500);
-            text-transform: uppercase;
             letter-spacing: .3px;
             margin-bottom: 8px
         }
@@ -593,16 +584,16 @@
             font-size: 13px;
             color: var(--g700);
             line-height: 1.8;
+            margin-bottom: 2px;
             padding-left: 12px;
-            text-indent: -12px;
-            margin-bottom: 2px
+            text-indent: -12px
         }
 
         .ai-ins {
             font-size: 13px;
             color: var(--g700);
             line-height: 1.7;
-            margin-top: 4px
+            margin-top: 6px
         }
 
         .ai-ins b {
@@ -620,7 +611,6 @@
             margin-bottom: 8px
         }
 
-        .ai-txt b,
         .ai-txt strong {
             color: var(--g900)
         }
@@ -630,7 +620,6 @@
             color: var(--blue);
             font-weight: 500;
             text-decoration: none;
-            margin-top: 8px;
             display: inline-block
         }
 
@@ -638,82 +627,36 @@
             text-decoration: underline
         }
 
-        .ai-share {
+        .ai-foot {
             display: flex;
             gap: 8px;
             margin-top: 16px;
             padding-top: 14px;
-            border-top: 1px solid var(--g200)
+            border-top: 1px solid var(--g200);
+            flex-wrap: wrap
         }
 
-        /* ===== Input ===== */
-        .inp-row {
-            display: flex;
-            gap: 8px
-        }
-
-        .inp {
-            flex: 1;
-            padding: 11px 16px;
-            font-size: 14px;
+        /* 자막 뷰어 */
+        .script-box {
             background: var(--g50);
             border: 1px solid var(--g200);
             border-radius: 10px;
-            color: var(--g900);
-            outline: none;
-            transition: var(--tr);
-            font-family: inherit
-        }
-
-        .inp:focus {
-            border-color: var(--blue);
-            background: var(--white);
-            box-shadow: 0 0 0 3px rgba(49, 130, 246, .1)
-        }
-
-        .inp::placeholder {
-            color: var(--g400)
-        }
-
-        .btn-p {
-            padding: 11px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #fff;
-            background: var(--blue);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-family: inherit;
-            white-space: nowrap
-        }
-
-        .btn-p:hover {
-            background: #2272E6
-        }
-
-        .btn-p:disabled {
-            opacity: .5;
-            cursor: not-allowed
-        }
-
-        .btn-g {
-            padding: 7px 14px;
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
             font-size: 13px;
-            font-weight: 500;
             color: var(--g700);
-            background: var(--g100);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-family: inherit
+            line-height: 1.8;
+            white-space: pre-wrap;
+            margin-top: 12px;
+            display: none
         }
 
-        .btn-g:hover {
-            background: var(--g200)
+        .script-box.open {
+            display: block
         }
 
-        /* ===== Channel ===== */
+        /* Channel */
         .ch-i {
             display: flex;
             align-items: center;
@@ -770,7 +713,6 @@
             background: rgba(240, 68, 82, .15)
         }
 
-        /* ===== Empty ===== */
         .empty {
             text-align: center;
             padding: 40px 20px;
@@ -788,7 +730,7 @@
             margin-top: 4px
         }
 
-        /* ===== Modal ===== */
+        /* Modal */
         .ov {
             display: none;
             position: fixed;
@@ -808,7 +750,7 @@
         }
 
         .modal {
-            background: var(--white);
+            background: var(--wh);
             border-radius: 20px;
             max-width: 640px;
             width: 100%;
@@ -838,7 +780,6 @@
             background: var(--g100)
         }
 
-        /* ===== Toast / Loading ===== */
         .toast {
             position: fixed;
             bottom: 60px;
@@ -909,14 +850,13 @@
             font-weight: 500
         }
 
-        /* ===== Ticker ===== */
         .ticker {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             height: 40px;
-            background: var(--white);
+            background: var(--wh);
             border-top: 1px solid var(--g200);
             display: flex;
             align-items: center;
@@ -958,13 +898,12 @@
             color: var(--blue)
         }
 
-        /* ===== Responsive ===== */
         @media(max-width:960px) {
             .cols {
                 grid-template-columns: 1fr
             }
 
-            .col-right {
+            .col-r {
                 position: static
             }
         }
@@ -975,11 +914,11 @@
             }
 
             .vi-thumb {
-                width: 100px;
-                height: 56px
+                width: 80px;
+                height: 45px
             }
 
-            .card {
+            .crd {
                 padding: 16px
             }
         }
@@ -990,7 +929,7 @@
 
     <header class="hd">
         <div class="hd-in">
-            <div class="hd-left">
+            <div class="hd-l">
                 <a href="/" class="logo">
                     <svg viewBox="0 0 24 24" fill="none">
                         <rect width="24" height="24" rx="6" fill="#F04452" />
@@ -1000,9 +939,10 @@
                     YouTube 요약봇
                 </a>
                 <nav class="nav">
-                    <button class="nav-i on" data-t="dash">대시보드</button>
-                    <button class="nav-i" data-t="ch">채널관리</button>
-                    <button class="nav-i" data-t="arch">보관함</button>
+                    <button class="nv on" data-t="dash">대시보드</button>
+                    <button class="nv" data-t="analyze">URL 분석</button>
+                    <button class="nv" data-t="ch">채널관리</button>
+                    <button class="nv" data-t="arch">보관함</button>
                 </nav>
             </div>
         </div>
@@ -1013,57 +953,42 @@
         <!-- ===== 대시보드 ===== -->
         <div id="p-dash" class="pane on">
             <div class="cols">
-                <!-- 왼쪽: 오늘의 요약 -->
-                <div class="col-left">
-                    <!-- URL 분석 -->
-                    <div class="card">
-                        <div class="inp-row">
-                            <input class="inp" id="videoUrl" placeholder="분석할 YouTube URL을 입력하세요">
-                            <button class="btn-p" id="btnAn" onclick="analyzeVideo()">분석</button>
-                        </div>
-                    </div>
-
-                    <!-- 오늘의 핵심 정보 -->
-                    <div class="card">
-                        <div class="card-h">
-                            <div class="card-t">오늘의 핵심 정보</div>
+                <div>
+                    <!-- 보라색: 오늘의 핵심 정보 -->
+                    <div class="crd">
+                        <div class="crd-h">
+                            <div class="crd-t">오늘의 핵심 정보</div>
                             <div style="display:flex;gap:6px">
-                                <button class="btn-g" onclick="loadDash()">새로고침</button>
-                                <button class="btn-p" style="padding:7px 14px;font-size:13px" id="btnDig"
-                                    onclick="triggerDigest()">다이제스트 실행</button>
+                                <button class="btn btn-g" onclick="loadDash()">새로고침</button>
+                                <button class="btn btn-b" id="btnRun" onclick="runCollect()">자동 수집</button>
                             </div>
                         </div>
                         <div id="digestBox" class="digest-box">
-                            <div class="digest-empty">다이제스트를 실행하면 핵심 정보가 여기에 표시됩니다</div>
+                            <div class="dg-empty">자동 수집을 실행하면 핵심 정보가 여기에 표시됩니다</div>
                         </div>
                     </div>
 
-                    <!-- 영상 목록 -->
-                    <div class="card">
-                        <div class="card-h">
-                            <div class="card-t">오늘의 요약</div>
-                            <button class="card-act" onclick="switchTab('arch')">전체보기</button>
+                    <!-- 파란색: 오늘의 요약 -->
+                    <div class="crd">
+                        <div class="crd-h">
+                            <div class="crd-t">오늘의 요약</div>
+                            <button class="crd-a" onclick="switchTab('arch')">전체보기</button>
                         </div>
                         <div id="dashList" class="vl">
                             <div class="empty">
                                 <div class="empty-t">요약된 영상이 없습니다</div>
-                                <div class="empty-d">채널을 등록하고 다이제스트를 실행하세요</div>
+                                <div class="empty-d">채널을 등록하고 자동 수집을 실행하세요</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 오른쪽: AI 상세 요약 -->
-                <div class="col-right">
-                    <div class="ai-card" id="aiPanel">
+                <!-- 빨간색: AI 상세 요약 -->
+                <div class="col-r">
+                    <div class="ai-crd" id="aiPanel">
                         <div class="ai-top">
                             <div class="ai-top-t" id="aiTitle">AI 상세 요약</div>
                             <div class="ai-top-ch" id="aiCh">왼쪽 영상을 선택하면 상세 분석을 확인할 수 있습니다</div>
-                        </div>
-                        <div class="ai-tabs" id="aiTabs" style="display:none">
-                            <button class="ai-tab on" data-at="overview"
-                                onclick="switchAiTab('overview')">감성·쟁점</button>
-                            <button class="ai-tab" data-at="detail" onclick="switchAiTab('detail')">상세 요약</button>
                         </div>
                         <div class="ai-body" id="aiBody">
                             <div class="ai-empty">왼쪽 목록에서 영상을 선택하세요</div>
@@ -1073,15 +998,34 @@
             </div>
         </div>
 
+        <!-- ===== URL 분석 (별도 탭) ===== -->
+        <div id="p-analyze" class="pane">
+            <div style="max-width:800px;margin:0 auto">
+                <div class="crd">
+                    <div class="crd-h">
+                        <div class="crd-t">YouTube 영상 URL 분석</div>
+                    </div>
+                    <p style="font-size:13px;color:var(--g500);margin-bottom:16px">개별 YouTube 영상 URL을 입력하면 AI가 자동으로 자막을
+                        추출하고 분석합니다.</p>
+                    <div class="inp-row">
+                        <input class="inp" id="videoUrl" placeholder="YouTube URL을 입력하세요">
+                        <button class="btn btn-b" id="btnAn" onclick="analyzeVideo()"
+                            style="padding:11px 24px;font-size:14px">분석</button>
+                    </div>
+                </div>
+                <div id="urlResult"></div>
+            </div>
+        </div>
+
         <!-- ===== 채널관리 ===== -->
         <div id="p-ch" class="pane">
-            <div class="card" style="max-width:800px">
-                <div class="card-h">
-                    <div class="card-t">구독 채널 관리</div>
+            <div class="crd" style="max-width:800px">
+                <div class="crd-h">
+                    <div class="crd-t">구독 채널 관리</div>
                 </div>
                 <div class="inp-row" style="margin-bottom:20px">
                     <input class="inp" id="chUrl" placeholder="YouTube 채널 URL을 입력하세요">
-                    <button class="btn-p" onclick="addCh()">추가</button>
+                    <button class="btn btn-b" onclick="addCh()">추가</button>
                 </div>
                 <div id="chList">
                     <div class="empty">
@@ -1094,10 +1038,10 @@
         <!-- ===== 보관함 ===== -->
         <div id="p-arch" class="pane">
             <div class="cols">
-                <div class="col-left">
-                    <div class="card">
-                        <div class="card-h">
-                            <div class="card-t">분석 보관함</div>
+                <div>
+                    <div class="crd">
+                        <div class="crd-h">
+                            <div class="crd-t">분석 보관함</div>
                         </div>
                         <div id="archList" class="vl">
                             <div class="empty">
@@ -1106,16 +1050,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-right">
-                    <div class="ai-card" id="aiPanel2">
+                <div class="col-r">
+                    <div class="ai-crd" id="aiPanel2">
                         <div class="ai-top">
                             <div class="ai-top-t" id="aiTitle2">AI 상세 요약</div>
                             <div class="ai-top-ch" id="aiCh2">영상을 선택하면 상세 분석을 확인할 수 있습니다</div>
-                        </div>
-                        <div class="ai-tabs" id="aiTabs2" style="display:none">
-                            <button class="ai-tab on" data-at2="overview"
-                                onclick="switchAiTab2('overview')">감성·쟁점</button>
-                            <button class="ai-tab" data-at2="detail" onclick="switchAiTab2('detail')">상세 요약</button>
                         </div>
                         <div class="ai-body" id="aiBody2">
                             <div class="ai-empty">왼쪽 목록에서 영상을 선택하세요</div>
@@ -1141,17 +1080,6 @@
                 (0.14%)</span></div>
     </div>
 
-    <div id="resModal" class="ov" onclick="if(event.target===this)closeRes()">
-        <div class="modal">
-            <div class="modal-h">
-                <div>
-                    <div style="font-size:13px;color:var(--blue);font-weight:500" id="resCh"></div>
-                    <h2 style="font-size:18px;font-weight:700" id="resTitle"></h2>
-                </div><button class="modal-x" onclick="closeRes()">✕</button>
-            </div>
-            <div id="resBody"></div>
-        </div>
-    </div>
     <div id="ld" class="ld">
         <div class="spin"></div>
         <div class="ld-t" id="ldT">처리 중...</div>
@@ -1159,19 +1087,17 @@
     <div id="toast" class="toast"></div>
 
     <script>
-        // ===== State =====
-        let currentData = null; // 현재 선택된 영상의 전체 데이터
-        let allAnalyses = []; // 전체 분석 목록
+        let allAn = [];
 
-        // ===== Tab =====
+        // Tab
         function switchTab(t) {
-            document.querySelectorAll('.nav-i').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+            document.querySelectorAll('.nv').forEach(b => b.classList.toggle('on', b.dataset.t === t));
             document.querySelectorAll('.pane').forEach(p => p.classList.toggle('on', p.id === 'p-' + t));
             if (t === 'ch') loadCh(); if (t === 'arch') loadArch();
         }
-        document.querySelectorAll('.nav-i').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
+        document.querySelectorAll('.nv').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.t)));
 
-        // ===== Utils =====
+        // Utils
         function toast(m, ok = true) { const t = document.getElementById('toast'); t.textContent = m; t.className = 'toast ' + (ok ? 'toast-ok' : 'toast-err') + ' show'; setTimeout(() => t.classList.remove('show'), 3000) }
         function showLd(t) { document.getElementById('ldT').textContent = t || '처리 중...'; document.getElementById('ld').classList.add('show') }
         function hideLd() { document.getElementById('ld').classList.remove('show') }
@@ -1179,212 +1105,190 @@
         function fmtD(s) { if (!s) return ''; const d = new Date(s); const diff = Math.round((Date.now() - d) / 60000); if (diff < 60) return diff + '분 전'; if (diff < 1440) return Math.round(diff / 60) + '시간 전'; return d.toLocaleDateString('ko-KR', { month: 'numeric', day: 'numeric' }) }
         function fmtS(t) { if (!t) return ''; return t.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') }
         async function api(u, m = 'GET', b = null) { const o = { method: m, headers: { 'Content-Type': 'application/json' } }; if (b) o.body = JSON.stringify(b); const r = await fetch(u, o); return r.json() }
-        function parseArr(raw) { try { return typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { return [] } }
+        function pArr(raw) { try { return typeof raw === 'string' ? JSON.parse(raw) : (raw || []) } catch (e) { return [] } }
+        async function clip(text, label) { try { await navigator.clipboard.writeText(text); toast(label + ' 복사됨') } catch (e) { toast('복사 실패', false) } }
 
-        // ===== Clipboard =====
-        async function copyText(text, label) {
-            try { await navigator.clipboard.writeText(text); toast(label + ' 복사됨') } catch (e) { toast('복사 실패', false) }
-        }
+        // Tags
+        function sTag(s) { if (s === 'positive') return '<span class="tag t-pos">호재</span>'; if (s === 'negative') return '<span class="tag t-neg">악재</span>'; return '<span class="tag t-neu">중립</span>' }
+        function iTag(i) { if (i === 'urgent') return ' <span class="tag t-urg">긴급</span>'; if (i === 'major') return ' <span class="tag t-maj">주요</span>'; return '' }
 
-        // ===== Tags HTML =====
-        function sTag(s) { if (s === 'positive') return '<span class="tag t-pos">🔴 호재</span>'; if (s === 'negative') return '<span class="tag t-neg">🔵 악재</span>'; return '<span class="tag t-neu">중립</span>' }
-        function iTag(i) { if (i === 'urgent') return '<span class="tag t-urg">긴급</span>'; if (i === 'major') return '<span class="tag t-maj">주요</span>'; return '' }
-        function sTags(raw) { return parseArr(raw).slice(0, 5).map(s => '<span class="tag t-stk">' + esc(s) + '</span>').join('') }
-
-        // ===== Build Digest Box =====
-        function buildDigestBox(analyses) {
+        // --- 보라색: 오늘의 핵심 정보 ---
+        function buildDigest(analyses) {
             const box = document.getElementById('digestBox');
-            if (!analyses.length) { box.innerHTML = '<div class="digest-empty">다이제스트를 실행하면 핵심 정보가 여기에 표시됩니다</div>'; return }
-
-            let pos = 0, neg = 0, neu = 0;
-            const stockMap = {};
+            if (!analyses.length) { box.innerHTML = '<div class="dg-empty">자동 수집을 실행하면 핵심 정보가 여기에 표시됩니다</div>'; return }
+            let pos = 0, neg = 0, neu = 0; const stkMap = {};
             analyses.forEach(a => {
-                if (a.sentiment === 'positive') pos++;
-                else if (a.sentiment === 'negative') neg++;
-                else neu++;
-                parseArr(a.key_stocks).forEach(s => { stockMap[s] = (stockMap[s] || 0) + 1 });
+                if (a.sentiment === 'positive') pos++; else if (a.sentiment === 'negative') neg++; else neu++;
+                pArr(a.key_stocks).forEach(s => { stkMap[s] = (stkMap[s] || 0) + 1 });
             });
-            const topStocks = Object.entries(stockMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
-            const channels = [...new Set(analyses.map(a => a.channel_name).filter(Boolean))];
-
+            const topS = Object.entries(stkMap).sort((a, b) => b[1] - a[1]).slice(0, 8);
+            const chs = [...new Set(analyses.map(a => a.channel_name).filter(Boolean))];
             let h = '';
-            h += '<div class="digest-row"><span class="digest-label">분석 현황</span> ' + channels.length + '개 채널, ' + analyses.length + '개 영상 분석 완료</div>';
-            if (pos > 0) h += '<div class="digest-row">🔴 호재 전망 <b>' + pos + '건</b></div>';
-            if (neg > 0) h += '<div class="digest-row">🔵 악재 전망 <b>' + neg + '건</b></div>';
-            if (neu > 0) h += '<div class="digest-row">중립 <b>' + neu + '건</b></div>';
-            if (topStocks.length) {
-                h += '<div style="margin-top:8px"><div class="digest-row" style="margin-bottom:4px"><span class="digest-label">주요 언급 종목</span></div>';
-                h += '<div class="digest-stocks">' + topStocks.map(([s, c]) => '<span class="digest-stock">' + esc(s) + ' (' + c + ')</span>').join('') + '</div></div>';
+            h += '<div class="dg-row"><span class="dg-label">분석 현황</span> ' + chs.length + '개 채널, ' + analyses.length + '개 영상 분석</div>';
+            if (pos) h += '<div class="dg-row">🔴 호재 전망 ' + pos + '건</div>';
+            if (neg) h += '<div class="dg-row">🔵 악재 전망 ' + neg + '건</div>';
+            if (neu) h += '<div class="dg-row">중립 ' + neu + '건</div>';
+            if (topS.length) {
+                h += '<div style="margin-top:8px"><div class="dg-row"><span class="dg-label">주요 언급 종목</span></div>';
+                h += '<div class="dg-stocks">' + topS.map(([s, c]) => '<span class="dg-stk">' + esc(s) + ' (' + c + ')</span>').join('') + '</div></div>';
             }
-            h += '<div class="digest-share"><button class="btn-share" onclick="shareDigest()">공유</button></div>';
+            h += '<div class="dg-foot"><button class="btn-share" onclick="shareDigest()">공유</button></div>';
             box.innerHTML = h;
         }
-
         function shareDigest() {
-            const analyses = allAnalyses;
-            if (!analyses.length) { toast('공유할 데이터가 없습니다', false); return }
-            const stocks = {}; const channels = [...new Set(analyses.map(a => a.channel_name).filter(Boolean))];
-            let pos = 0, neg = 0;
-            analyses.forEach(a => {
-                if (a.sentiment === 'positive') pos++; if (a.sentiment === 'negative') neg++;
-                parseArr(a.key_stocks).forEach(s => { stocks[s] = (stocks[s] || 0) + 1 });
-            });
-            const topS = Object.entries(stocks).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([s]) => s);
-            let txt = '[YouTube 요약봇 오늘의 핵심]\n';
-            txt += channels.length + '개 채널, ' + analyses.length + '개 영상 분석\n';
-            if (pos) txt += '호재 전망 ' + pos + '건\n'; if (neg) txt += '악재 전망 ' + neg + '건\n';
-            if (topS.length) txt + '주요 종목: ' + topS.join(', ') + '\n';
-            copyText(txt, '오늘의 핵심 정보');
+            if (!allAn.length) { toast('공유할 데이터 없음', false); return }
+            const stkMap = {}; let pos = 0, neg = 0; const chs = [...new Set(allAn.map(a => a.channel_name).filter(Boolean))];
+            allAn.forEach(a => { if (a.sentiment === 'positive') pos++; if (a.sentiment === 'negative') neg++; pArr(a.key_stocks).forEach(s => { stkMap[s] = (stkMap[s] || 0) + 1 }) });
+            const topS = Object.entries(stkMap).sort((a, b) => b[1] - a[1]).slice(0, 5).map(([s]) => s);
+            let t = '[오늘의 핵심]\n' + chs.length + '개 채널, ' + allAn.length + '개 영상 분석\n';
+            if (pos) t += '호재 전망 ' + pos + '건\n'; if (neg) t += '악재 전망 ' + neg + '건\n';
+            if (topS.length) t += '주요 종목: ' + topS.join(', ') + '\n';
+            clip(t, '오늘의 핵심 정보');
         }
 
-        // ===== Build Video Item =====
-        function buildVI(a, panelTarget) {
+        // --- 파란색: 영상 카드 (1줄 요약 + 클릭 시 상세) ---
+        function buildVI(a, panel) {
             const th = a.thumbnail_url || 'https://img.youtube.com/vi/' + a.video_id + '/hqdefault.jpg';
-            const pt = panelTarget || 'main';
-            return `<div class="vi" id="vi-${a.id}" onclick="selectVideo(${a.id},'${pt}')">
+            const oneLine = a.one_line_summary || a.summary?.substring(0, 60) || '요약 없음';
+            return `<div class="vi" id="vi-${a.id}" onclick="selectVideo(${a.id},'${panel}')">
         <img class="vi-thumb" src="${th}" alt="" loading="lazy" onerror="this.src='https://img.youtube.com/vi/${a.video_id}/hqdefault.jpg'">
         <div class="vi-body">
             <div class="vi-ch">${esc(a.channel_name || '')} · ${fmtD(a.created_at)}</div>
             <div class="vi-title">${esc(a.title)}</div>
-            <div class="vi-desc">${esc((a.summary || '').substring(0, 80))}</div>
+            <div class="vi-one">${sTag(a.sentiment)}${iTag(a.importance)} ${esc(oneLine)}</div>
             <div class="vi-foot">
-                <div class="vi-time">${sTag(a.sentiment)} ${iTag(a.importance)}</div>
-                <div class="vi-actions">
-                    <button class="btn-tiny" onclick="event.stopPropagation();copyTranscript(${a.id})">자막 복사</button>
-                    <button class="btn-tiny" onclick="event.stopPropagation();shareVideo(${a.id})">공유</button>
+                <div class="vi-meta">${a.char_count ? a.char_count.toLocaleString() + '자' : ''}</div>
+                <div class="vi-acts">
+                    <button class="btn-t" onclick="event.stopPropagation();copyScript(${a.id})">자막 복사</button>
+                    <button class="btn-t" onclick="event.stopPropagation();shareV(${a.id})">공유</button>
                 </div>
             </div>
         </div>
     </div>`;
         }
 
-        // ===== Select Video → Right Panel =====
-        async function selectVideo(id, panelTarget) {
-            // Highlight
-            document.querySelectorAll('.vi').forEach(v => v.classList.remove('selected'));
-            const el = document.getElementById('vi-' + id); if (el) el.classList.add('selected');
-
-            const suffix = panelTarget === 'arch' ? '2' : '';
-            const titleEl = document.getElementById('aiTitle' + suffix);
-            const chEl = document.getElementById('aiCh' + suffix);
-            const tabsEl = document.getElementById('aiTabs' + suffix);
-            const bodyEl = document.getElementById('aiBody' + suffix);
-
-            titleEl.textContent = '불러오는 중...'; chEl.textContent = '';
-            bodyEl.innerHTML = '<div style="text-align:center;padding:40px"><div class="spin"></div></div>';
-
+        // --- 빨간색: AI 상세 요약 (탭 없이 통합) ---
+        async function selectVideo(id, panel) {
+            document.querySelectorAll('.vi').forEach(v => v.classList.remove('sel'));
+            const el = document.getElementById('vi-' + id); if (el) el.classList.add('sel');
+            const sf = panel === 'arch' ? '2' : '';
+            const tEl = document.getElementById('aiTitle' + sf);
+            const cEl = document.getElementById('aiCh' + sf);
+            const bEl = document.getElementById('aiBody' + sf);
+            tEl.textContent = '불러오는 중...'; cEl.textContent = '';
+            bEl.innerHTML = '<div style="text-align:center;padding:40px"><div class="spin"></div></div>';
             try {
                 const d = await api('/api/archive/' + id);
-                if (!d.success || !d.analysis) { bodyEl.innerHTML = '<div class="ai-empty">데이터를 불러올 수 없습니다</div>'; return }
-                currentData = d.analysis;
-                titleEl.textContent = currentData.title || 'AI 분석';
-                chEl.textContent = currentData.channel_name || '';
-                tabsEl.style.display = 'flex';
-                renderAiPanel(suffix);
-            } catch (e) { bodyEl.innerHTML = '<div class="ai-empty">오류가 발생했습니다</div>' }
-        }
-
-        function renderAiPanel(suffix) {
-            const a = currentData; if (!a) return;
-            const bodyEl = document.getElementById('aiBody' + suffix);
-            const activeTab = document.querySelector('[data-at' + suffix + '].on');
-            const tab = activeTab ? activeTab.getAttribute('data-at' + suffix) : 'overview';
-
-            if (tab === 'overview') {
-                let h = '';
-                // 감성
-                const sentClass = a.sentiment === 'positive' ? 'pos' : a.sentiment === 'negative' ? 'neg' : 'neu';
-                const sentText = a.sentiment === 'positive' ? '호재 (긍정적)' : a.sentiment === 'negative' ? '악재 (부정적)' : '중립';
-                const sentBadge = a.importance === 'urgent' ? '<span class="sent-badge t-urg">긴급</span>' : a.importance === 'major' ? '<span class="sent-badge t-maj">주요</span>' : '';
-                h += '<div class="sent-bar"><div class="sent-dot ' + sentClass + '"></div><div class="sent-label">' + sentText + '</div>' + sentBadge + '</div>';
-
-                // 종목
-                const stocks = parseArr(a.key_stocks);
-                if (stocks.length) {
-                    h += '<div class="ai-sec"><div class="ai-sec-t">관련 종목</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
-                    stocks.forEach(s => { h += '<span class="tag t-stk">' + esc(s) + '</span>' });
-                    h += '</div></div>';
-                }
-
-                // 핵심 포인트
-                const pts = parseArr(a.key_points);
-                if (pts.length) {
-                    h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>';
-                    pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' });
-                    h += '</div>';
-                }
-
-                // 시장 영향 + 투자 시사점
-                if (a.market_impact || a.investment_insight) {
-                    h += '<div class="ai-sec">';
-                    if (a.market_impact) h += '<div class="ai-ins"><b>시장 영향</b><br>' + esc(a.market_impact) + '</div>';
-                    if (a.investment_insight) h += '<div class="ai-ins" style="margin-top:10px"><b>투자 시사점</b><br>' + esc(a.investment_insight) + '</div>';
-                    h += '</div>';
-                }
-
-                // 공유
-                h += '<div class="ai-share"><button class="btn-share" onclick="shareVideo(' + a.id + ')">공유</button>';
-                h += '<a class="ai-link" href="https://www.youtube.com/watch?v=' + a.video_id + '" target="_blank">원본 영상 ›</a></div>';
-                bodyEl.innerHTML = h;
-
-            } else {
-                // 상세 요약
-                let h = '<div class="ai-txt"><p>' + fmtS(a.summary || '요약 없음') + '</p></div>';
-                h += '<div class="ai-share"><button class="btn-share" onclick="shareVideo(' + a.id + ')">공유</button>';
-                h += '<button class="btn-share" onclick="copyTranscript(' + a.id + ')">자막 복사</button></div>';
-                bodyEl.innerHTML = h;
-            }
-        }
-
-        function switchAiTab(tab) {
-            document.querySelectorAll('[data-at]').forEach(b => { b.classList.toggle('on', b.getAttribute('data-at') === tab) });
-            renderAiPanel('');
-        }
-        function switchAiTab2(tab) {
-            document.querySelectorAll('[data-at2]').forEach(b => { b.classList.toggle('on', b.getAttribute('data-at2') === tab) });
-            renderAiPanel('2');
-        }
-
-        // ===== Copy Transcript =====
-        async function copyTranscript(id) {
-            try {
-                const d = await api('/api/archive/' + id);
-                if (d.success && d.analysis && d.analysis.transcript) {
-                    copyText(d.analysis.transcript, '자막');
-                } else { toast('자막 데이터가 없습니다', false) }
-            } catch (e) { toast('자막 복사 실패', false) }
-        }
-
-        // ===== Share Video =====
-        async function shareVideo(id) {
-            try {
-                const d = await api('/api/archive/' + id);
-                if (!d.success || !d.analysis) { toast('데이터 없음', false); return }
+                if (!d.success || !d.analysis) { bEl.innerHTML = '<div class="ai-empty">데이터를 불러올 수 없습니다</div>'; return }
                 const a = d.analysis;
-                const sent = a.sentiment === 'positive' ? '호재' : a.sentiment === 'negative' ? '악재' : '중립';
-                let txt = '[' + sent + '] ' + (a.title || '') + '\n';
-                const pts = parseArr(a.key_points);
-                if (pts.length) pts.forEach(p => { txt += '· ' + p + '\n' });
-                if (a.market_impact) txt += '\n시장 영향: ' + a.market_impact;
-                if (a.investment_insight) txt += '\n투자 시사점: ' + a.investment_insight;
-                txt += '\n\nhttps://www.youtube.com/watch?v=' + a.video_id;
-                copyText(txt, '분석 결과');
+                tEl.textContent = a.title || ''; cEl.textContent = a.channel_name || '';
+                renderAI(a, bEl);
+            } catch (e) { bEl.innerHTML = '<div class="ai-empty">오류가 발생했습니다</div>' }
+        }
+
+        function renderAI(a, el) {
+            let h = '';
+            // 감성 + 중요도
+            const sc = a.sentiment === 'positive' ? 'pos' : a.sentiment === 'negative' ? 'neg' : 'neu';
+            const st = a.sentiment === 'positive' ? '호재 (긍정)' : a.sentiment === 'negative' ? '악재 (부정)' : '중립';
+            const ib = a.importance === 'urgent' ? '<span class="sent-badge t-urg">긴급</span>' : a.importance === 'major' ? '<span class="sent-badge t-maj" style="background:var(--orange-bg);color:var(--orange)">주요</span>' : '';
+            h += '<div class="sent-bar"><div class="sent-dot ' + sc + '"></div><div class="sent-label">' + st + '</div>' + ib + '</div>';
+
+            // 관련 종목
+            const stocks = pArr(a.key_stocks);
+            if (stocks.length) {
+                h += '<div class="ai-sec"><div class="ai-sec-t">관련 종목</div><div style="display:flex;flex-wrap:wrap;gap:6px">';
+                stocks.forEach(s => { h += '<span class="tag t-stk">' + esc(s) + '</span>' });
+                h += '</div></div>';
+            }
+
+            // 핵심 포인트
+            const pts = pArr(a.key_points);
+            if (pts.length) {
+                h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>';
+                pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' });
+                h += '</div>';
+            }
+
+            // 시장 영향
+            if (a.market_impact) { h += '<div class="ai-sec"><div class="ai-sec-t">시장 영향</div><div class="ai-ins">' + esc(a.market_impact) + '</div></div>' }
+
+            // 투자 시사점
+            if (a.investment_insight) { h += '<div class="ai-sec"><div class="ai-sec-t">투자 시사점</div><div class="ai-ins">' + esc(a.investment_insight) + '</div></div>' }
+
+            // 리스크 평가
+            if (a.risk_assessment) { h += '<div class="ai-sec"><div class="ai-sec-t">리스크 평가</div><div class="ai-ins">' + esc(a.risk_assessment) + '</div></div>' }
+
+            // 상세 요약
+            if (a.summary) { h += '<div class="ai-sec"><div class="ai-sec-t">상세 요약</div><div class="ai-txt"><p>' + fmtS(a.summary) + '</p></div></div>' }
+
+            // 자막 보기
+            h += '<div class="ai-sec" style="border-bottom:none"><button class="btn btn-g" style="width:100%" onclick="toggleScript(this,' + a.id + ')">자막 보기</button>';
+            h += '<div class="script-box" id="script-' + a.id + '"></div></div>';
+
+            // 하단 액션
+            h += '<div class="ai-foot">';
+            h += '<button class="btn-share" onclick="shareV(' + a.id + ')">공유</button>';
+            h += '<button class="btn-share" onclick="copyScript(' + a.id + ')">자막 복사</button>';
+            h += '<a class="ai-link" href="https://www.youtube.com/watch?v=' + a.video_id + '" target="_blank">원본 영상</a>';
+            h += '</div>';
+
+            el.innerHTML = h;
+        }
+
+        // 자막 토글
+        async function toggleScript(btn, id) {
+            const box = document.getElementById('script-' + id);
+            if (!box) return;
+            if (box.classList.contains('open')) { box.classList.remove('open'); btn.textContent = '자막 보기'; return }
+            if (!box.dataset.loaded) {
+                try {
+                    const d = await api('/api/archive/' + id);
+                    if (d.success && d.analysis?.transcript) { box.textContent = d.analysis.transcript; box.dataset.loaded = '1' }
+                    else { box.textContent = '자막 데이터가 없습니다' }
+                } catch (e) { box.textContent = '자막을 불러올 수 없습니다' }
+            }
+            box.classList.add('open'); btn.textContent = '자막 닫기';
+        }
+
+        // 자막 복사
+        async function copyScript(id) {
+            try {
+                const d = await api('/api/archive/' + id);
+                if (d.success && d.analysis?.transcript) clip(d.analysis.transcript, '자막');
+                else toast('자막 데이터 없음', false)
+            } catch (e) { toast('복사 실패', false) }
+        }
+
+        // 공유
+        async function shareV(id) {
+            try {
+                const d = await api('/api/archive/' + id); if (!d.success || !d.analysis) { toast('데이터 없음', false); return }
+                const a = d.analysis; const sent = a.sentiment === 'positive' ? '호재' : a.sentiment === 'negative' ? '악재' : '중립';
+                let t = '[' + sent + '] ' + (a.title || '') + '\n';
+                if (a.one_line_summary) t += a.one_line_summary + '\n\n';
+                const pts = pArr(a.key_points); if (pts.length) pts.forEach(p => { t += '· ' + p + '\n' });
+                if (a.market_impact) t += '\n시장 영향: ' + a.market_impact;
+                if (a.investment_insight) t += '\n투자 시사점: ' + a.investment_insight;
+                if (a.risk_assessment) t += '\n리스크: ' + a.risk_assessment;
+                t += '\n\nhttps://www.youtube.com/watch?v=' + a.video_id;
+                clip(t, '분석 결과');
             } catch (e) { toast('공유 실패', false) }
         }
 
-        // ===== Dashboard =====
+        // Dashboard
         async function loadDash() {
             try {
-                const [aD, cD, dD] = await Promise.all([api('/api/archive/list'), api('/api/channels'), api('/api/daily_digest/latest')]);
-                allAnalyses = aD.analyses || [];
-                buildDigestBox(allAnalyses);
+                const [aD, cD] = await Promise.all([api('/api/archive/list'), api('/api/channels')]);
+                allAn = aD.analyses || [];
+                buildDigest(allAn);
                 const ct = document.getElementById('dashList');
-                if (!allAnalyses.length) { ct.innerHTML = '<div class="empty"><div class="empty-t">요약된 영상이 없습니다</div><div class="empty-d">채널을 등록하고 다이제스트를 실행하세요</div></div>'; return }
-                ct.innerHTML = allAnalyses.slice(0, 20).map(a => buildVI(a, 'main')).join('');
+                if (!allAn.length) { ct.innerHTML = '<div class="empty"><div class="empty-t">요약된 영상이 없습니다</div><div class="empty-d">채널을 등록하고 자동 수집을 실행하세요</div></div>'; return }
+                ct.innerHTML = allAn.slice(0, 20).map(a => buildVI(a, 'main')).join('');
             } catch (e) { console.error(e) }
         }
 
-        // ===== Channels =====
+        // Channels
         async function loadCh() {
             try {
                 const d = await api('/api/channels'); const el = document.getElementById('chList');
@@ -1401,7 +1305,7 @@
         }
         async function delCh(id, n) { if (!confirm('"' + n + '" 삭제?')) return; try { await api('/api/channels/' + id, 'DELETE'); toast('삭제됨'); loadCh(); loadDash() } catch (e) { toast('오류', false) } }
 
-        // ===== Archive =====
+        // Archive
         async function loadArch() {
             try {
                 const d = await api('/api/archive/list'); const ct = document.getElementById('archList');
@@ -1410,40 +1314,44 @@
             } catch (e) { }
         }
 
-        // ===== Digest =====
-        async function triggerDigest() {
-            const b = document.getElementById('btnDig'); b.disabled = true; b.textContent = '실행 중...'; showLd('다이제스트 실행 중...');
+        // 자동 수집 (구 다이제스트)
+        async function runCollect() {
+            const b = document.getElementById('btnRun'); b.disabled = true; b.textContent = '수집 중...'; showLd('자동 수집 실행 중...');
             try {
                 const d = await api('/api/daily_digest', 'POST', { hours: 48 }); hideLd();
-                if (d.success) { toast(d.total_videos + '개 수집, ' + d.total_summarized + '개 요약'); loadDash() } else toast(d.message || '실패', false)
-            } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false; b.textContent = '다이제스트 실행' }
+                if (d.success) { toast(d.total_videos + '개 수집, ' + d.total_summarized + '개 요약 완료'); loadDash() } else toast(d.message || '실패', false)
+            } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false; b.textContent = '자동 수집' }
         }
 
-        // ===== Analyze =====
+        // URL 분석
         async function analyzeVideo() {
             const u = document.getElementById('videoUrl').value.trim(); if (!u) { toast('URL을 입력해주세요', false); return }
             const b = document.getElementById('btnAn'); b.disabled = true; showLd('영상 분석 중...');
             try {
                 const d = await api('/api/analyze', 'POST', { video_url: u, analysis_type: 'single' }); hideLd();
                 if (d.success) {
-                    document.getElementById('resCh').textContent = d.video_info?.channel_name || '';
-                    document.getElementById('resTitle').textContent = d.video_info?.title || '';
-                    let h = '<div style="margin-bottom:14px">' + sTag(d.sentiment) + iTag(d.importance) + sTags(d.key_stocks) + '</div>';
+                    let h = '<div class="crd"><div class="crd-h"><div class="crd-t">' + (d.video_info?.title || '분석 결과') + '</div></div>';
+                    h += '<div style="font-size:13px;color:var(--g500);margin-bottom:12px">' + (d.video_info?.channel_name || '') + '</div>';
+                    // 감성 + 종목
+                    const sc = d.sentiment === 'positive' ? 'pos' : d.sentiment === 'negative' ? 'neg' : 'neu';
+                    const st = d.sentiment === 'positive' ? '호재' : d.sentiment === 'negative' ? '악재' : '중립';
+                    h += '<div class="sent-bar" style="margin-bottom:12px"><div class="sent-dot ' + sc + '"></div><div class="sent-label">' + st + '</div></div>';
+                    const stks = pArr(d.key_stocks);
+                    if (stks.length) { h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">'; stks.forEach(s => { h += '<span class="tag t-stk">' + esc(s) + '</span>' }); h += '</div>' }
                     const pts = d.key_points || [];
                     if (pts.length) { h += '<div class="ai-sec"><div class="ai-sec-t">핵심 포인트</div>'; pts.forEach(p => { h += '<div class="ai-pt">· ' + esc(p) + '</div>' }); h += '</div>' }
-                    if (d.market_impact || d.investment_insight) { h += '<div class="ai-sec">'; if (d.market_impact) h += '<div class="ai-ins"><b>시장 영향</b><br>' + esc(d.market_impact) + '</div>'; if (d.investment_insight) h += '<div class="ai-ins"><b>투자 시사점</b><br>' + esc(d.investment_insight) + '</div>'; h += '</div>' }
-                    h += '<div class="ai-txt"><p>' + fmtS(d.summary || '') + '</p></div>';
-                    document.getElementById('resBody').innerHTML = h;
-                    document.getElementById('resModal').classList.add('show');
-                    document.getElementById('videoUrl').value = ''; toast('분석 완료'); loadDash()
+                    if (d.market_impact) h += '<div class="ai-sec"><div class="ai-sec-t">시장 영향</div><div class="ai-ins">' + esc(d.market_impact) + '</div></div>';
+                    if (d.investment_insight) h += '<div class="ai-sec"><div class="ai-sec-t">투자 시사점</div><div class="ai-ins">' + esc(d.investment_insight) + '</div></div>';
+                    if (d.risk_assessment) h += '<div class="ai-sec"><div class="ai-sec-t">리스크 평가</div><div class="ai-ins">' + esc(d.risk_assessment) + '</div></div>';
+                    if (d.summary) h += '<div class="ai-sec"><div class="ai-sec-t">상세 요약</div><div class="ai-txt"><p>' + fmtS(d.summary) + '</p></div></div>';
+                    h += '</div>';
+                    document.getElementById('urlResult').innerHTML = h;
+                    document.getElementById('videoUrl').value = ''; toast('분석 완료'); loadDash();
                 } else toast(d.message || '실패', false)
             } catch (e) { hideLd(); toast('오류', false) } finally { b.disabled = false }
         }
-        function closeRes() { document.getElementById('resModal').classList.remove('show') }
 
-        // Keys
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeRes(); if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyzeVideo(); if (e.key === 'Enter' && document.activeElement.id === 'chUrl') addCh() });
-
+        document.addEventListener('keydown', e => { if (e.key === 'Enter' && document.activeElement.id === 'videoUrl') analyzeVideo(); if (e.key === 'Enter' && document.activeElement.id === 'chUrl') addCh() });
         loadDash();
     </script>
 </body>
