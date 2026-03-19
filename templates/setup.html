@@ -21,8 +21,7 @@
             <span class="ms-auto" id="geminiStatus"></span>
         </div>
         <div class="d-flex gap-2">
-            <input type="password" class="input-custom flex-grow-1" id="geminiKey"
-                   placeholder="Gemini API 키를 입력하세요">
+            <input type="password" class="input-custom flex-grow-1" id="geminiKey" placeholder="Gemini API 키를 입력하세요">
             <button class="btn-primary-custom" onclick="saveGeminiKey()" style="white-space: nowrap;">
                 저장
             </button>
@@ -32,7 +31,7 @@
                 <i class="fas fa-plug me-1"></i>연결 테스트
             </button>
             <a href="https://aistudio.google.com/apikey" target="_blank"
-               style="font-size: 0.85rem; color: var(--primary); text-decoration: none; padding: 0.4rem 0;">
+                style="font-size: 0.85rem; color: var(--primary); text-decoration: none; padding: 0.4rem 0;">
                 <i class="fas fa-external-link-alt me-1"></i>API 키 발급받기
             </a>
         </div>
@@ -50,8 +49,7 @@
             <span class="ms-auto" id="youtubeStatus"></span>
         </div>
         <div class="d-flex gap-2">
-            <input type="password" class="input-custom flex-grow-1" id="youtubeKey"
-                   placeholder="YouTube API 키 (선택사항)">
+            <input type="password" class="input-custom flex-grow-1" id="youtubeKey" placeholder="YouTube API 키 (선택사항)">
             <button class="btn-primary-custom" onclick="saveYoutubeKey()" style="white-space: nowrap;">
                 저장
             </button>
@@ -67,9 +65,11 @@
             <i class="fas fa-info-circle me-1"></i>사용 안내
         </h6>
         <ul style="margin: 0; padding-left: 1.25rem; color: #0c4a6e; font-size: 0.9rem; line-height: 1.8;">
-            <li>Gemini API 키는 <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>에서 무료로 발급받을 수 있습니다.</li>
-            <li>YouTube Data API 키는 <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a>에서 발급받으세요.</li>
-            <li>API 키는 브라우저 세션에 저장되며, 브라우저를 닫으면 초기화됩니다.</li>
+            <li>Gemini API 키는 <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a>에서 무료로
+                발급받을 수 있습니다.</li>
+            <li>YouTube Data API 키는 <a href="https://console.cloud.google.com/" target="_blank">Google Cloud
+                    Console</a>에서 발급받으세요.</li>
+            <li>API 키는 브라우저에 안전하게 저장되며, 재접속 시 자동으로 복원됩니다.</li>
         </ul>
     </div>
 </div>
@@ -77,22 +77,61 @@
 
 {% block extra_js %}
 <script>
-    // 설정 상태 확인
+    const STATUS_OK = '<span style="color: var(--success); font-size: 0.85rem;"><i class="fas fa-check-circle"></i> 설정됨</span>';
+    const STATUS_NO = '<span style="color: var(--text-secondary); font-size: 0.85rem;">미설정</span>';
+
+    // 페이지 로드 시 localStorage에서 자동 복원
     window.addEventListener('load', async () => {
         try {
             const resp = await fetch('/api/check_settings');
             const data = await resp.json();
-            document.getElementById('geminiStatus').innerHTML = data.gemini_api_configured
-                ? '<span style="color: var(--success); font-size: 0.85rem;"><i class="fas fa-check-circle"></i> 설정됨</span>'
-                : '<span style="color: var(--text-secondary); font-size: 0.85rem;">미설정</span>';
-            document.getElementById('youtubeStatus').innerHTML = data.youtube_api_configured
-                ? '<span style="color: var(--success); font-size: 0.85rem;"><i class="fas fa-check-circle"></i> 설정됨</span>'
-                : '<span style="color: var(--text-secondary); font-size: 0.85rem;">미설정</span>';
-        } catch (e) {}
+            const savedGemini = localStorage.getItem('yt_gemini_api_key');
+            const savedYoutube = localStorage.getItem('yt_youtube_api_key');
+            if (savedGemini && !data.gemini_api_configured) {
+                await fetch('/api/save_settings', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ gemini_api_key: savedGemini })
+                });
+                data.gemini_api_configured = true;
+            }
+            if (savedYoutube && !data.youtube_api_configured) {
+                await fetch('/api/save_settings', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ youtube_api_key: savedYoutube })
+                });
+                data.youtube_api_configured = true;
+            }
+            document.getElementById('geminiStatus').innerHTML = data.gemini_api_configured ? STATUS_OK : STATUS_NO;
+            document.getElementById('youtubeStatus').innerHTML = data.youtube_api_configured ? STATUS_OK : STATUS_NO;
+            if (savedGemini) {
+                document.getElementById('geminiKey').value = savedGemini.substring(0, 8) + '********';
+                document.getElementById('geminiKey').dataset.fullKey = savedGemini;
+            }
+            if (savedYoutube) {
+                document.getElementById('youtubeKey').value = savedYoutube.substring(0, 8) + '********';
+                document.getElementById('youtubeKey').dataset.fullKey = savedYoutube;
+            }
+        } catch (e) { }
     });
 
+    document.addEventListener('DOMContentLoaded', () => {
+        ['geminiKey', 'youtubeKey'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('focus', function () {
+                if (this.value.includes('****')) { this.value = ''; this.dataset.fullKey = ''; }
+            });
+        });
+    });
+
+    function getActualKey(inputId) {
+        const el = document.getElementById(inputId);
+        const val = el.value.trim();
+        if (val.includes('****') && el.dataset.fullKey) return el.dataset.fullKey;
+        return val;
+    }
+
     async function saveGeminiKey() {
-        const key = document.getElementById('geminiKey').value.trim();
+        const key = getActualKey('geminiKey');
         if (!key) { alert('API 키를 입력해주세요.'); return; }
         const resp = await fetch('/api/save_settings', {
             method: 'POST',
@@ -101,14 +140,16 @@
         });
         const data = await resp.json();
         if (data.success) {
-            document.getElementById('geminiStatus').innerHTML =
-                '<span style="color: var(--success); font-size: 0.85rem;"><i class="fas fa-check-circle"></i> 설정됨</span>';
-            alert('저장되었습니다!');
+            localStorage.setItem('yt_gemini_api_key', key);
+            document.getElementById('geminiKey').dataset.fullKey = key;
+            document.getElementById('geminiKey').value = key.substring(0, 8) + '********';
+            document.getElementById('geminiStatus').innerHTML = STATUS_OK;
+            alert('저장되었습니다! (재접속 시 자동 복원됩니다)');
         }
     }
 
     async function saveYoutubeKey() {
-        const key = document.getElementById('youtubeKey').value.trim();
+        const key = getActualKey('youtubeKey');
         if (!key) { alert('API 키를 입력해주세요.'); return; }
         const resp = await fetch('/api/save_settings', {
             method: 'POST',
@@ -117,26 +158,25 @@
         });
         const data = await resp.json();
         if (data.success) {
-            document.getElementById('youtubeStatus').innerHTML =
-                '<span style="color: var(--success); font-size: 0.85rem;"><i class="fas fa-check-circle"></i> 설정됨</span>';
-            alert('저장되었습니다!');
+            localStorage.setItem('yt_youtube_api_key', key);
+            document.getElementById('youtubeKey').dataset.fullKey = key;
+            document.getElementById('youtubeKey').value = key.substring(0, 8) + '********';
+            document.getElementById('youtubeStatus').innerHTML = STATUS_OK;
+            alert('저장되었습니다! (재접속 시 자동 복원됩니다)');
         }
     }
 
     async function testGemini() {
-        const key = document.getElementById('geminiKey').value.trim();
+        const key = getActualKey('geminiKey');
         if (!key) { alert('API 키를 먼저 입력해주세요.'); return; }
-
         const el = document.getElementById('geminiTestResult');
         el.innerHTML = '<span style="color: var(--primary);"><span class="loading-spinner"></span> 테스트 중...</span>';
-
         const resp = await fetch('/api/test_gemini', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ api_key: key })
         });
         const data = await resp.json();
-
         if (data.success) {
             el.innerHTML = `<span style="color: var(--success);"><i class="fas fa-check-circle"></i> ${data.message}</span>`;
         } else {
