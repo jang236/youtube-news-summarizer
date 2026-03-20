@@ -116,6 +116,67 @@ display: none;
 .result-section.show {
 display: block;
 }
+
+/* 분석 섹션 스타일 */
+.analysis-section {
+margin-bottom: 1rem;
+padding: 1.25rem;
+border-radius: 12px;
+line-height: 1.8;
+font-size: 0.93rem;
+}
+.analysis-section p {
+margin: 0.4rem 0;
+}
+.section-header {
+font-size: 1rem;
+font-weight: 700;
+margin-bottom: 0.6rem;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+.section-header .section-icon {
+font-size: 1.2rem;
+}
+
+/* 섹션별 색상 */
+.section-title {
+background: #f0f4ff;
+border-left: 4px solid #4a6cf7;
+}
+.section-summary {
+background: #f0fdf4;
+border-left: 4px solid #22c55e;
+}
+.section-deep {
+background: #fefce8;
+border-left: 4px solid #eab308;
+}
+.section-second {
+background: #faf5ff;
+border-left: 4px solid #a855f7;
+}
+.section-counter {
+background: #fff7ed;
+border-left: 4px solid #f97316;
+}
+.section-action {
+background: #eff6ff;
+border-left: 4px solid #3b82f6;
+}
+.section-terms {
+background: #f8fafc;
+border-left: 4px solid #94a3b8;
+}
+.section-ai {
+background: #f0fdfa;
+border-left: 4px solid #14b8a6;
+}
+.section-sector {
+background: #fdf4ff;
+border-left: 4px solid #d946ef;
+}
 .video-info {
 display: flex;
 gap: 1rem;
@@ -331,13 +392,9 @@ margin-bottom: 1rem;
                     `;
                 }
 
-                // 요약 (마크다운 렌더링)
+                // 요약 (섹션별 포맷팅)
                 const summaryEl = document.getElementById('summaryContent');
-                if (typeof marked !== 'undefined') {
-                    summaryEl.innerHTML = marked.parse(data.summary);
-                } else {
-                    summaryEl.textContent = data.summary;
-                }
+                summaryEl.innerHTML = formatAnalysis(data.summary);
             } else {
                 alert(data.message || '분석에 실패했습니다.');
             }
@@ -403,5 +460,77 @@ margin-bottom: 1rem;
             });
         }
     });
+
+    // 분석 결과 포맷팅
+    function formatAnalysis(text) {
+        if (!text) return '';
+
+        // 이모지 섹션 매핑
+        const sectionMap = [
+            { emoji: '📰', cls: 'section-title', label: '제목' },
+            { emoji: '✅', cls: 'section-summary', label: '요약' },
+            { emoji: '🔍', cls: 'section-deep', label: '깊이 파기' },
+            { emoji: '🔄', cls: 'section-second', label: '2차 효과' },
+            { emoji: '⚖️', cls: 'section-counter', label: '다른 시각' },
+            { emoji: '🎯', cls: 'section-action', label: '실전 액션' },
+            { emoji: '📖', cls: 'section-terms', label: '용어' },
+            { emoji: '🤖', cls: 'section-ai', label: 'AI 한줄평' },
+            { emoji: '🏷️', cls: 'section-sector', label: '관련 섹터' }
+        ];
+
+        // 이모지가 포함되어 있는지 확인
+        const hasEmoji = sectionMap.some(s => text.includes(s.emoji));
+        if (!hasEmoji) {
+            // 이모지가 없으면 기본 텍스트 렌더링 (줄바꿈만 처리)
+            return '<div class="analysis-section section-summary">' +
+                text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>') +
+                '</div>';
+        }
+
+        // 이모지 기준으로 섹션 분리
+        let html = '';
+        const lines = text.split('\n');
+        let currentSection = null;
+        let currentContent = [];
+
+        function flushSection() {
+            if (currentSection) {
+                const contentText = currentContent.join('\n').trim();
+                if (contentText) {
+                    const formatted = contentText
+                        .replace(/\n\n/g, '</p><p>')
+                        .replace(/\n/g, '<br>');
+                    html += `<div class="analysis-section ${currentSection.cls}">`;
+                    html += `<div class="section-header"><span class="section-icon">${currentSection.emoji}</span>${currentSection.headerText || currentSection.label}</div>`;
+                    html += `<p>${formatted}</p>`;
+                    html += '</div>';
+                }
+            } else if (currentContent.length > 0) {
+                const preText = currentContent.join('\n').trim();
+                if (preText) {
+                    html += `<div class="analysis-section section-summary"><p>${preText.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p></div>`;
+                }
+            }
+        }
+
+        for (const line of lines) {
+            let matched = false;
+            for (const sec of sectionMap) {
+                if (line.includes(sec.emoji)) {
+                    flushSection();
+                    currentSection = { ...sec, headerText: line.trim() };
+                    currentContent = [];
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) {
+                currentContent.push(line);
+            }
+        }
+        flushSection();
+
+        return html;
+    }
 </script>
 {% endblock %}
