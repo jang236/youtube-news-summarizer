@@ -78,7 +78,7 @@ class GeminiSummarizer:
 - one_line_summary: 핵심 결론 한 문장
 - summary: 반드시 📰✅📖🤖🏷️ 이모지 섹션 형식으로 작성
 - summary에 영상 서론, 인사말, 홍보 내용은 제외
-- summary 안에서는 마크다운 사용 금지, 일반 텍스트만"
+- summary 안에서는 마크다운 사용 금지, 일반 텍스트만"""
 
         raw = self._generate(prompt)
 
